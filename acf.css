@@ -1,0 +1,48 @@
+.years-rel .acf-relationship .selection .choices,
+.years-rel .acf-relationship .selection .values {
+  float: none;
+  width: 100%; }
+
+.years-rel .acf-relationship .list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: auto; }
+  .years-rel .acf-relationship .list li {
+    width: 4em;
+    text-align: center;
+    padding: 0.5rem; }
+    .years-rel .acf-relationship .list li .acf-rel-item {
+      display: inline-block;
+      padding: 0.5rem;
+      border: 1px dotted #d5d5d5; }
+      .years-rel .acf-relationship .list li .acf-rel-item:hover {
+        background-color: #008dd4; }
+      .years-rel .acf-relationship .list li .acf-rel-item.disabled {
+        opacity: 0.25; }
+
+.years-rel .acf-relationship .values {
+  border-top: 1px solid #ccc;
+  min-height: 6rem; }
+  .years-rel .acf-relationship .values .acf-rel-item:hover .acf-icon {
+    top: -10px;
+    right: -10px; }
+  .years-rel .acf-relationship .values .list li .acf-rel-item {
+    background-color: #008dd4;
+    color: #fff; }
+
+.teams-rel .list {
+  height: 20rem; }
+  .teams-rel .list li .acf-rel-item {
+    padding: 0.5rem; }
+    .teams-rel .list li .acf-rel-item:hover {
+      background-color: #008dd4; }
+    .teams-rel .list li .acf-rel-item.disabled {
+      opacity: 0.25; }
+
+.teams-rel .values .list li {
+  margin-bottom: 1px; }
+  .teams-rel .values .list li .acf-rel-item {
+    background-color: #008dd4;
+    color: #fff; }

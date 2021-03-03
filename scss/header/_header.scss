@@ -1,0 +1,13 @@
+.site-header {
+    padding: 2rem 0;
+
+    h1 {
+        a {
+            color: $slate;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

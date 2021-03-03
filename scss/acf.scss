@@ -1,0 +1,94 @@
+.years-rel {
+    .acf-relationship {
+        .selection {
+            .choices,
+            .values {
+                float: none;
+                width: 100%;
+            }
+        }
+
+        .list {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: auto;
+
+            li {
+                width: 4em;
+                text-align: center;
+                padding: 0.5rem;
+
+                .acf-rel-item {
+                    display: inline-block;
+                    padding: 0.5rem;
+                    border: 1px dotted #d5d5d5;
+
+                    &:hover {
+                        background-color: #008dd4;
+                    }
+
+                    &.disabled {
+                        opacity: 0.25;
+                    }
+                }
+            }
+
+        }
+        
+        .values {
+            border-top: 1px solid #ccc;
+            min-height: 6rem;
+
+            .acf-rel-item:hover .acf-icon {
+                top: -10px;
+                right: -10px;
+            }
+
+            .list {
+                li {
+                    .acf-rel-item {
+                        background-color: #008dd4;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }    
+}
+
+.teams-rel {
+    .list {
+        height: 20rem;
+
+        li {
+            .acf-rel-item {
+                padding: 0.5rem;
+
+                &:hover {
+                    background-color: #008dd4;
+                }
+
+                &.disabled {
+                    opacity: 0.25;
+                }
+            }
+        }
+    }
+
+    .values {
+        .list {
+            li {
+                margin-bottom: 1px;
+                
+                .acf-rel-item {
+                    background-color: #008dd4;
+                    color: #fff;
+                }
+            }
+        }
+
+
+    }    
+}

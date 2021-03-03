@@ -1,0 +1,64 @@
+body.single-member {
+
+    .site-content {
+        padding: 6rem 0;
+    }
+
+
+    .vitals {
+        .photo {
+            @include desktop-small {
+                grid-column: 2 / span 4;
+            }
+        }
+
+        .info {
+            @include desktop-small {
+                grid-column: 6 / span 8;
+            }
+
+            .headline {
+                padding-bottom: 1rem;
+            }
+        }
+
+    }
+
+    .biography {
+        padding-top: 2rem;
+
+        .copy {
+            @include desktop-small {
+                grid-column: 2 / span 8;
+            }
+
+            p {
+                padding-bottom: 2rem;
+            }
+        }
+    }
+
+    .interview {
+        .q-and-a {
+            @include desktop-small {
+                grid-column: 2 / span 8;
+            }
+
+            & + .q-and-a {
+                padding-top: 2rem;
+            }
+        }
+
+        .question {
+            padding-bottom: 0.5rem;
+
+            h4 {
+                line-height: 1.25em;
+            }
+        }
+
+        .answer {
+
+        }
+    }
+}
