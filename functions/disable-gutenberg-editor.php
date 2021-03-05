@@ -63,7 +63,7 @@ add_action( 'admin_head', 'bearsmith_disable_classic_editor' );
 function bearsmith_disable_gutenberg_cpt( $current_status, $post_type ) {
 
     // Disabled post types
-    $disabled_post_types = array( 'member', 'year', 'team' );
+    $disabled_post_types = array( 'member', 'year', 'team', 'division' );
 
     // Change $can_edit to false for any post types in the disabled post types array
     if ( in_array( $post_type, $disabled_post_types, true ) ) {
