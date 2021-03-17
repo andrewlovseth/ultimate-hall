@@ -188,7 +188,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "25",
                         "class": "",
                         "id": ""
                     },
@@ -202,7 +202,7 @@
                     "key": "field_603d252cf8d02",
                     "label": "Team",
                     "name": "team",
-                    "type": "text",
+                    "type": "post_object",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -211,11 +211,14 @@
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "post_type": [
+                        "team"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
                 }
             ]
         },
@@ -239,10 +242,10 @@
             "button_label": "+ Add Tournament",
             "sub_fields": [
                 {
-                    "key": "field_603d24adf8cf3",
+                    "key": "field_60528acf4152b",
                     "label": "Team",
                     "name": "team",
-                    "type": "text",
+                    "type": "post_object",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -251,30 +254,14 @@
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
-                },
-                {
-                    "key": "field_603d24b3f8cf4",
-                    "label": "City",
-                    "name": "city",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "post_type": [
+                        "team"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
                 },
                 {
                     "key": "field_603eaa1044b5d",
@@ -359,10 +346,10 @@
             "button_label": "+ Add Tournament",
             "sub_fields": [
                 {
-                    "key": "field_603d24cff8cf9",
+                    "key": "field_60528b0904ec0",
                     "label": "Team",
                     "name": "team",
-                    "type": "text",
+                    "type": "post_object",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -371,30 +358,14 @@
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
-                },
-                {
-                    "key": "field_603d24cff8cfa",
-                    "label": "City",
-                    "name": "city",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "post_type": [
+                        "team"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
                 },
                 {
                     "key": "field_603ea8c9259e9",
@@ -517,6 +488,68 @@
             ]
         },
         {
+            "key": "field_6052909faef55",
+            "label": "Awards",
+            "name": "awards",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "+ Add Award",
+            "sub_fields": [
+                {
+                    "key": "field_605290a5aef56",
+                    "label": "Year",
+                    "name": "year",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "year"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
+                },
+                {
+                    "key": "field_605290bfaef57",
+                    "label": "Award",
+                    "name": "award",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
             "key": "field_603d255bf8d07",
             "label": "Interview",
             "name": "",
@@ -589,6 +622,30 @@
                             "toolbar": "full",
                             "media_upload": 0,
                             "delay": 0
+                        },
+                        {
+                            "key": "field_605294e5a4820",
+                            "label": "Photo",
+                            "name": "photo",
+                            "type": "image",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": ""
                         }
                     ],
                     "min": "",
@@ -600,8 +657,8 @@
             "max": ""
         },
         {
-            "key": "field_603ea6cc035f2",
-            "label": "Miscellaneous",
+            "key": "field_60528fe97b4b0",
+            "label": "Letters of Recommendation",
             "name": "",
             "type": "tab",
             "instructions": "",
@@ -616,9 +673,9 @@
             "endpoint": 0
         },
         {
-            "key": "field_603ea6dc035f3",
-            "label": "Miscellaneous",
-            "name": "miscellaneous",
+            "key": "field_60528ff67b4b1",
+            "label": "Letters of Recommendation",
+            "name": "letters_of_recommendation",
             "type": "flexible_content",
             "instructions": "",
             "required": 0,
@@ -629,16 +686,35 @@
                 "id": ""
             },
             "layouts": {
-                "layout_603ea6e077c79": {
-                    "key": "layout_603ea6e077c79",
-                    "name": "section",
-                    "label": "Section",
+                "layout_603d256a08de8": {
+                    "key": "layout_603d256a08de8",
+                    "name": "letter",
+                    "label": "Letter",
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_603ea6ea035f4",
-                            "label": "Headline",
-                            "name": "headline",
+                            "key": "field_6052900a7b4b4",
+                            "label": "Text",
+                            "name": "text",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 0,
+                            "delay": 0
+                        },
+                        {
+                            "key": "field_605290137b4b5",
+                            "label": "Recommender",
+                            "name": "recommender",
                             "type": "text",
                             "instructions": "",
                             "required": 0,
@@ -655,10 +731,10 @@
                             "maxlength": ""
                         },
                         {
-                            "key": "field_603ea6ef035f5",
-                            "label": "Copy",
-                            "name": "copy",
-                            "type": "wysiwyg",
+                            "key": "field_60529211a878a",
+                            "label": "Photo",
+                            "name": "photo",
+                            "type": "image",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
@@ -667,18 +743,23 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "default_value": "",
-                            "tabs": "all",
-                            "toolbar": "full",
-                            "media_upload": 0,
-                            "delay": 0
+                            "return_format": "array",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": ""
                         }
                     ],
                     "min": "",
                     "max": ""
                 }
             },
-            "button_label": "+ Add Section",
+            "button_label": "+ Add Letter",
             "min": "",
             "max": ""
         },
@@ -762,6 +843,33 @@
                     "mime_types": ""
                 }
             ]
+        },
+        {
+            "key": "field_60529225e2c90",
+            "label": "Gallery",
+            "name": "gallery",
+            "type": "gallery",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "insert": "append",
+            "library": "all",
+            "min": "",
+            "max": "",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
         },
         {
             "key": "field_603d25d4d5699",
@@ -886,6 +994,31 @@
                     "min": "",
                     "max": "",
                     "return_format": "object"
+                },
+                {
+                    "key": "field_60528f187c47d",
+                    "label": "Divisions",
+                    "name": "divisions",
+                    "type": "relationship",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "div-rel",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "division"
+                    ],
+                    "taxonomy": "",
+                    "filters": [
+                        "search"
+                    ],
+                    "elements": "",
+                    "min": "",
+                    "max": "",
+                    "return_format": "object"
                 }
             ]
         }
@@ -920,5 +1053,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1614733731
+    "modified": 1616024810
 }

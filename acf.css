@@ -32,17 +32,23 @@
     background-color: #008dd4;
     color: #fff; }
 
+.div-rel .list,
 .teams-rel .list {
   height: 20rem; }
+  .div-rel .list li .acf-rel-item,
   .teams-rel .list li .acf-rel-item {
     padding: 0.5rem; }
+    .div-rel .list li .acf-rel-item:hover,
     .teams-rel .list li .acf-rel-item:hover {
       background-color: #008dd4; }
+    .div-rel .list li .acf-rel-item.disabled,
     .teams-rel .list li .acf-rel-item.disabled {
       opacity: 0.25; }
 
+.div-rel .values .list li,
 .teams-rel .values .list li {
   margin-bottom: 1px; }
+  .div-rel .values .list li .acf-rel-item,
   .teams-rel .values .list li .acf-rel-item {
     background-color: #008dd4;
     color: #fff; }
