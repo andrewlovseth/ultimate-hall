@@ -44,3 +44,5 @@ function bearsmith_team_relationship_order($args, $field, $post_id) {
     return $args;
 }
 add_filter('acf/fields/relationship/query/key=field_603e78e196eea', 'bearsmith_team_relationship_order', 10, 3);
+add_filter('acf/fields/relationship/query/key=field_60528f187c47d', 'bearsmith_team_relationship_order', 10, 3);
+add_filter('acf/fields/relationship/query/key=field_60528c634455f', 'bearsmith_team_relationship_order', 10, 3);
