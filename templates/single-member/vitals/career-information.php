@@ -24,6 +24,7 @@
             }
         }
     }
+
  
 
 
@@ -45,7 +46,7 @@
 
 ?>
 
-<div class="career-information">
+<div class="career-information vitals-section">
     <div class="vitals-header">
         <h3>Career Information</h3>
     </div>
@@ -66,7 +67,7 @@
                         'year' => $year,
                         'team' => $team
                     ];
-                    get_template_part('templates/single-member/career-entry', null, $args);
+                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
 
                 ?>
             <?php endforeach; ?>
@@ -89,7 +90,7 @@
                         'year' => $year,
                         'team' => $team
                     ];
-                    get_template_part('templates/single-member/career-entry', null, $args);
+                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
 
                 ?>
             <?php endforeach; ?>
@@ -112,7 +113,7 @@
                         'year' => $year,
                         'team' => $team
                     ];
-                    get_template_part('templates/single-member/career-entry', null, $args);
+                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
 
                 ?>
             <?php endforeach; ?>
@@ -143,8 +144,8 @@
                         </div>
 
                         <div class="team">
-                            <a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $team_name; ?></a>
-                            <span class="tournament"><?php echo $tournament_name; ?></span>
+                            <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team_name; ?></a>
+                            <span class="tournament"><a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $tournament_name; ?></a></span>
                         </div>
                     </div>
             <?php endforeach; ?>

@@ -57,6 +57,25 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1
+                },
+                {
+                    "key": "field_60947f05d4fa6",
+                    "label": "Beach",
+                    "name": "beach",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
                 }
             ]
         }
@@ -91,5 +110,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1616024576
+    "modified": 1620344588
 }

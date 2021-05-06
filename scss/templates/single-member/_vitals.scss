@@ -20,7 +20,7 @@
         color: $white;
         text-transform: uppercase;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
 
         h3 {
             font-size: 0.75rem;
@@ -56,6 +56,12 @@
 
         p {
             font-size: 0.875rem;
+        }
+    }
+
+    .vitals-section {
+        & + .vitals-section {
+            padding-top: 1.5rem;
         }
     }
 
@@ -103,10 +109,49 @@
             span.tournament {
                 display: block;
                 font-size: 0.675rem;
+
+                a {
+                    color: $slate;
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
         }
 
 
+    }
+
+    .us-championships,
+    .world-championships {
+        .championships {
+            & + .championships {
+                padding-top: 0.75rem;
+            }
+
+            &.first {
+                p {
+                    font-weight: bold;
+
+                }
+            }
+
+            p {
+                display: flex;
+                font-size: 0.75rem;
+                padding-left: 0.5rem;
+                line-height: 1.25em;
+
+                &:before {
+                    content: '·';
+                    margin-right: 0.5rem;
+                    font-size: 1.25rem;
+                    font-weight: normal;
+                }
+            }
+        }
     }
 
 

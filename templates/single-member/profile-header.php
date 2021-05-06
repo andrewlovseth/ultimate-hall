@@ -2,10 +2,21 @@
     $meta = get_field('meta');
     $class = $meta['class'];
     $type = $meta['induction_type'];
+    $year = $class->post_name;
 ?>
 
-
 <section class="profile-header">
-    <h2>Class of <?php echo $class->post_name; ?></h2>
-    <h1><?php the_title(); ?></h1>
+    <?php if($year == '2004'): ?>
+        <div class="class">
+            <h2>Inaugural Class of <?php echo $year; ?></h2>
+        </div>
+    <?php else: ?>
+        <div class="class">
+            <h2>Class of <?php echo $year; ?></h2>
+        </div>
+    <?php endif; ?>
+
+    <div class="name">
+        <h1><?php the_title(); ?></h1>
+    </div>
 </section>

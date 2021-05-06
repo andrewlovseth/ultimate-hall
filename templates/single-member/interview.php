@@ -1,22 +1,26 @@
-<section class="interview grid">
-    <div class="section-header align-center">
-        <h3>Interview</h3>
-    </div>
+<?php if(have_rows('interview')): ?>
 
-    <?php if(have_rows('interview')): while(have_rows('interview')) : the_row(); ?>
+    <section class="interview grid">
+        <div class="section-header align-center">
+            <h3>Interview</h3>
+        </div>
 
-        <?php if( get_row_layout() == 'qa' ): ?>
+        <?php while(have_rows('interview')) : the_row(); ?>
 
-            <div class="q-and-a">
-                <div class="question headline">
-                    <h4><?php the_sub_field('question'); ?></h4>
+            <?php if( get_row_layout() == 'qa' ): ?>
+
+                <div class="q-and-a">
+                    <div class="question headline">
+                        <h4><?php the_sub_field('question'); ?></h4>
+                    </div>
+                    <div class="answer copy p2">
+                        <?php the_sub_field('answer'); ?>
+                    </div>		
                 </div>
-                <div class="answer copy p2">
-                    <?php the_sub_field('answer'); ?>
-                </div>		
-            </div>
 
-        <?php endif; ?>
+            <?php endif; ?>
 
-    <?php endwhile; endif; ?>
-</section>
+        <?php endwhile; ?>
+    </section>
+
+<?php endif; ?>

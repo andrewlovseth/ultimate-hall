@@ -218,7 +218,8 @@ div, article, section, header, footer, nav, figure, li {
 /* Responsive Image */
 img {
   display: block;
-  max-width: 100%; }
+  max-width: 100%;
+  height: auto; }
 
 body,
 button,
@@ -237,12 +238,12 @@ a {
   color: #3E80AD; }
 
 ::-moz-selection {
-  background: #000;
+  background: #3E80AD;
   color: #fff;
   text-shadow: none; }
 
 ::selection {
-  background: #000;
+  background: #3E80AD;
   color: #fff;
   text-shadow: none; }
 
@@ -451,7 +452,11 @@ body.post-type-archive-member .members-list ul {
     padding: 0.5rem 0; }
 
 body.single-member section.profile {
-  grid-template-rows: auto 1fr; }
+  grid-template-rows: auto 1fr;
+  padding-bottom: 3rem; }
+  @media screen and (min-width: 992px) {
+    body.single-member section.profile {
+      padding-bottom: 6rem; } }
 
 body.single-member .profile-header {
   text-align: center;
@@ -491,7 +496,7 @@ body.single-member .vitals {
     color: #fff;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 1.5rem; }
+    margin-bottom: 1rem; }
     body.single-member .vitals-header h3 {
       font-size: 0.75rem;
       letter-spacing: 0.1em;
@@ -510,6 +515,8 @@ body.single-member .vitals {
     padding-top: 0.625rem; }
   body.single-member .vitals .vital p {
     font-size: 0.875rem; }
+  body.single-member .vitals .vitals-section + .vitals-section {
+    padding-top: 1.5rem; }
   body.single-member .vitals .career-information .division + .division {
     padding-top: 2rem; }
   body.single-member .vitals .career-information .division-header {
@@ -536,6 +543,29 @@ body.single-member .vitals {
     body.single-member .vitals .career-information .entry span.tournament {
       display: block;
       font-size: 0.675rem; }
+      body.single-member .vitals .career-information .entry span.tournament a {
+        color: #231F20;
+        text-decoration: none; }
+        body.single-member .vitals .career-information .entry span.tournament a:hover {
+          text-decoration: underline; }
+  body.single-member .vitals .us-championships .championships + .championships,
+  body.single-member .vitals .world-championships .championships + .championships {
+    padding-top: 0.75rem; }
+  body.single-member .vitals .us-championships .championships.first p,
+  body.single-member .vitals .world-championships .championships.first p {
+    font-weight: bold; }
+  body.single-member .vitals .us-championships .championships p,
+  body.single-member .vitals .world-championships .championships p {
+    display: flex;
+    font-size: 0.75rem;
+    padding-left: 0.5rem;
+    line-height: 1.25em; }
+    body.single-member .vitals .us-championships .championships p:before,
+    body.single-member .vitals .world-championships .championships p:before {
+      content: '·';
+      margin-right: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: normal; }
 
 @media screen and (min-width: 992px) {
   body.single-member .biography {
@@ -544,6 +574,67 @@ body.single-member .vitals {
 
 body.single-member .biography p {
   padding-bottom: 2rem; }
+
+body.single-member .championship-tournaments {
+  padding: 3rem 0;
+  background: #F8F9FA; }
+  @media screen and (min-width: 992px) {
+    body.single-member .championship-tournaments {
+      padding: 6rem 0; }
+      body.single-member .championship-tournaments .us-championships {
+        grid-column: 2 / span 6; }
+      body.single-member .championship-tournaments .world-championships {
+        grid-column: 8 / span 6; } }
+  body.single-member .championship-tournaments .table-header {
+    padding-bottom: 0.5rem; }
+    body.single-member .championship-tournaments .table-header h4 {
+      font-family: "Work Sans", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: bold; }
+  body.single-member .championship-tournaments .championships-table + .championships-table {
+    margin-top: 3rem; }
+    @media screen and (min-width: 992px) {
+      body.single-member .championship-tournaments .championships-table + .championships-table {
+        margin-top: 0; } }
+  body.single-member .championship-tournaments .championships-table table {
+    width: 100%;
+    font-family: "Work Sans", sans-serif; }
+  body.single-member .championship-tournaments .championships-table thead {
+    text-align: left;
+    background: #404040;
+    color: #fff; }
+    body.single-member .championship-tournaments .championships-table thead th {
+      padding: 0.625rem 1rem 0.5rem 1rem;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em; }
+  body.single-member .championship-tournaments .championships-table tbody tr + tr td {
+    border-top: 1px solid #d5d5d5; }
+  body.single-member .championship-tournaments .championships-table tbody td {
+    padding: 0.75rem 1rem 0.625rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600; }
+    body.single-member .championship-tournaments .championships-table tbody td.year a, body.single-member .championship-tournaments .championships-table tbody td.tournament a {
+      color: #231F20; }
+    body.single-member .championship-tournaments .championships-table tbody td.year .location, body.single-member .championship-tournaments .championships-table tbody td.tournament .location {
+      padding-top: 0.25rem;
+      display: block;
+      font-family: "Averia Serif Libre", cursive;
+      font-style: italic;
+      font-weight: normal; }
+    body.single-member .championship-tournaments .championships-table tbody td.team a {
+      font-weight: 600; }
+    body.single-member .championship-tournaments .championships-table tbody td.team .division {
+      padding-top: 0.25rem;
+      display: block;
+      font-family: "Averia Serif Libre", cursive;
+      font-style: italic;
+      font-weight: normal; }
+    body.single-member .championship-tournaments .championships-table tbody td.placement {
+      width: 110px; }
+  body.single-member .championship-tournaments .championships-table tbody a:hover {
+    text-decoration: underline; }
 
 body.single-member .interview {
   padding: 3rem 0; }

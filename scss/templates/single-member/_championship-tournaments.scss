@@ -1,0 +1,119 @@
+.championship-tournaments {
+    padding: 3rem 0;
+    background: $light-gray;
+
+    @include desktop-small {
+        padding: 6rem 0;
+
+        .us-championships {
+            grid-column: 2 / span 6;
+        }
+
+        .world-championships {
+            grid-column: 8 / span 6;
+        }
+    }
+
+    .table-header {
+        padding-bottom: 0.5rem;
+
+        h4 {
+            font-family: $work-sans;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+    }
+
+    .championships-table {
+
+        & + .championships-table {
+            margin-top: 3rem;
+
+            @include desktop-small {
+                margin-top: 0;
+            }
+        }
+
+        table {
+            width: 100%;
+            font-family: $work-sans;
+
+        }
+
+        thead {
+            text-align: left;
+            background: $charcoal;
+            color: $white;
+
+            th {
+                padding: 0.625rem 1rem 0.5rem 1rem;
+                font-size: 0.625rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        tbody {
+            tr {
+                + tr {
+                    td {
+                        border-top: 1px solid #d5d5d5;
+                    }
+                }
+            }
+
+            td {
+                padding: 0.75rem 1rem 0.625rem 1rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+
+                &.year,
+                &.tournament {
+                    a {
+                        color: $slate;
+                    }
+
+                    .location {
+                        padding-top: 0.25rem;
+                        display: block;
+                        font-family: $averia;
+                        font-style: italic;
+                        font-weight: normal;
+                    }
+                }
+
+                &.team {
+                    a {
+                        font-weight: 600;
+                    }
+
+                    .division {
+                        padding-top: 0.25rem;
+                        display: block;
+                        font-family: $averia;
+                        font-style: italic;
+                        font-weight: normal;
+                    }
+                }
+
+                &.placement {
+                    width: 110px;
+                }
+
+
+            }
+
+            a {
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+
+
+
+    
+}

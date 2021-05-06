@@ -2,8 +2,11 @@ body.single-member {
 
     section.profile {
         grid-template-rows: auto 1fr;
+        padding-bottom: 3rem;
 
-
+        @include desktop-small {
+            padding-bottom: 6rem;
+        }
     }
 
     @import 'single-member/profile-header';
@@ -12,6 +15,7 @@ body.single-member {
 
     @import 'single-member/biography';
 
+    @import 'single-member/championship-tournaments';
 
     @import 'single-member/interview';
 
