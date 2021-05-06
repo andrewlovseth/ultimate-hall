@@ -1,0 +1,10 @@
+.biography {
+    @include desktop-small {
+        grid-column: 3 / span 6;
+        grid-row: 2;
+    }
+
+    p {
+        padding-bottom: 2rem;
+    }
+}

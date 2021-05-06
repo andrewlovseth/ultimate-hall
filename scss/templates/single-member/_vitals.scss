@@ -1,0 +1,113 @@
+.vitals {
+    background: $light-gray;
+    padding: 2rem;
+    font-family: $work-sans;
+    margin-bottom: 3rem;
+
+    @include tablet {
+        grid-column: 3 / span 6;
+    }
+
+    @include desktop-small {
+        grid-column: 10 / span 4;
+        grid-row: 1 / span 2;
+        margin-bottom: 0;
+        align-self: start;
+    }
+
+    &-header {
+        background: $charcoal;
+        color: $white;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            padding: 0.5rem;
+        }
+    }
+
+    .photo {
+        img {
+            margin: 0 auto;
+            max-width: 230px;
+        }
+    }
+    
+    .header {
+        text-align: center;
+        padding-bottom: 2rem;
+    }
+
+    .name {
+        padding: 1.25rem 0;
+
+        h2 {
+            font-size: 1.125rem;
+        }
+    }
+
+    .vital {
+        & + .vital {
+            padding-top: 0.625rem;
+        }
+
+        p {
+            font-size: 0.875rem;
+        }
+    }
+
+    .career-information {
+        .division {
+            & + .division {
+                padding-top: 2rem;
+            }
+        }
+
+        .division-header {
+            padding-bottom: 0.5rem;
+
+            h4 {
+                font-weight: 700;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        .entry {
+            display: flex;
+            font-size: 0.75rem;
+            line-height: 1.25em;
+
+            & + .entry {
+                padding-top: 0.75rem;
+            }
+
+            .year {
+                width: 120px;
+                padding-right: 2rem;
+            }
+
+            .team {
+                flex: 1;
+            }
+
+            a {
+                text-decoration: underline;
+                display: inline-block;
+            }
+
+            span.tournament {
+                display: block;
+                font-size: 0.675rem;
+            }
+        }
+
+
+    }
+
+
+}

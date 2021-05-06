@@ -230,6 +230,9 @@ textarea {
   font-family: "Averia Serif Libre", cursive;
   font-weight: 300; }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300; }
+
 a {
   color: #3E80AD; }
 
@@ -243,23 +246,62 @@ a {
   color: #fff;
   text-shadow: none; }
 
-.headline.section-header {
-  padding-bottom: 0.5rem; }
-  .headline.section-header h3 {
-    font-weight: bold; }
+.page-header {
+  padding-bottom: 3rem; }
+  .page-header h1 {
+    font-size: clamp(2rem, 3vw, 5rem); }
+
+.section-header {
+  padding-bottom: 2rem; }
+  @media screen and (min-width: 992px) {
+    .section-header {
+      padding-bottom: 3rem; } }
+  .section-header.align-center {
+    text-align: center; }
+  .section-header h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.8vw, 2rem); }
+
+.sub-title h2 {
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  font-family: "Work Sans", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  color: #E7C22C; }
+
+.copy ul {
+  list-style-type: disc; }
+
+.copy ol {
+  list-style-type: decimal; }
+
+.copy ul, .copy ol {
+  padding-left: 2rem; }
+  .copy ul li + li, .copy ol li + li {
+    margin-top: 1rem; }
 
 .copy.p1 {
   font-size: clamp(1.125rem, 1.2vw, 1.25rem);
   line-height: 1.5em; }
 
 .copy.p2 {
-  line-height: 1.25em; }
+  line-height: 1.55em;
+  font-size: clamp(1rem, 1.1vw, 1.125rem); }
 
 body {
   background: #fff; }
 
 .site-content {
-  padding: clamp(3rem, 10vh, 6rem) 0; }
+  padding: 3rem 0; }
+  @media screen and (min-width: 992px) {
+    .site-content {
+      padding: 6rem 0; } }
+  @media screen and (min-width: 1280px) {
+    .site-content {
+      padding: 8rem 0; } }
 
 .grid {
   display: grid;
@@ -298,6 +340,53 @@ body {
     @media screen and (min-width: 992px) {
       .sub-grid > * {
         grid-column: 1 / span 12; } }
+
+.member-grid {
+  display: grid;
+  gap: 4rem 3rem;
+  grid-template-columns: repeat(2, 1fr); }
+  @media screen and (min-width: 480px) {
+    .member-grid {
+      grid-template-columns: repeat(3, 1fr); } }
+  @media screen and (min-width: 768px) {
+    .member-grid {
+      grid-template-columns: repeat(4, 1fr); } }
+  @media screen and (min-width: 992px) {
+    .member-grid {
+      grid-template-columns: repeat(5, 1fr); } }
+  .member-grid .photo a {
+    max-width: 160px;
+    margin: 0 auto;
+    display: block;
+    position: relative; }
+    .member-grid .photo a:before {
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: 100%; }
+    .member-grid .photo a > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0; }
+    .member-grid .photo a img {
+      width: 100%;
+      max-height: 100%;
+      -o-object-fit: cover;
+         object-fit: cover; }
+    .member-grid .photo a img {
+      border-radius: 50%; }
+  .member-grid .info {
+    padding-top: 1rem;
+    text-align: center; }
+    .member-grid .info h3 {
+      font-family: "Work Sans", sans-serif;
+      font-size: 1rem; }
+      .member-grid .info h3 a {
+        color: #231F20; }
+        .member-grid .info h3 a:hover {
+          text-decoration: underline; }
 
 .site-header {
   padding: 2rem 0;
@@ -352,6 +441,8 @@ body {
         .site-header .site-nav a {
           font-size: 0.8125rem;
           letter-spacing: 0.075em; } }
+      .site-header .site-nav a:hover {
+        text-decoration: underline; }
 
 body.post-type-archive-member .members-list ul {
   list-style: disc;
@@ -359,36 +450,117 @@ body.post-type-archive-member .members-list ul {
   body.post-type-archive-member .members-list ul li {
     padding: 0.5rem 0; }
 
-body.single-member .site-content {
-  padding: 6rem 0; }
+body.single-member section.profile {
+  grid-template-rows: auto 1fr; }
 
-@media screen and (min-width: 992px) {
-  body.single-member .vitals .photo {
-    grid-column: 2 / span 4; } }
-
-@media screen and (min-width: 992px) {
-  body.single-member .vitals .info {
-    grid-column: 6 / span 8; } }
-
-body.single-member .vitals .info .headline {
-  padding-bottom: 1rem; }
-
-body.single-member .biography {
-  padding-top: 2rem; }
+body.single-member .profile-header {
+  text-align: center;
+  padding-bottom: 2rem; }
   @media screen and (min-width: 992px) {
-    body.single-member .biography .copy {
-      grid-column: 2 / span 8; } }
-  body.single-member .biography .copy p {
+    body.single-member .profile-header {
+      grid-column: 2 / span 8;
+      grid-row: 1;
+      text-align: left; } }
+  body.single-member .profile-header h2 {
+    font-family: "Work Sans", sans-serif;
+    color: #E7C22C;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    padding-bottom: 0.5rem;
+    font-weight: 600; }
+  body.single-member .profile-header h1 {
+    font-size: clamp(2rem, 3vw, 5rem); }
+
+body.single-member .vitals {
+  background: #F8F9FA;
+  padding: 2rem;
+  font-family: "Work Sans", sans-serif;
+  margin-bottom: 3rem; }
+  @media screen and (min-width: 768px) {
+    body.single-member .vitals {
+      grid-column: 3 / span 6; } }
+  @media screen and (min-width: 992px) {
+    body.single-member .vitals {
+      grid-column: 10 / span 4;
+      grid-row: 1 / span 2;
+      margin-bottom: 0;
+      align-self: start; } }
+  body.single-member .vitals-header {
+    background: #404040;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1.5rem; }
+    body.single-member .vitals-header h3 {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding: 0.5rem; }
+  body.single-member .vitals .photo img {
+    margin: 0 auto;
+    max-width: 230px; }
+  body.single-member .vitals .header {
+    text-align: center;
     padding-bottom: 2rem; }
+  body.single-member .vitals .name {
+    padding: 1.25rem 0; }
+    body.single-member .vitals .name h2 {
+      font-size: 1.125rem; }
+  body.single-member .vitals .vital + .vital {
+    padding-top: 0.625rem; }
+  body.single-member .vitals .vital p {
+    font-size: 0.875rem; }
+  body.single-member .vitals .career-information .division + .division {
+    padding-top: 2rem; }
+  body.single-member .vitals .career-information .division-header {
+    padding-bottom: 0.5rem; }
+    body.single-member .vitals .career-information .division-header h4 {
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em; }
+  body.single-member .vitals .career-information .entry {
+    display: flex;
+    font-size: 0.75rem;
+    line-height: 1.25em; }
+    body.single-member .vitals .career-information .entry + .entry {
+      padding-top: 0.75rem; }
+    body.single-member .vitals .career-information .entry .year {
+      width: 120px;
+      padding-right: 2rem; }
+    body.single-member .vitals .career-information .entry .team {
+      flex: 1; }
+    body.single-member .vitals .career-information .entry a {
+      text-decoration: underline;
+      display: inline-block; }
+    body.single-member .vitals .career-information .entry span.tournament {
+      display: block;
+      font-size: 0.675rem; }
 
 @media screen and (min-width: 992px) {
-  body.single-member .interview .q-and-a {
-    grid-column: 2 / span 8; } }
+  body.single-member .biography {
+    grid-column: 3 / span 6;
+    grid-row: 2; } }
 
-body.single-member .interview .q-and-a + .q-and-a {
-  padding-top: 2rem; }
+body.single-member .biography p {
+  padding-bottom: 2rem; }
 
-body.single-member .interview .question {
-  padding-bottom: 0.5rem; }
-  body.single-member .interview .question h4 {
-    line-height: 1.25em; }
+body.single-member .interview {
+  padding: 3rem 0; }
+  @media screen and (min-width: 992px) {
+    body.single-member .interview {
+      padding: 6rem 0; } }
+  @media screen and (min-width: 992px) {
+    body.single-member .interview > * {
+      grid-column: 5 / span 6; } }
+  body.single-member .interview .q-and-a + .q-and-a {
+    padding-top: 3rem; }
+  body.single-member .interview .question {
+    padding-bottom: 0.5rem; }
+    body.single-member .interview .question h4 {
+      font-weight: bold;
+      line-height: 1.375em;
+      font-family: "Work Sans", sans-serif;
+      font-size: clamp(1.125rem, 1.4vw, 1.25rem); }
+  body.single-member .interview .answer p {
+    margin-bottom: 2rem; }

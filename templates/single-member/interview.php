@@ -1,5 +1,5 @@
 <section class="interview grid">
-    <div class="section-header headline">
+    <div class="section-header align-center">
         <h3>Interview</h3>
     </div>
 
@@ -11,7 +11,7 @@
                 <div class="question headline">
                     <h4><?php the_sub_field('question'); ?></h4>
                 </div>
-                <div class="answer copy p1">
+                <div class="answer copy p2">
                     <?php the_sub_field('answer'); ?>
                 </div>		
             </div>

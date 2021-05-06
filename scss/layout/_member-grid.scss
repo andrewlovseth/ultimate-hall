@@ -1,0 +1,51 @@
+.member-grid {
+    display: grid;
+    gap: 4rem 3rem;
+    grid-template-columns: repeat(2, 1fr);
+
+    @include tablet-small {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include tablet {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @include desktop-small {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .photo {
+
+        a {
+            max-width: 160px;
+            margin: 0 auto;
+            display: block;            
+            @include aspect-ratio(1, 1);
+            @include cover-fill-image;
+
+            img {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    .info {
+        padding-top: 1rem;
+        text-align: center;
+
+        h3 {
+            font-family: $work-sans;
+            font-size: 1rem;
+
+            a {
+                color: $slate;
+                
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+    }
+}

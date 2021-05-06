@@ -1,0 +1,25 @@
+.profile-header {
+    text-align: center;
+    padding-bottom: 2rem;
+
+    @include desktop-small {
+        grid-column: 2 / span 8;
+        grid-row: 1;
+        text-align: left;
+    }
+
+    h2 {
+        font-family: $work-sans;
+        color: $gold;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: clamp(1rem, 1.2vw, 1.125rem);
+        padding-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 3vw, 5rem);
+    }
+
+}

@@ -4,11 +4,7 @@
 
 ?>
 
-<section class="biography grid">
-
-    <div class="section-header headline">
-        <h3>Biography</h3>
-    </div>
+<section class="biography">
 
     <div class="copy p1">
         <?php echo $biography; ?>

@@ -1,64 +1,18 @@
 body.single-member {
 
-    .site-content {
-        padding: 6rem 0;
-    }
+    section.profile {
+        grid-template-rows: auto 1fr;
 
-
-    .vitals {
-        .photo {
-            @include desktop-small {
-                grid-column: 2 / span 4;
-            }
-        }
-
-        .info {
-            @include desktop-small {
-                grid-column: 6 / span 8;
-            }
-
-            .headline {
-                padding-bottom: 1rem;
-            }
-        }
 
     }
 
-    .biography {
-        padding-top: 2rem;
+    @import 'single-member/profile-header';
 
-        .copy {
-            @include desktop-small {
-                grid-column: 2 / span 8;
-            }
+    @import 'single-member/vitals';
 
-            p {
-                padding-bottom: 2rem;
-            }
-        }
-    }
+    @import 'single-member/biography';
 
-    .interview {
-        .q-and-a {
-            @include desktop-small {
-                grid-column: 2 / span 8;
-            }
 
-            & + .q-and-a {
-                padding-top: 2rem;
-            }
-        }
+    @import 'single-member/interview';
 
-        .question {
-            padding-bottom: 0.5rem;
-
-            h4 {
-                line-height: 1.25em;
-            }
-        }
-
-        .answer {
-
-        }
-    }
 }

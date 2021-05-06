@@ -3,9 +3,19 @@ body {
 }
 
 .site-content {
-	padding: clamp(3rem, 10vh, 6rem) 0;
+	padding: 3rem 0;
+
+	@include desktop-small {
+		padding: 6rem 0;
+	}
+
+	@include desktop-medium {
+		padding: 8rem 0;
+	}
 }
 
 @import "grid";
 
 @import "sub-grid";
+
+@import "member-grid";

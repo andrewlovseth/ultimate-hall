@@ -1,0 +1,36 @@
+.interview {
+    padding: 3rem 0;
+
+    @include desktop-small {
+        padding: 6rem 0;
+    }
+
+    & > * {
+        @include desktop-small {
+            grid-column: 5 / span 6;
+        }        
+    }
+
+    .q-and-a {
+        & + .q-and-a {
+            padding-top: 3rem;
+        }
+    }
+
+    .question {
+        padding-bottom: 0.5rem;
+
+        h4 {
+            font-weight: bold;
+            line-height: 1.375em;
+            font-family: $work-sans;
+            font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+        }
+    }
+
+    .answer {
+        p {
+            margin-bottom: 2rem;
+        }
+    }
+}

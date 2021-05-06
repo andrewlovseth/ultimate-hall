@@ -1,12 +1,31 @@
 .copy {
 
+	ul {
+		list-style-type: disc;
+	}
+
+	ol {
+		list-style-type: decimal;
+	}
+
+	ul, ol {
+		padding-left: 2rem;
+
+		li {
+			& + li {
+				margin-top: 1rem;
+			}
+		}
+	}
+
 	&.p1 {
 		font-size: clamp(1.125rem, 1.2vw, 1.25rem);
 		line-height: 1.5em;
 	}
 
 	&.p2 {
-		line-height: 1.25em;
+		line-height: 1.55em;
+		font-size: clamp(1rem, 1.1vw, 1.125rem);
 
 	}
 

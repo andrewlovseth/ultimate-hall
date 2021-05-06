@@ -7,28 +7,38 @@
 
     $photos = get_field('photos');
     $headshot = $photos['headshot'];
+   
+    $today = new DateTime();
+    $birthday = new DateTime($birthdate_field);
+    $age = $today->diff($birthday);
 
-    $meta = get_field('meta');
-    $class = $meta['class'];
-    $type = $meta['induction_type'];
 ?>
 
-<section class="grid vitals">
-    <div class="headshot photo">
+<section class="vitals">
+    <div class="photo">
         <img src="<?php echo $headshot['url']; ?>" alt="<?php echo $headshot['alt']; ?>" />
     </div>
 
-    <div class="info">
-        <div class="headline">
-            <h1><?php the_title(); ?></h1>
+    <div class="header">
+        <div class="name">
+            <h2><?php the_title(); ?></h2>
         </div>
 
-        <div class="copy p2">
-            <p><strong>Inducted:</strong> <?php echo $class->post_name; ?> - <?php echo $type['label']; ?></p>
-            <p><strong>Hometown:</strong> <?php echo $hometown; ?></p>
-            <?php if($birthdate): ?>
-                <p><strong>Birthdate:</strong> <?php echo $birthdate->format('M j, Y'); ?></p>
-            <?php endif; ?>
-        </div>
+        <?php if($hometown): ?>
+            <div class="hometown vital">
+                <p><strong>Hometown:</strong> <?php echo $hometown; ?></p>
+            </div>
+        <?php endif; ?>
+
+        <?php if($birthdate): ?>
+            <div class="birthdate vital">
+                <p><strong>Born:</strong> <?php echo $birthdate->format('F j, Y'); ?> (Age <?php echo $age->y; ?>)</p>
+            </div>
+        <?php endif; ?>
     </div>
+
+    <?php get_template_part('templates/single-member/career-information'); ?>
+
+
+
 </section>
