@@ -10,7 +10,7 @@
         <h3>Biography</h3>
     </div>
 
-    <div class="copy p2">
+    <div class="copy p1">
         <?php echo $biography; ?>
     </div>
 

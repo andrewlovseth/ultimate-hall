@@ -5,10 +5,12 @@ select,
 optgroup,
 textarea {
 	color: $slate;
+	font-family: $averia;
+	font-weight: 300;
 }
 
 a {
-	color: orange;
+	color: $blue;
 }
 
 ::-moz-selection {

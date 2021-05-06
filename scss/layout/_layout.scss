@@ -2,6 +2,10 @@ body {
 	background: $white;
 }
 
+.site-content {
+	padding: clamp(3rem, 10vh, 6rem) 0;
+}
+
 @import "grid";
 
 @import "sub-grid";

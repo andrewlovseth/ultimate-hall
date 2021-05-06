@@ -11,7 +11,7 @@
                 <div class="question headline">
                     <h4><?php the_sub_field('question'); ?></h4>
                 </div>
-                <div class="answer copy p2">
+                <div class="answer copy p1">
                     <?php the_sub_field('answer'); ?>
                 </div>		
             </div>

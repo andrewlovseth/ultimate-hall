@@ -26,7 +26,9 @@
         <div class="copy p2">
             <p><strong>Inducted:</strong> <?php echo $class->post_name; ?> - <?php echo $type['label']; ?></p>
             <p><strong>Hometown:</strong> <?php echo $hometown; ?></p>
-            <p><strong>Birthdate:</strong> <?php echo $birthdate->format('M j, Y'); ?></p>
+            <?php if($birthdate): ?>
+                <p><strong>Birthdate:</strong> <?php echo $birthdate->format('M j, Y'); ?></p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
