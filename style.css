@@ -249,6 +249,8 @@ a {
 
 .page-header {
   padding-bottom: 3rem; }
+  .page-header.align-center {
+    text-align: center; }
   .page-header h1 {
     font-size: clamp(2rem, 3vw, 5rem); }
 
@@ -355,6 +357,8 @@ body {
   @media screen and (min-width: 992px) {
     .member-grid {
       grid-template-columns: repeat(5, 1fr); } }
+  .member-grid .section-header {
+    grid-column: 1 / -1; }
   .member-grid .photo a {
     max-width: 160px;
     margin: 0 auto;
@@ -445,11 +449,68 @@ body {
       .site-header .site-nav a:hover {
         text-decoration: underline; }
 
-body.post-type-archive-member .members-list ul {
-  list-style: disc;
-  padding-left: 1rem; }
-  body.post-type-archive-member .members-list ul li {
-    padding: 0.5rem 0; }
+body.post-type-archive-member .class-nav {
+  padding-bottom: 3rem; }
+  body.post-type-archive-member .class-nav ul {
+    margin: 0 auto;
+    border-top: 1px solid #d5d5d5;
+    border-left: 1px solid #d5d5d5;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); }
+    @media screen and (min-width: 768px) {
+      body.post-type-archive-member .class-nav ul {
+        grid-template-columns: repeat(5, 1fr); } }
+    @media screen and (min-width: 992px) {
+      body.post-type-archive-member .class-nav ul {
+        grid-template-columns: repeat(8, 1fr); } }
+    @media screen and (min-width: 1280px) {
+      body.post-type-archive-member .class-nav ul {
+        grid-template-columns: repeat(10, 1fr); } }
+  body.post-type-archive-member .class-nav li {
+    border-bottom: 1px solid #d5d5d5;
+    border-right: 1px solid #d5d5d5; }
+  body.post-type-archive-member .class-nav a {
+    display: block;
+    font-family: "Work Sans", sans-serif;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    transition: all 0.2s ease-in;
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em; }
+    body.post-type-archive-member .class-nav a:hover {
+      background: #3E80AD;
+      color: #fff; }
+
+body.post-type-archive-member .class {
+  padding: 3rem 0; }
+  @media screen and (min-width: 992px) {
+    body.post-type-archive-member .class {
+      padding: 6rem 0; } }
+  body.post-type-archive-member .class:nth-child(even) {
+    background: #F8F9FA; }
+  body.post-type-archive-member .class .section-header {
+    padding-bottom: 0; }
+
+body.post-type-archive-member .back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10; }
+  body.post-type-archive-member .back-to-top a {
+    display: block;
+    background: #3E80AD;
+    color: #fff;
+    font-family: "Work Sans", sans-serif;
+    font-weight: bold;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 1rem 2rem;
+    border-radius: 32px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2); }
+    body.post-type-archive-member .back-to-top a:after {
+      content: '↑';
+      margin-left: 0.5rem; }
 
 body.single-member section.profile {
   grid-template-rows: auto 1fr;

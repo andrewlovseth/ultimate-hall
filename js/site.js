@@ -4,7 +4,7 @@
 
 
 
-
+		$('.smooth').smoothScroll();
 			
 	});
 

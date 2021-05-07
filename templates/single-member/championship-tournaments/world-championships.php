@@ -1,6 +1,6 @@
 <?php
 
-    $team_name_edits = array('(Open)', '(Women)', '(Mixed)', ' - Masters Women', ' - Beach Masters Women', ' - Beach Masters Mixed', ' (Men)', ' (Masters)', ' (Grand Masters)');
+    $team_name_edits = array('(Open)', '(Women)', '(Mixed)', '(Masters Women)', '(Beach Masters Women)', '(Beach Masters Mixed)', ' (Men)', ' (Masters)', ' (Grand Masters)');
 
     $world_teams = get_field('wfdf_championships');
     if($world_teams):

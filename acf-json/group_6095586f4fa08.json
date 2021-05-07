@@ -1,0 +1,47 @@
+{
+    "key": "group_6095586f4fa08",
+    "title": "Options: Members",
+    "fields": [
+        {
+            "key": "field_609558856f35d",
+            "label": "Classes",
+            "name": "classes",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "years-rel",
+                "id": ""
+            },
+            "post_type": [
+                "year"
+            ],
+            "taxonomy": "",
+            "filters": "",
+            "elements": "",
+            "min": "",
+            "max": "",
+            "return_format": "object"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-members"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1620400321
+}
