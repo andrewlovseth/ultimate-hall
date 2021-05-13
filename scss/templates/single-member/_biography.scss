@@ -7,4 +7,29 @@
     p {
         padding-bottom: 2rem;
     }
+
+    .contributions-and-services {
+        padding-top: 2rem;
+        
+        .section-header {
+            padding-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+
+            li {
+                line-height: 1.5em;
+                
+                & + li {
+                    margin-top: 0.75rem;
+                }
+            }
+        }
+
+        .year {
+            font-weight: bold;
+        }
+    }
 }

@@ -5,12 +5,19 @@
     $birthdate_field = $vitals['birthdate'];
     $birthdate = DateTime::createFromFormat('Ymd', $birthdate_field);
 
+    $date_of_death_field = $vitals['date_of_death'];
+    $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
+
     $photos = get_field('photos');
     $headshot = $photos['headshot'];
    
     $today = new DateTime();
     $birthday = new DateTime($birthdate_field);
     $age = $today->diff($birthday);
+
+    if($date_of_death_field) {
+        $lifespan = $date_of_death->diff($birthday);
+    }
 
 ?>
 
@@ -32,8 +39,20 @@
     <?php endif; ?>
 
     <?php if($birthdate): ?>
-        <div class="birthdate vital">
-            <p><strong>Born:</strong> <?php echo $birthdate->format('F j, Y'); ?> (Age <?php echo $age->y; ?>)</p>
-        </div>
+        <?php if($lifespan): ?>
+            <div class="birthdate vital">
+                <p>
+                    <strong>Born:</strong> <?php echo $birthdate->format('F j, Y'); ?><br/>
+                    <strong>Died:</strong> <?php echo $date_of_death->format('F j, Y'); ?> (Age <?php echo $lifespan->y; ?>)<br/>
+                </p>
+            </div>
+        <?php else: ?>
+            <div class="birthdate vital">
+                <p><strong>Born:</strong> <?php echo $birthdate->format('F j, Y'); ?> (Age <?php echo $age->y; ?>)</p>
+            </div>
+        <?php endif; ?>
+
+
+
     <?php endif; ?>
 </div>

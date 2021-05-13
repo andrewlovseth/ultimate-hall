@@ -6,4 +6,6 @@
     <?php get_template_part('templates/single-member/vitals/us-championships'); ?>
 
     <?php get_template_part('templates/single-member/vitals/wfdf-championships'); ?>
+
+    <?php get_template_part('templates/single-member/vitals/awards'); ?>
 </section>

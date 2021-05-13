@@ -266,6 +266,8 @@ a {
     letter-spacing: 0.1em;
     font-weight: 300;
     font-size: clamp(1.5rem, 1.8vw, 2rem); }
+    .section-header h3.small {
+      font-size: clamp(1.25rem, 1.25vw, 1.5rem); }
 
 .sub-title h2 {
   font-size: clamp(0.875rem, 1vw, 1rem);
@@ -282,7 +284,8 @@ a {
   list-style-type: decimal; }
 
 .copy ul, .copy ol {
-  padding-left: 2rem; }
+  padding-left: 2rem;
+  padding-bottom: 2rem; }
   .copy ul li + li, .copy ol li + li {
     margin-top: 1rem; }
 
@@ -571,11 +574,13 @@ body.single-member .vitals {
   body.single-member .vitals .name {
     padding: 1.25rem 0; }
     body.single-member .vitals .name h2 {
-      font-size: 1.125rem; }
+      font-size: 1.125rem;
+      font-weight: 600; }
   body.single-member .vitals .vital + .vital {
     padding-top: 0.625rem; }
   body.single-member .vitals .vital p {
-    font-size: 0.875rem; }
+    font-size: 0.875rem;
+    line-height: 1.5em; }
   body.single-member .vitals .vitals-section + .vitals-section {
     padding-top: 1.5rem; }
   body.single-member .vitals .career-information .division + .division {
@@ -627,6 +632,22 @@ body.single-member .vitals {
       margin-right: 0.5rem;
       font-size: 1.25rem;
       font-weight: normal; }
+  body.single-member .vitals .awards p {
+    display: flex;
+    font-size: 0.75rem;
+    padding-left: 0.5rem;
+    line-height: 1.25em; }
+    body.single-member .vitals .awards p:before {
+      content: '·';
+      margin-right: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: normal; }
+    body.single-member .vitals .awards p + p {
+      padding-top: 0.75rem; }
+    body.single-member .vitals .awards p .award {
+      font-weight: bold; }
+    body.single-member .vitals .awards p .year {
+      padding-left: 0.25rem; }
 
 @media screen and (min-width: 992px) {
   body.single-member .biography {
@@ -635,6 +656,20 @@ body.single-member .vitals {
 
 body.single-member .biography p {
   padding-bottom: 2rem; }
+
+body.single-member .biography .contributions-and-services {
+  padding-top: 2rem; }
+  body.single-member .biography .contributions-and-services .section-header {
+    padding-bottom: 1rem; }
+  body.single-member .biography .contributions-and-services ul {
+    list-style-type: disc;
+    padding-left: 1.25rem; }
+    body.single-member .biography .contributions-and-services ul li {
+      line-height: 1.5em; }
+      body.single-member .biography .contributions-and-services ul li + li {
+        margin-top: 0.75rem; }
+  body.single-member .biography .contributions-and-services .year {
+    font-weight: bold; }
 
 body.single-member .championship-tournaments {
   padding: 3rem 0;
@@ -646,6 +681,10 @@ body.single-member .championship-tournaments {
         grid-column: 2 / span 6; }
       body.single-member .championship-tournaments .world-championships {
         grid-column: 8 / span 6; } }
+  @media screen and (min-width: 992px) {
+    body.single-member .championship-tournaments.sections-1 .us-championships,
+    body.single-member .championship-tournaments.sections-1 .world-championships {
+      grid-column: 5 / span 6; } }
   body.single-member .championship-tournaments .table-header {
     padding-bottom: 0.5rem; }
     body.single-member .championship-tournaments .table-header h4 {

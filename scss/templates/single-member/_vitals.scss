@@ -46,6 +46,7 @@
 
         h2 {
             font-size: 1.125rem;
+            font-weight: 600;
         }
     }
 
@@ -56,6 +57,7 @@
 
         p {
             font-size: 0.875rem;
+            line-height: 1.5em;
         }
     }
 
@@ -152,6 +154,34 @@
                 }
             }
         }
+    }
+
+    .awards {
+        p {
+            display: flex;
+            font-size: 0.75rem;
+            padding-left: 0.5rem;
+            line-height: 1.25em;
+
+            &:before {
+                content: '·';
+                margin-right: 0.5rem;
+                font-size: 1.25rem;
+                font-weight: normal;
+            }
+
+            & + p {
+                padding-top: 0.75rem;
+            }
+
+            .award {
+                font-weight: bold;
+            }
+
+            .year {
+                padding-left: 0.25rem;
+            }
+        }        
     }
 
 
