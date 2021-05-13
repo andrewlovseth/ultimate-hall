@@ -6,7 +6,7 @@
 
 
 // Remove Admin bar from front-end
-show_admin_bar(false);
+//show_admin_bar(false);
 
 
 // Theme Support for title tags, post thumbnails, HTML5 elements, feed links

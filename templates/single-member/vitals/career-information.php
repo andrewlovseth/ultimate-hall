@@ -43,113 +43,113 @@
         }
     }
 
+    if($college || $club || $masters || $national_team ):
 
 ?>
 
-<div class="career-information vitals-section">
-    <div class="vitals-header">
-        <h3>Career Information</h3>
-    </div>
-
-    <?php if($college): ?>
-        <div class="college division">
-            <div class="division-header">
-                <h4>College</h4>
-            </div>
-
-            <?php foreach($college as $college_team): ?>
-                
-                <?php
-                    $year = $college_team['year'];
-                    $team = $college_team['team'];
-
-                    $args = [
-                        'year' => $year,
-                        'team' => $team
-                    ];
-                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
-
-                ?>
-            <?php endforeach; ?>
+    <div class="career-information vitals-section">
+        <div class="vitals-header">
+            <h3>Career Information</h3>
         </div>
-    <?php endif; ?>
 
-    <?php if($club): ?>
-        <div class="club division">
-            <div class="division-header">
-                <h4>Club</h4>
-            </div>
+        <?php if($college): ?>
+            <div class="college division">
+                <div class="division-header">
+                    <h4>College</h4>
+                </div>
 
-            <?php foreach($club as $club_team): ?>
-                
-                <?php
-                    $year = $club_team['year'];
-                    $team = $club_team['team'];
-
-                    $args = [
-                        'year' => $year,
-                        'team' => $team
-                    ];
-                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
-
-                ?>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if($masters): ?>
-        <div class="masters division">
-            <div class="division-header">
-                <h4>Masters</h4>
-            </div>
-
-            <?php foreach($masters as $masters_team): ?>
-                
-                <?php
-                    $year = $masters_team['year'];
-                    $team = $masters_team['team'];
-
-                    $args = [
-                        'year' => $year,
-                        'team' => $team
-                    ];
-                    get_template_part('templates/single-member/vitals/career-entry', null, $args);
-
-                ?>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-
-    <?php if($national_teams): ?>
-        <div class="national-team division">
-            <div class="division-header">
-                <h4>National Team</h4>
-            </div>
-
-            <?php foreach($national_teams as $national_team): ?>
-                
-                <?php
-                    $tournament = $national_team['tournament'];
-                    $team = $national_team['team'];
-                    $year = get_field('details_year', $tournament->ID);
+                <?php foreach($college as $college_team): ?>
                     
-                    $team_name = $team->post_title;
-                    $tournament_name = $tournament->post_title;
+                    <?php
+                        $year = $college_team['year'];
+                        $team = $college_team['team'];
 
-                ?>
-                    <div class="entry">
-                        <div class="year">
-                            <span><?php echo $year->post_title; ?></span>
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($club): ?>
+            <div class="club division">
+                <div class="division-header">
+                    <h4>Club</h4>
+                </div>
+
+                <?php foreach($club as $club_team): ?>
+                    
+                    <?php
+                        $year = $club_team['year'];
+                        $team = $club_team['team'];
+
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($masters): ?>
+            <div class="masters division">
+                <div class="division-header">
+                    <h4>Masters</h4>
+                </div>
+
+                <?php foreach($masters as $masters_team): ?>
+                    
+                    <?php
+                        $year = $masters_team['year'];
+                        $team = $masters_team['team'];
+
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($national_teams): ?>
+            <div class="national-team division">
+                <div class="division-header">
+                    <h4>National Team</h4>
+                </div>
+
+                <?php foreach($national_teams as $national_team): ?>
+                    
+                    <?php
+                        $tournament = $national_team['tournament'];
+                        $team = $national_team['team'];
+                        $year = get_field('details_year', $tournament->ID);
+                        
+                        $team_name = $team->post_title;
+                        $tournament_name = $tournament->post_title;
+
+                    ?>
+                        <div class="entry">
+                            <div class="year">
+                                <span><?php echo $year->post_title; ?></span>
+                            </div>
+
+                            <div class="team">
+                                <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team_name; ?></a>
+                                <span class="tournament"><a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $tournament_name; ?></a></span>
+                            </div>
                         </div>
-
-                        <div class="team">
-                            <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team_name; ?></a>
-                            <span class="tournament"><a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $tournament_name; ?></a></span>
-                        </div>
-                    </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-</div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

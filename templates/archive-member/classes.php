@@ -6,12 +6,13 @@
         ?>
         
         <section class="class grid" id="class-<?php echo $year; ?>">
-            <section class="member-grid">
-                <section class="section-header align-center">
-                    <h3>Class of <?php echo $year; ?></h3>
-                </section>
-                <?php
+            <div class="section-header align-center">
+                <h3>Class of <?php echo $year; ?></h3>
+            </div>
 
+            <div class="member-grid">
+
+                <?php
                     $args = array(
                         'post_type' => 'member',
                         'posts_per_page' => -1,
@@ -33,7 +34,7 @@
 
                 <?php endwhile; endif; wp_reset_postdata(); ?>
 
-            </section>
+            </div>
         </section>
 
     <?php endforeach; ?>

@@ -11,5 +11,7 @@
     <?php get_template_part('templates/single-member/championship-tournaments'); ?>
 
     <?php get_template_part('templates/single-member/interview'); ?>
+    
+    <?php get_template_part('templates/single-member/teammates'); ?>
 
 <?php get_footer(); ?>

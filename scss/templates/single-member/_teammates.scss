@@ -1,0 +1,8 @@
+section.teammates {
+    padding: 3rem 0;
+    background: $light-gray;
+
+    @include desktop-small {
+        padding: 6rem 0;
+    }
+}

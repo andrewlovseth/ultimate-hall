@@ -7,7 +7,7 @@
 
     if($teams) {
         foreach($teams as $team) {
-            $division_obj = get_field('division', $team['team']->ID);
+            $division_obj = get_field('division', $team['team']);
             $division = $division_obj[0]->post_name;
     
             if (in_array($division, array("college-women", "college-men", "college-mixed"))) {
@@ -29,7 +29,7 @@
 
     foreach($college_teams as $college_team) {
         $tournament = $college_team['tournament'];
-        $tournament_year = get_field('details_year', $tournament->ID);
+        $tournament_year = get_field('details_year', $tournament);
         $year = $tournament_year->post_title;
         $placement = $college_team['placement'];
 
@@ -47,7 +47,7 @@
 
     foreach($club_teams as $club_team) {
         $tournament = $club_team['tournament'];
-        $tournament_year = get_field('details_year', $tournament->ID);
+        $tournament_year = get_field('details_year', $tournament);
         $year = $tournament_year->post_title;
         $placement = $club_team['placement'];
 
@@ -65,7 +65,7 @@
 
     foreach($masters_teams as $masters_team) {
         $tournament = $masters_team['tournament'];
-        $tournament_year = get_field('details_year', $tournament->ID);
+        $tournament_year = get_field('details_year', $tournament);
         $year = $tournament_year->post_title;
         $placement = $masters_team['placement'];
 

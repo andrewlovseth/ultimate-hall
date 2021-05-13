@@ -1,5 +1,9 @@
 body.single-member {
 
+    .site-content {
+        padding-bottom: 0;
+    }
+
     section.profile {
         grid-template-rows: auto 1fr;
         padding-bottom: 3rem;
@@ -18,5 +22,7 @@ body.single-member {
     @import 'single-member/championship-tournaments';
 
     @import 'single-member/interview';
+
+    @import 'single-member/teammates';
 
 }

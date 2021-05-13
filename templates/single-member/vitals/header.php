@@ -15,6 +15,8 @@
     $birthday = new DateTime($birthdate_field);
     $age = $today->diff($birthday);
 
+    $lifespan = FALSE;
+
     if($date_of_death_field) {
         $lifespan = $date_of_death->diff($birthday);
     }

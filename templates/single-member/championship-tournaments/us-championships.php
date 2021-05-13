@@ -22,24 +22,24 @@
                 <?php foreach($us_teams as $us_team): ?>
                     <?php
                         $tournament = $us_team['tournament'];
-                        $year_obj = get_field('details_year', $tournament->ID);
+                        $year_obj = get_field('details_year', $tournament);
                         $year = $year_obj->post_title;
 
-                        $team_obj = $us_team['team'];
-                        $team = $team_obj->post_title;
-                        $team = str_replace($team_name_edits, '', $team);
-                        $division_obj = get_field('division', $team_obj->ID);
+                        $team = $us_team['team'];
+                        $team_name = get_the_title($team);
+                        $team_name = str_replace($team_name_edits, '', $team_name);
+                        $division_obj = get_field('division', $team);
                         $division = $division_obj[0]->post_title;
 
                         $placement = $us_team['placement'];
 
-                        $beach = get_field('details_beach', $tournament->ID);
+                        $beach = get_field('details_beach', $tournament);
 
                     ?>
                     <tr>
-                        <td class="year"><a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $year; ?></a></td>
+                        <td class="year"><a href="<?php echo get_permalink($tournament); ?>"><?php echo $year; ?></a></td>
                         <td class="team">
-                            <a href="<?php echo get_permalink($team_obj->ID); ?>"><?php echo $team; ?></a>
+                            <a href="<?php echo get_permalink($team); ?>"><?php echo $team_name; ?></a>
                             <span class="division"><?php echo $division; ?><?php if($beach == TRUE): ?> (Beach)<?php endif; ?></span></td>
                         <td class="placement"><?php echo $placement; ?></td>
                     </tr>

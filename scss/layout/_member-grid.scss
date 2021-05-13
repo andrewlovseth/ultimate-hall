@@ -1,18 +1,134 @@
 .member-grid {
     display: grid;
     gap: 4rem 3rem;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     @include tablet-small {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(6, 1fr);
     }
 
     @include tablet {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(8, 1fr);
     }
 
     @include desktop-small {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(10, 1fr);
+    }
+
+    // List of 1
+    .member:nth-last-child(n+1):nth-last-child(-n+1):first-child,
+    .member:nth-last-child(n+1):nth-last-child(-n+1):first-child ~ .member {
+
+        @include desktop-small {
+            
+            &:nth-child(1) {
+                grid-column: 5 / span 2;
+            }   
+        }
+    }    
+
+    // List of 2
+    .member:nth-last-child(n+2):nth-last-child(-n+2):first-child,
+    .member:nth-last-child(n+2):nth-last-child(-n+2):first-child ~ .member {
+
+        @include desktop-small {
+            
+            &:nth-child(1) {
+                grid-column: 4 / span 2;
+            }   
+
+            &:nth-child(2) {
+                grid-column: 6 / span 2;
+            }   
+        }
+    }    
+
+    // List of 3
+    .member:nth-last-child(n+3):nth-last-child(-n+3):first-child,
+    .member:nth-last-child(n+3):nth-last-child(-n+3):first-child ~ .member {
+
+        @include desktop-small {
+            
+            &:nth-child(1) {
+                grid-column: 3 / span 2;
+            }
+
+            &:nth-child(2) {
+                grid-column: 5 / span 2;
+            }            
+
+            &:nth-child(3) {
+                grid-column: 7 / span 2;
+            }     
+        }
+    }    
+
+
+    // List of 6 + 11
+    .member:nth-last-child(n+6):nth-last-child(-n+6):first-child,
+    .member:nth-last-child(n+6):nth-last-child(-n+6):first-child ~ .member,
+    .member:nth-last-child(n+11):nth-last-child(-n+11):first-child,
+    .member:nth-last-child(n+11):nth-last-child(-n+11):first-child ~ .member {
+
+        @include desktop-small {
+            // 1 Orphans
+            &:last-child:nth-child(1n - 1) {
+                grid-column-end: -5;
+            }
+
+        }
+    }    
+
+    // List of 4 + 9
+    .member:nth-last-child(n+4):nth-last-child(-n+4):first-child,
+    .member:nth-last-child(n+4):nth-last-child(-n+4):first-child ~ .member
+    .member:nth-last-child(n+9):nth-last-child(-n+9):first-child,
+    .member:nth-last-child(n+9):nth-last-child(-n+9):first-child ~ .member,
+    .member:nth-last-child(n+14):nth-last-child(-n+14):first-child,
+    .member:nth-last-child(n+14):nth-last-child(-n+14):first-child ~ .member {
+
+        @include desktop-small {
+            // 4 Orphans
+            &:last-child:nth-child(5n - 1) {
+                grid-column-end: -2;
+            }
+          
+            &:nth-last-child(2):nth-child(5n - 2) {
+                grid-column-end: -4;
+            }
+
+            &:nth-last-child(3):nth-child(5n - 3) {
+                grid-column-end: -6;
+            }
+
+            &:nth-last-child(4):nth-child(5n - 4) {
+                grid-column-end: -8;
+            }
+        }
+    }
+
+    // List of 7 + 12
+    .member:nth-last-child(n+7):nth-last-child(-n+7):first-child,
+    .member:nth-last-child(n+7):nth-last-child(-n+7):first-child ~ .member,
+    .member:nth-last-child(n+12):nth-last-child(-n+12):first-child,
+    .member:nth-last-child(n+12):nth-last-child(-n+12):first-child ~ .member {
+
+        @include desktop-small {
+            // 2 Orphans
+            &:last-child:nth-child(7),
+            &:last-child:nth-child(12) {
+                grid-column-end: -4;
+            }
+          
+            &:nth-last-child(2):nth-child(6),
+            &:nth-last-child(2):nth-child(11) {
+                grid-column-end: -6;
+            }
+        }
+    }
+
+    .member {
+        grid-column: span 2;
     }
 
     .section-header {
@@ -31,6 +147,13 @@
             img {
                 border-radius: 50%;
             }
+
+            .empty {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                background: #d5d5d5;
+            }
         }
     }
 
@@ -40,7 +163,8 @@
 
         h3 {
             font-family: $work-sans;
-            font-size: 1rem;
+            font-size: clamp(0.8125rem, 0.9vw, 1rem);
+            line-height: 1.25em;
 
             a {
                 color: $slate;

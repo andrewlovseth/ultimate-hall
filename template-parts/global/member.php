@@ -2,7 +2,11 @@
     <div class="photo">
         <a href="<?php the_permalink(); ?>">
             <div class="content">
-                <img src="<?php $image = get_field('photos_headshot'); echo $image['sizes']['thumbnail']; ?>" alt="<?php echo $image['alt']; ?>" />
+                <?php $image = get_field('photos_headshot'); if($image): ?>
+                    <img src="<?php echo $image['sizes']['thumbnail']; ?>" alt="<?php echo $image['alt']; ?>" />
+                <?php else: ?>
+                    <div class="empty"></div>
+                <?php endif; ?>
             </div>
         </a>
     </div>
