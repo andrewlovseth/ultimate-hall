@@ -701,19 +701,23 @@ body.single-member .vitals {
         body.single-member .vitals .career-information .entry span.tournament a:hover {
           text-decoration: underline; }
   body.single-member .vitals .us-championships .championships + .championships,
-  body.single-member .vitals .world-championships .championships + .championships {
+  body.single-member .vitals .world-championships .championships + .championships,
+  body.single-member .vitals .pro-championships .championships + .championships {
     padding-top: 0.75rem; }
   body.single-member .vitals .us-championships .championships.first p,
-  body.single-member .vitals .world-championships .championships.first p {
+  body.single-member .vitals .world-championships .championships.first p,
+  body.single-member .vitals .pro-championships .championships.first p {
     font-weight: bold; }
   body.single-member .vitals .us-championships .championships p,
-  body.single-member .vitals .world-championships .championships p {
+  body.single-member .vitals .world-championships .championships p,
+  body.single-member .vitals .pro-championships .championships p {
     display: flex;
     font-size: 0.75rem;
     padding-left: 0.5rem;
     line-height: 1.25em; }
     body.single-member .vitals .us-championships .championships p:before,
-    body.single-member .vitals .world-championships .championships p:before {
+    body.single-member .vitals .world-championships .championships p:before,
+    body.single-member .vitals .pro-championships .championships p:before {
       content: '·';
       margin-right: 0.5rem;
       font-size: 1.25rem;

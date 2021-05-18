@@ -106,23 +106,6 @@
                     "display_format": "m\/d\/Y",
                     "return_format": "Ymd",
                     "first_day": 1
-                },
-                {
-                    "key": "field_609d47af56635",
-                    "label": "Date of Death",
-                    "name": "date_of_death",
-                    "type": "date_picker",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "display_format": "m\/d\/Y",
-                    "return_format": "Ymd",
-                    "first_day": 1
                 }
             ]
         },
@@ -296,7 +279,7 @@
                     "taxonomy": "",
                     "allow_null": 0,
                     "multiple": 0,
-                    "return_format": "id",
+                    "return_format": "object",
                     "ui": 1
                 },
                 {
@@ -318,7 +301,7 @@
                     "taxonomy": "",
                     "allow_null": 0,
                     "multiple": 0,
-                    "return_format": "id",
+                    "return_format": "object",
                     "ui": 1
                 },
                 {
@@ -469,6 +452,118 @@
                         "Quarterfinals": "Quarterfinals",
                         "Semifinals": "Semifinals",
                         "Finals": "Finals"
+                    },
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "ajax": 0,
+                    "placeholder": ""
+                }
+            ]
+        },
+        {
+            "key": "field_60a3e3a643140",
+            "label": "Pro Seasons",
+            "name": "pro_seasons",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "+ Add Tournament",
+            "sub_fields": [
+                {
+                    "key": "field_60a3e3a743141",
+                    "label": "Team",
+                    "name": "team",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "team"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
+                },
+                {
+                    "key": "field_60a3e3a743142",
+                    "label": "Season",
+                    "name": "season",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "tournaments"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "object",
+                    "ui": 1
+                },
+                {
+                    "key": "field_60a3e3a743143",
+                    "label": "Placement",
+                    "name": "placement",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "1st": "1st",
+                        "2nd": "2nd",
+                        "3rd": "3rd",
+                        "4th": "4th",
+                        "5th": "5th",
+                        "6th": "6th",
+                        "7th": "7th",
+                        "8th": "8th",
+                        "9th": "9th",
+                        "10th": "10th",
+                        "11th": "11th",
+                        "12th": "12th",
+                        "13th": "13th",
+                        "14th": "14th",
+                        "15th": "15th",
+                        "16th": "16th",
+                        "Pool Play": "Pool Play",
+                        "Power Pools": "Power Pools",
+                        "Pre-Quarterfinals": "Pre-Quarterfinals",
+                        "Quarterfinals": "Quarterfinals",
+                        "Semifinals": "Semifinals",
+                        "Finals": "Finals",
+                        "Playoffs": "Playoffs",
+                        "Missed Playoffs": "Missed Playoffs"
                     },
                     "default_value": false,
                     "allow_null": 0,
@@ -1080,5 +1175,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1620923942
+    "modified": 1621353562
 }

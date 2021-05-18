@@ -4,6 +4,10 @@
     $college = array();
     $club = array();
     $masters = array();
+    $masters = array();
+    $grandmasters = array();
+    $great_grandmasters = array();
+    $pro = array();
 
     if($teams) {
         foreach($teams as $team) {
@@ -19,8 +23,20 @@
                 array_push($club, $team);
             }
     
-            if (in_array($division, array("masters-women", "masters-men", "masters-mixed", "grandmasters-women", "grandmasters-men", "grandmasters-mixed", "great-grandmasters-men"))) {
+            if (in_array($division, array("masters-women", "masters-men", "masters-mixed"))) {
                 array_push($masters, $team);
+            }
+
+            if (in_array($division, array("grandmasters-women", "grandmasters-men", "grandmasters-mixed"))) {
+                array_push($grandmasters, $team);
+            }
+
+            if (in_array($division, array("great-grandmasters-men"))) {
+                array_push($great_grandmasters, $team);
+            }
+
+            if (in_array($division, array("audl", "mlu", "pul", "wul"))) {
+                array_push($pro, $team);
             }
         }
     }
@@ -43,7 +59,7 @@
         }
     }
 
-    if($college || $club || $masters || $national_team ):
+    if($college || $club || $masters || $national_team || $pro ):
 
 ?>
 
@@ -121,6 +137,52 @@
             </div>
         <?php endif; ?>
 
+        <?php if($grandmasters): ?>
+            <div class="grandmasters division">
+                <div class="division-header">
+                    <h4>Grandmasters</h4>
+                </div>
+
+                <?php foreach($grandmasters as $masters_team): ?>
+                    
+                    <?php
+                        $year = $masters_team['year'];
+                        $team = $masters_team['team'];
+
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($great_grandmasters): ?>
+            <div class="great-grandmasters division">
+                <div class="division-header">
+                    <h4>Great Grandmasters</h4>
+                </div>
+
+                <?php foreach($great_grandmasters as $masters_team): ?>
+                    
+                    <?php
+                        $year = $masters_team['year'];
+                        $team = $masters_team['team'];
+
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <?php if($national_teams): ?>
             <div class="national-team division">
                 <div class="division-header">
@@ -146,6 +208,37 @@
                             <div class="team">
                                 <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team_name; ?></a>
                                 <span class="tournament"><a href="<?php echo get_permalink($tournament->ID); ?>"><?php echo $tournament_name; ?></a></span>
+                            </div>
+                        </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+
+        <?php if($pro): ?>
+            <div class="pro division">
+                <div class="division-header">
+                    <h4>Professional</h4>
+                </div>
+
+                <?php foreach($pro as $pro_team): ?>
+                    
+                    <?php
+                        $year = $pro_team['year'];
+                        $team = $pro_team['team'];
+                        $division_obj = get_field('division', $team->ID);
+                        $division = $division_obj[0];
+                        $team_name = $team->post_title;
+
+                    ?>
+                        <div class="entry">
+                            <div class="year">
+                                <span><?php echo $year; ?></span>
+                            </div>
+
+                            <div class="team">
+                                <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team_name; ?></a>
+                                <span class="tournament"><a href="<?php echo get_permalink($division->ID); ?>"><?php echo get_the_title($division->ID); ?></a></span>
                             </div>
                         </div>
                 <?php endforeach; ?>

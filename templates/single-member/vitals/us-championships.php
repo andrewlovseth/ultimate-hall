@@ -4,6 +4,8 @@
     $college_teams = array();
     $club_teams = array();
     $masters_teams = array();
+    $grandmasters_teams = array();
+    $great_grandmasters_teams = array();
 
     if($teams) {
         foreach($teams as $team) {
@@ -18,8 +20,16 @@
                 array_push($club_teams, $team);
             }
     
-            if (in_array($division, array("masters-women", "masters-men", "masters-mixed", "grandmasters-women", "grandmasters-men", "grandmasters-mixed", "great-grandmasters-men"))) {
+            if (in_array($division, array("masters-women", "masters-men", "masters-mixed"))) {
                 array_push($masters_teams, $team);
+            }
+
+            if (in_array($division, array("grandmasters-women", "grandmasters-men", "grandmasters-mixed"))) {
+                array_push($grandmasters_teams, $team);
+            }
+
+            if (in_array($division, array("great-grandmasters-men"))) {
+                array_push($great_grandmasters_teams, $team);
             }
         }
     }
@@ -78,7 +88,45 @@
         }
     }
 
-    if($college_first || $college_second || $club_first || $club_second || $masters_first || $masters_second): 
+
+    $grandmasters_first = array();
+    $grandmasters_second = array();
+
+    foreach($grandmasters_teams as $masters_team) {
+        $tournament = $masters_team['tournament'];
+        $tournament_year = get_field('details_year', $tournament);
+        $year = $tournament_year->post_title;
+        $placement = $masters_team['placement'];
+
+        if ($placement == '1st') {
+            array_push($grandmasters_first, $year);
+        }
+
+        if ($placement == '2nd') {
+            array_push($grandmasters_second, $year);
+        }
+    }
+
+
+    $great_grandmasters_first = array();
+    $great_grandmasters_second = array();
+
+    foreach($great_grandmasters_teams as $masters_team) {
+        $tournament = $masters_team['tournament'];
+        $tournament_year = get_field('details_year', $tournament);
+        $year = $tournament_year->post_title;
+        $placement = $masters_team['placement'];
+
+        if ($placement == '1st') {
+            array_push($great_grandmasters_first, $year);
+        }
+
+        if ($placement == '2nd') {
+            array_push($great_grandmasters_second, $year);
+        }
+    }
+
+    if($college_first || $college_second || $club_first || $club_second || $masters_first || $masters_second || $grandmasters_first || $grandmasters_second || $great_grandmasters_first || $great_grandmasters_second ): 
 
 ?>
 
@@ -105,6 +153,18 @@
             </div>
         <?php endif; ?>
 
+        <?php if($grandmasters_first): ?>
+            <div class="championships masters first">
+                <p><?php echo count($grandmasters_first); ?>x U.S. Grandmasters Champion (<?php echo implode(', ', $grandmasters_first); ?>)</p>
+            </div>
+        <?php endif; ?>
+
+        <?php if($great_grandmasters_first): ?>
+            <div class="championships masters first">
+                <p><?php echo count($great_grandmasters_first); ?>x U.S. Great Grandmasters Champion (<?php echo implode(', ', $great_grandmasters_first); ?>)</p>
+            </div>
+        <?php endif; ?>
+
         <?php if($college_second): ?>
             <div class="championships college second">
                 <p><?php echo count($college_second); ?>x U.S. College Runner Up (<?php echo implode(', ', $college_second); ?>)</p>
@@ -120,6 +180,18 @@
         <?php if($masters_second): ?>
             <div class="championships masters second">
                 <p><?php echo count($masters_second); ?>x U.S. Masters Runner Up (<?php echo implode(', ', $masters_second); ?>)</p>
+            </div>
+        <?php endif; ?>
+
+        <?php if($grandmasters_second): ?>
+            <div class="championships masters second">
+                <p><?php echo count($grandmasters_first); ?>x U.S. Grandmasters Runner Up (<?php echo implode(', ', $grandmasters_second); ?>)</p>
+            </div>
+        <?php endif; ?>
+
+        <?php if($great_grandmasters_second): ?>
+            <div class="championships masters second">
+                <p><?php echo count($great_grandmasters_first); ?>x U.S. Great Grandmasters Runner Up (<?php echo implode(', ', $great_grandmasters_second); ?>)</p>
             </div>
         <?php endif; ?>
     </div>
