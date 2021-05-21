@@ -1,11 +1,30 @@
 (function ($, window, document, undefined) {
 
+
 	$(document).ready(function($) {
-
-
-
 		$('.smooth').smoothScroll();
-			
+
+		// rel="external"
+		$('a[rel="external"]').click( function() {
+			window.open( $(this).attr('href') );
+			return false;
+		});
+
+		// Nav Trigger
+		$('.js-nav-trigger').click(function(){
+			$('body').toggleClass('nav-overlay-open');
+			return false;
+		});			
 	});
 
+
+	$(document).mouseup(function(e) {
+		var menu = $('.site-navigation, .js-nav-trigger');
+	
+		if (!menu.is(e.target) && menu.has(e.target).length === 0) {
+			$('body').removeClass('nav-overlay-open');
+		}
+	});
+
+	
 })(jQuery, window, document);

@@ -1,0 +1,28 @@
+body.nav-overlay-open {
+	.hamburger {
+        z-index: 100;
+
+		a {
+			.patty {
+                background: none;
+
+                &:after {
+                    top: 0;
+                    transform: rotate(45deg);
+                }
+
+                &:before {
+                    top: 0;
+                    transform: rotate(-45deg);
+                }
+			}
+		}
+	}
+
+    @media screen and (max-width: 991px) {
+        .site-nav {
+            left: 0;
+            opacity: 1;
+        }
+    }
+}

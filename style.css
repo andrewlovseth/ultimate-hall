@@ -301,10 +301,12 @@ body {
   background: #fff; }
 
 .site-content {
-  padding: 3rem 0; }
+  padding: 3rem 0;
+  min-height: 50vh; }
   @media screen and (min-width: 992px) {
     .site-content {
-      padding: 6rem 0; } }
+      padding: 6rem 0;
+      min-height: 70vh; } }
   @media screen and (min-width: 1280px) {
     .site-content {
       padding: 8rem 0; } }
@@ -496,46 +498,160 @@ body {
       .site-header .logo {
         max-width: 164px; } }
     .site-header .logo a {
-      display: block; }
-      @media screen and (min-width: 992px) {
-        .site-header .logo a {
-          position: absolute;
-          top: -1.5rem; } }
+      display: block;
+      position: absolute;
+      top: -1.5rem; }
       .site-header .logo a img {
         width: 100%; }
-  .site-header .site-nav {
-    display: none; }
-    @media screen and (min-width: 992px) {
-      .site-header .site-nav {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        grid-column: 5 / span 9; } }
-    .site-header .site-nav .link + .link {
-      margin-left: 1.5rem; }
-      @media screen and (min-width: 1280px) {
+  @media screen and (min-width: 992px) {
+    .site-header .hamburger {
+      display: none; } }
+  .site-header .hamburger a {
+    width: 2rem;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    margin-left: auto; }
+    .site-header .hamburger a .patty {
+      width: 2rem;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      margin-left: auto;
+      transition: all 0.2s; }
+      .site-header .hamburger a .patty:after, .site-header .hamburger a .patty:before {
+        content: '';
+        display: block;
+        width: 2rem;
+        height: 2px;
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        border-radius: 2px;
+        transition: all 0.2s; }
+      .site-header .hamburger a .patty:before {
+        top: -8px; }
+      .site-header .hamburger a .patty:after {
+        top: 8px; }
+  @media screen and (min-width: 992px) {
+    .site-header .site-nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      grid-column: 5 / span 9; } }
+  @media screen and (min-width: 992px) {
+    .site-header .site-nav .link.desktop + .link.desktop {
+      margin-left: 1.5rem; } }
+  @media screen and (min-width: 1280px) {
+    .site-header .site-nav .link.desktop + .link.desktop {
+      margin-left: 2.5rem; } }
+  @media screen and (min-width: 992px) {
+    .site-header .site-nav .link.desktop + .link.desktop:before {
+      content: '·';
+      margin-right: 1.5rem; } }
+  @media screen and (min-width: 1280px) {
+    .site-header .site-nav .link.desktop + .link.desktop:before {
+      margin-right: 2.5rem; } }
+  @media screen and (min-width: 992px) {
+    .site-header .site-nav .link.mobile-only {
+      display: none; } }
+  .site-header .site-nav a {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem; }
+    @media screen and (min-width: 1280px) {
+      .site-header .site-nav a {
+        font-size: 0.8125rem;
+        letter-spacing: 0.075em; } }
+    .site-header .site-nav a:hover {
+      text-decoration: underline; }
+  @media screen and (max-width: 991px) {
+    .site-header .site-nav {
+      position: absolute;
+      top: 0;
+      z-index: 1000;
+      left: -50vw;
+      width: 50vw;
+      height: 100vh;
+      background: #E7C22C;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transition: all 0.2s ease-in-out;
+      padding: 3.25rem 2rem;
+      grid-column: 1 / -1; }
+      .site-header .site-nav .link {
+        padding-bottom: 2rem; }
         .site-header .site-nav .link + .link {
-          margin-left: 2.5rem; } }
-      .site-header .site-nav .link + .link:before {
-        content: '·';
-        margin-right: 1.5rem; }
-        @media screen and (min-width: 1280px) {
-          .site-header .site-nav .link + .link:before {
-            margin-right: 2.5rem; } }
-    .site-header .site-nav a {
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.75rem; }
-      @media screen and (min-width: 1280px) {
-        .site-header .site-nav a {
-          font-size: 0.8125rem;
-          letter-spacing: 0.075em; } }
-      .site-header .site-nav a:hover {
-        text-decoration: underline; }
+          margin-left: 0; }
+        .site-header .site-nav .link:before {
+          display: none; }
+        .site-header .site-nav .link a {
+          font-size: 1.125rem; } }
+
+body.nav-overlay-open .hamburger {
+  z-index: 100; }
+  body.nav-overlay-open .hamburger a .patty {
+    background: none; }
+    body.nav-overlay-open .hamburger a .patty:after {
+      top: 0;
+      transform: rotate(45deg); }
+    body.nav-overlay-open .hamburger a .patty:before {
+      top: 0;
+      transform: rotate(-45deg); }
+
+@media screen and (max-width: 991px) {
+  body.nav-overlay-open .site-nav {
+    left: 0;
+    opacity: 1; } }
 
 .site-footer {
-  min-height: 30vh;
-  background: #231F20; }
+  background: #404040;
+  color: #fff;
+  padding: 2rem 0;
+  gap: 2rem; }
+  @media screen and (min-width: 992px) {
+    .site-footer {
+      padding: 4rem 0; } }
+  .site-footer a {
+    color: #fff; }
+  .site-footer .logo {
+    grid-column: 2  / span 2;
+    align-self: start; }
+    .site-footer .logo a {
+      display: block;
+      max-width: 96px; }
+      @media screen and (min-width: 1280px) {
+        .site-footer .logo a {
+          max-width: 128px; } }
+  @media screen and (min-width: 992px) {
+    .site-footer .footer-nav {
+      grid-column: 4 / span 10;
+      align-self: center;
+      justify-content: flex-end;
+      display: flex;
+      align-items: center; } }
+  .site-footer .footer-nav .link {
+    margin-bottom: 1rem; }
+    @media screen and (min-width: 992px) {
+      .site-footer .footer-nav .link {
+        margin-bottom: 0; } }
+    @media screen and (min-width: 992px) {
+      .site-footer .footer-nav .link + .link {
+        margin-left: 1.25rem; } }
+    @media screen and (min-width: 992px) {
+      .site-footer .footer-nav .link + .link:before {
+        content: '·';
+        margin-right: 1.25rem; } }
+  .site-footer .footer-nav a {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem; }
+    @media screen and (min-width: 1280px) {
+      .site-footer .footer-nav a {
+        font-size: 0.8125rem;
+        letter-spacing: 0.075em; } }
+    .site-footer .footer-nav a:hover {
+      text-decoration: underline; }
 
 body.post-type-archive-member .class-nav {
   padding-bottom: 3rem; }

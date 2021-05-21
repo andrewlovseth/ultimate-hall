@@ -11,76 +11,11 @@
         color: $white;
     }
 
-    .logo {
-        max-width: 128px;
-        grid-column: 2 / span 2;
+    @import 'logo';
 
-        @include tablet-small {
-            grid-column: 2 / span 3;
-            
-        }
+    @import 'hamburger';
 
-        @include desktop-medium {
-            max-width: 164px;
-        }
-
-        a {
-            display: block;
-
-            @include desktop-small {
-                position: absolute;
-                top: -1.5rem;
-            }
-
-            img {
-                width: 100%;
-            }
-        }
-    }
-
-    .site-nav {
-        display: none;
-
-        @include desktop-small {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            grid-column: 5 / span 9;
-        }
-
-        .link {
-            &  + .link {
-                margin-left: 1.5rem;
-                
-                @include desktop-medium {
-                    margin-left: 2.5rem;
-                }
-
-                &:before {
-                    content: '·';
-                    margin-right: 1.5rem;
-
-                    @include desktop-medium {
-                        margin-right: 2.5rem;
-                    }
-                }
-
-            }
-        }
-
-        a {
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.75rem;
-
-            @include desktop-medium {
-                font-size: 0.8125rem;
-                letter-spacing: 0.075em;
-            }
-            
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
+    @import 'navigation';
 }
+
+@import 'nav-overlay-open';
