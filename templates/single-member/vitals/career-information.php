@@ -35,7 +35,7 @@
                 array_push($great_grandmasters, $team);
             }
 
-            if (in_array($division, array("audl", "mlu", "pul", "wul"))) {
+            if (in_array($division, array("american-ultimate-disc-league", "major-league-ultimate", "premier-ultimate-league", "western-ultimate-league"))) {
                 array_push($pro, $team);
             }
         }

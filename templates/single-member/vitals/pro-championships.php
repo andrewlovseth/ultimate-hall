@@ -9,7 +9,7 @@
             $division_obj = get_field('division', $team['team']);
             $division = $division_obj[0]->post_name;
     
-            if (in_array($division, array("audl", "mlu", "pul", "wul"))) {
+            if (in_array($division, array("american-ultimate-disc-league", "major-league-ultimate", "premier-ultimate-league", "western-ultimate-league"))) {
                 array_push($pro_teams, $team);
             }
     
