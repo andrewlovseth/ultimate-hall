@@ -159,14 +159,14 @@
 
     .awards {
         p {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1rem 1fr;
             font-size: 0.75rem;
             padding-left: 0.5rem;
             line-height: 1.25em;
 
             &:before {
                 content: '·';
-                margin-right: 0.5rem;
                 font-size: 1.25rem;
                 font-weight: normal;
             }
@@ -180,7 +180,7 @@
             }
 
             .year {
-                padding-left: 0.25rem;
+                font-weight: normal;
             }
         }        
     }

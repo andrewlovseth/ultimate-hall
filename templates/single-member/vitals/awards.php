@@ -7,8 +7,10 @@
         <?php while(have_rows('awards')): the_row(); ?>
 
             <p>
-                <span class="award"><?php the_sub_field('award'); ?></span>
-                <?php if(get_sub_field('year')): ?><span class="year">(<?php $year = get_sub_field('year'); echo $year->post_title; ?>)</span><?php endif; ?>
+                <span class="award">
+                    <?php the_sub_field('award'); ?>
+                    <?php if(get_sub_field('year')): ?><span class="year">(<?php $year = get_sub_field('year'); echo $year->post_title; ?>)</span><?php endif; ?>
+                </span>
             </p>
 
         <?php endwhile; ?>
