@@ -40,10 +40,7 @@
             }
         }
     }
-
- 
-
-
+    
     $wfdfs = get_field('wfdf_championships');
     $national_teams = array();
     if($wfdfs) {

@@ -8,11 +8,11 @@
 <section class="profile-header">
     <?php if($year == '2004'): ?>
         <div class="class">
-            <h2>Inaugural Class of <?php echo $year; ?></h2>
+            <h2>Inaugural Class of <?php echo $year; ?> - <?php echo $type; ?></h2>
         </div>
     <?php else: ?>
         <div class="class">
-            <h2>Class of <?php echo $year; ?></h2>
+            <h2>Class of <?php echo $year; ?> - <?php echo $type; ?></h2>
         </div>
     <?php endif; ?>
 
