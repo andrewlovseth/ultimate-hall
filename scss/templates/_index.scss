@@ -1,0 +1,28 @@
+body.blog {
+
+    section.posts {
+
+    }
+
+    article.post-teaser {
+        .meta {
+
+            @include desktop-small {
+                grid-column: 1 / span 2;
+            }
+
+            .date {
+                display: block;
+                text-transform: uppercase;
+                font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+                letter-spacing: 0.05em;
+            }
+        }
+
+        .info {
+            @include desktop-small {
+                grid-column: 3 / span 10;
+            }
+        }
+    }
+}

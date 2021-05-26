@@ -43,3 +43,12 @@
 		color: $gold;
 	}
 }
+
+.page-header {
+	h1 {
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-weight: 300;
+		font-size: clamp(1.5rem, 1.8vw, 2rem);
+	}
+}
