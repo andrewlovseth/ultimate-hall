@@ -24,21 +24,24 @@
                 <?php foreach($world_teams as $world_team): ?>
                     <?php
                         $tournament_obj = $world_team['tournament'];
-                        $tournament_name = $tournament_obj->post_title;
-                        $tournament = preg_replace('/[0-9]+/', '', $tournament_name);
-                        $location = get_field('details_location', $tournament_obj->ID);
+                        if($tournament_obj) {
+                            $tournament_name = $tournament_obj->post_title;
+                            $tournament = preg_replace('/[0-9]+/', '', $tournament_name);
+                            $location = get_field('details_location', $tournament_obj->ID);
+    
+                            $year_obj = get_field('details_year', $tournament_obj->ID);
+                            $year = get_the_title($year_obj);
+    
+                            $team_obj = $world_team['team'];
+                            $team = $team_obj->post_title;
+                            $team_name = str_replace($team_name_edits, '', $team);
+                            $team_name = preg_replace('/[0-9]+/', '', $team_name);
+                            $division_obj = get_field('division', $team_obj->ID);
+                            $division = $division_obj[0]->post_title;
+    
+                            $placement = $world_team['placement'];
+                        }
 
-                        $year_obj = get_field('details_year', $tournament_obj->ID);
-                        $year = $year_obj->post_title;
-
-                        $team_obj = $world_team['team'];
-                        $team = $team_obj->post_title;
-                        $team_name = str_replace($team_name_edits, '', $team);
-                        $team_name = preg_replace('/[0-9]+/', '', $team_name);
-                        $division_obj = get_field('division', $team_obj->ID);
-                        $division = $division_obj[0]->post_title;
-
-                        $placement = $world_team['placement'];
 
                     ?>
                     <tr>

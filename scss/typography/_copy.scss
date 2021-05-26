@@ -1,5 +1,19 @@
 .copy {
 
+	&.extended {
+		& > * {
+			margin-bottom: 2rem;
+		}
+
+		& > h3 {
+			font-family: $work-sans;
+			font-weight: bold;
+			font-size: clamp(1.125rem, 1.2vw, 1.25rem);
+			margin-bottom: 1rem;
+			padding-top: 2rem;
+		}
+	}
+
 	ul {
 		list-style-type: disc;
 	}
@@ -31,7 +45,8 @@
 	}
 
 	&.p3 {
-		
+		line-height: 1.55em;
+		font-size: clamp(0.875rem, 1vw, 1rem);
 	}
 
 }

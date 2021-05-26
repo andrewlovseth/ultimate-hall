@@ -7,8 +7,7 @@
 
 get_header(); ?>
 
-    <section class="page-header grid">
-        <h1><?php the_title(); ?></h1>
-    </section>
+    <?php get_template_part('template-parts/global/page-header'); ?>
+
 
 <?php get_footer(); ?>

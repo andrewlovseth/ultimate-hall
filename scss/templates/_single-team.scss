@@ -1,0 +1,53 @@
+body.single-team {
+    .site-content {
+        padding-bottom: 0;
+    }
+    section.other-teams {
+        background: $light-gray;
+        padding: 3rem 0;
+        margin-top: 3rem;
+
+        @include desktop-small {
+            padding: 6rem 0;
+            margin-top: 6rem;
+        }
+
+        .teams-list {
+            @include desktop-small {
+                columns: 4;
+                column-gap: 2rem;
+            }
+        }
+
+        .team {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            a {
+                display: block;
+                font-size: 0.75rem;
+                font-weight: 600;
+                font-family: $work-sans;
+                color: $slate;
+                transition: all 0.2s ease-in;
+
+                &:hover {
+                    color: $blue;
+                }
+
+                span {
+                    display: block;
+                }
+
+                .location {
+                    padding-top: 0.125rem;
+                    display: block;
+                    font-family: $averia;
+                    font-style: italic;
+                    font-weight: normal;
+                    color: $charcoal;
+                }
+
+            }
+        }
+    }
+}

@@ -1,6 +1,5 @@
 <?php get_header(); ?>
 
-
     <section class="page-header grid">
         <h1>News</h1>
     </section>
@@ -15,7 +14,13 @@
                 </div>
 
                 <div class="info">
-                    <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                    <div class="headline">
+                        <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                    </div>
+
+                    <div class="excerpt copy p3">
+                        <?php the_excerpt(); ?>
+                    </div>
                 </div>
             </article>
 

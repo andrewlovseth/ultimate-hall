@@ -8,7 +8,7 @@
         foreach($worlds_teams as $worlds_team) {
             $tournament = $worlds_team['tournament'];
             $tournament_year = get_field('details_year', $tournament->ID);
-            $year = $tournament_year->post_title;
+            $year = get_the_title($tournament_year);
             $placement = $worlds_team['placement'];
     
             if ($placement == '1st') {

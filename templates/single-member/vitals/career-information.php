@@ -12,33 +12,38 @@
 
     if($teams) {
         foreach($teams as $team) {
-            $division_obj = get_field('division', $team['team']->ID);
-            $division = $division_obj[0]->post_name;
-            $year = $team['year'];
-    
-            if (in_array($division, $GLOBALS['divisions']['college'])) {
-                array_push($college, $team);
-            }
-    
-            if (in_array($division, $GLOBALS['divisions']['club'])) {
-                array_push($club, $team);
-            }
-    
-            if (in_array($division, $GLOBALS['divisions']['masters'])) {
-                array_push($masters, $team);
+            if($team['team']) {
+                $division_obj = get_field('division', $team['team']->ID);
+                if($division_obj) {
+                    $division = $division_obj[0]->post_name;
+            
+                    if (in_array($division, $GLOBALS['divisions']['college'])) {
+                        array_push($college, $team);
+                    }
+            
+                    if (in_array($division, $GLOBALS['divisions']['club'])) {
+                        array_push($club, $team);
+                    }
+            
+                    if (in_array($division, $GLOBALS['divisions']['masters'])) {
+                        array_push($masters, $team);
+                    }
+        
+                    if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
+                        array_push($grandmasters, $team);
+                    }
+        
+                    if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
+                        array_push($great_grandmasters, $team);
+                    }
+        
+                    if (in_array($division, $GLOBALS['divisions']['professional'])) {
+                        array_push($professional, $team);
+                    }
+                } 
             }
 
-            if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
-                array_push($grandmasters, $team);
-            }
-
-            if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
-                array_push($great_grandmasters, $team);
-            }
-
-            if (in_array($division, $GLOBALS['divisions']['professional'])) {
-                array_push($professional, $team);
-            }
+            
         }
     }
     
@@ -58,7 +63,6 @@
     }
 
     if($college || $club || $masters || $national_team || $pro ):
-
 ?>
 
     <div class="career-information vitals-section">
@@ -200,7 +204,7 @@
                     ?>
                         <div class="entry">
                             <div class="year">
-                                <span><?php echo $year->post_title; ?></span>
+                                <span><?php echo get_the_title($year); ?></span>
                             </div>
 
                             <div class="team">
@@ -242,4 +246,5 @@
             </div>
         <?php endif; ?>
     </div>
+
 <?php endif; ?>

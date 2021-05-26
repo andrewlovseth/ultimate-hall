@@ -6,7 +6,9 @@
     $birthdate = DateTime::createFromFormat('Ymd', $birthdate_field);
 
     $date_of_death_field = $vitals['date_of_death'];
-    $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
+    if($date_of_death_field) {
+        $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
+    }
 
     $photos = get_field('photos');
     $headshot = $photos['headshot'];

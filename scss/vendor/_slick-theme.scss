@@ -107,7 +107,6 @@ $slick-opacity-not-active: 1 !default;
     }
 
     &:before {
-        background: url(images/left-arrow.svg) no-repeat 0 0;
         width: 60px;
         height: 60px;
         content: '';
@@ -130,7 +129,6 @@ $slick-opacity-not-active: 1 !default;
         }
     }
     &:before {
-        background: url(images/right-arrow.svg) no-repeat 0 0;
         width: 60px;
         height: 60px;
         content: '';

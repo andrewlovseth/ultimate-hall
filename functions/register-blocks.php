@@ -5,24 +5,21 @@
 */
 
 
-/*
 
-add_action('acf/init', 'my_register_blocks');
-function my_register_blocks() {
+add_action('acf/init', 'bearsmith_register_blocks');
+function bearsmith_register_blocks() {
 
     if( function_exists('acf_register_block_type') ) {
 
         acf_register_block_type(array(
-            'name'              => 'block-name',
-            'title'             => __('Block Title'),
-            'description'       => __('Description of custom block.'),
-            'render_template'   => 'blocks/block-dir/block-file.php',
+            'name'              => 'hall-class',
+            'title'             => __('Hall of Fame Class'),
+            'description'       => __('Display a grid of Hall of Fame members by class'),
+            'render_template'   => 'blocks/hall-class/hall-class.php',
             'category'          => 'layout',
-            'icon'              => 'XXXXXX',
+            'icon'              => 'grid-view',
             'align'             => 'full',
         ));
 
     }
 }
-
- */

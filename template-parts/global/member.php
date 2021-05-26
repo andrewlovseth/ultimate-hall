@@ -1,8 +1,22 @@
+<?php
+    $args = wp_parse_args($args);
+
+    if(!empty($args)) {
+        $member_ID = $args['member_ID'];
+    } else {
+        $member_ID = $post->ID;
+    }
+    
+    $image = get_field('photos_headshot', $member_ID); 
+    $type = get_field('meta_induction_type', $member_ID);
+
+?>
+
 <div class="member">
     <div class="photo">
         <a href="<?php the_permalink(); ?>">
             <div class="content">
-                <?php $image = get_field('photos_headshot'); if($image): ?>
+                <?php if($image): ?>
                     <img src="<?php echo $image['sizes']['thumbnail']; ?>" alt="<?php echo $image['alt']; ?>" />
                 <?php else: ?>
                     <div class="empty"></div>
@@ -15,5 +29,11 @@
         <div class="name">
             <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
         </div>
+
+        <?php if($type): ?>
+            <div class="type">
+                <h4><?php echo $type['label']; ?></h4>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

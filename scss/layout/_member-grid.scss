@@ -165,6 +165,7 @@
             font-family: $work-sans;
             font-size: clamp(0.8125rem, 0.9vw, 1rem);
             line-height: 1.25em;
+            font-weight: bold;
 
             a {
                 color: $slate;
@@ -172,6 +173,16 @@
                 &:hover {
                     text-decoration: underline;
                 }
+            }
+        }
+
+        .type {
+            padding-top: 0.125rem;
+
+            h4 {
+                font-size: clamp(0.6125rem, 0.7vw, 0.75rem);
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
             }
         }
 

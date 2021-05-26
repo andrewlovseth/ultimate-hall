@@ -6,3 +6,7 @@ section.teammates {
         padding: 6rem 0;
     }
 }
+
+section.championship-tournaments + section.teammates {
+    background: $white;
+}

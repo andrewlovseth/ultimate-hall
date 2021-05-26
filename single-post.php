@@ -1,18 +1,25 @@
 <?php get_header(); ?>
 
-<section class="posts grid">
+	<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
 
-<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
+		<article <?php post_class( 'grid' ); ?>>
+			<div class="article-header">
+				<div class="date">
+                    <span><?php the_time('F j, Y'); ?></span>
+                </div>
 
-	<article>
-		<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-        <?php the_content(); ?>
-	</article>
+				<div class="title">
+					<h1><?php the_title(); ?></h1>
+				</div>
+			</div>
 
-<?php endwhile; endif; ?>
+			<div class="article-body copy p1 extended">
+				<?php the_content(); ?>
 
+			</div>
+			
+		</article>
 
-</section>
-
+	<?php endwhile; endif; ?>
 
 <?php get_footer(); ?>

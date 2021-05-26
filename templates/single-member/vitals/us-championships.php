@@ -11,26 +11,28 @@
     if($teams) {
         foreach($teams as $team) {
             $division_obj = get_field('division', $team['team']);
-            $division = $division_obj[0]->post_name;
+            if($division_obj) {
+                $division = $division_obj[0]->post_name;
     
-            if (in_array($division, $GLOBALS['divisions']['college'])) {
-                array_push($college_teams, $team);
-            }
+                if (in_array($division, $GLOBALS['divisions']['college'])) {
+                    array_push($college_teams, $team);
+                }
+        
+                if (in_array($division, $GLOBALS['divisions']['club'])) {
+                    array_push($club_teams, $team);
+                }
+        
+                if (in_array($division, $GLOBALS['divisions']['masters'])) {
+                    array_push($masters_teams, $team);
+                }
     
-            if (in_array($division, $GLOBALS['divisions']['club'])) {
-                array_push($club_teams, $team);
-            }
+                if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
+                    array_push($grandmasters_teams, $team);
+                }
     
-            if (in_array($division, $GLOBALS['divisions']['masters'])) {
-                array_push($masters_teams, $team);
-            }
-
-            if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
-                array_push($grandmasters_teams, $team);
-            }
-
-            if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
-                array_push($great_grandmasters_teams, $team);
+                if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
+                    array_push($great_grandmasters_teams, $team);
+                }
             }
         }
     }
@@ -41,7 +43,7 @@
     foreach($college_teams as $college_team) {
         $tournament = $college_team['tournament'];
         $tournament_year = get_field('details_year', $tournament);
-        $year = $tournament_year->post_title;
+        $year = get_the_title($tournament_year);
         $placement = $college_team['placement'];
 
         if ($placement == '1st') {
@@ -58,16 +60,18 @@
 
     foreach($club_teams as $club_team) {
         $tournament = $club_team['tournament'];
-        $tournament_year = get_field('details_year', $tournament);
-        $year = $tournament_year->post_title;
-        $placement = $club_team['placement'];
-
-        if ($placement == '1st') {
-            array_push($club_first, $year);
-        }
-
-        if ($placement == '2nd') {
-            array_push($club_second, $year);
+        if($tournament ) {
+            $tournament_year = get_field('details_year', $tournament);
+            $year = get_the_title($tournament_year);
+            $placement = $club_team['placement'];
+    
+            if ($placement == '1st') {
+                array_push($club_first, $year);
+            }
+    
+            if ($placement == '2nd') {
+                array_push($club_second, $year);
+            }
         }
     }
 
@@ -77,7 +81,7 @@
     foreach($masters_teams as $masters_team) {
         $tournament = $masters_team['tournament'];
         $tournament_year = get_field('details_year', $tournament);
-        $year = $tournament_year->post_title;
+        $year = get_the_title($tournament_year);
         $placement = $masters_team['placement'];
 
         if ($placement == '1st') {
@@ -96,7 +100,7 @@
     foreach($grandmasters_teams as $masters_team) {
         $tournament = $masters_team['tournament'];
         $tournament_year = get_field('details_year', $tournament);
-        $year = $tournament_year->post_title;
+        $year = get_the_title($tournament_year);
         $placement = $masters_team['placement'];
 
         if ($placement == '1st') {
@@ -115,7 +119,7 @@
     foreach($great_grandmasters_teams as $masters_team) {
         $tournament = $masters_team['tournament'];
         $tournament_year = get_field('details_year', $tournament);
-        $year = $tournament_year->post_title;
+        $year = get_the_title($tournament_year);
         $placement = $masters_team['placement'];
 
         if ($placement == '1st') {
