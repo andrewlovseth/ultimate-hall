@@ -15,6 +15,26 @@
 			$('body').toggleClass('nav-overlay-open');
 			return false;
 		});			
+
+
+		$('.gallery-slider').slick({
+			dots: true,
+			infinite: true,
+			speed: 300,
+			slidesToShow: 1,
+			centerMode: true,
+			variableWidth: true
+		  });
+
+
+		  $('.slick-slider').on('click', '.slick-slide', function (e) {
+			e.stopPropagation();
+			var index = $(this).data("slick-index");
+			if ($('.slick-slider').slick('slickCurrentSlide') !== index) {
+				$('.slick-slider').slick('slickGoTo', index);
+			}
+		  });
+
 	});
 
 

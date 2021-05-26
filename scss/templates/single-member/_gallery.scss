@@ -1,0 +1,58 @@
+section.gallery {
+    padding-bottom: 4rem;
+
+    &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 60%;
+        background: $light-gray;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    .slick-slide {
+        cursor: pointer;
+    }
+
+    .slick-current {
+        cursor: default;
+    }
+
+    .photo {
+        margin: 2rem 1rem;
+        box-shadow: rgba(50, 50, 93, 0.1) 0px 13px 27px -5px, rgba(0, 0, 0, 0.15) 0px 8px 16px -8px;
+        background: #fcfcfc;
+    }
+
+    .photo-wrapper {
+        width: 50vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include aspect-ratio(16, 9);
+
+        .content {
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            justify-content: center;
+        }
+
+        .image-wrapper {
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px 0px inset;
+            padding: 2rem;
+            background: $white;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            object-fit: contain;
+            max-height: 100%;
+        }
+    }
+}
