@@ -20,9 +20,7 @@
             }
         }
     }
-
-
-
+    
     if($worlds_first || $worlds_second): 
 
 ?>

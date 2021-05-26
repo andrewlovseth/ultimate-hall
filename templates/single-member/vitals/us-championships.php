@@ -1,4 +1,5 @@
 <?php
+    bearsmith_global_vars();
 
     $teams = get_field('us_championships');
     $college_teams = array();
@@ -12,23 +13,23 @@
             $division_obj = get_field('division', $team['team']);
             $division = $division_obj[0]->post_name;
     
-            if (in_array($division, array("college-women", "college-men", "college-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['college'])) {
                 array_push($college_teams, $team);
             }
     
-            if (in_array($division, array("club-women", "club-men", "club-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['club'])) {
                 array_push($club_teams, $team);
             }
     
-            if (in_array($division, array("masters-women", "masters-men", "masters-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['masters'])) {
                 array_push($masters_teams, $team);
             }
 
-            if (in_array($division, array("grandmasters-women", "grandmasters-men", "grandmasters-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
                 array_push($grandmasters_teams, $team);
             }
 
-            if (in_array($division, array("great-grandmasters-men"))) {
+            if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
                 array_push($great_grandmasters_teams, $team);
             }
         }
@@ -185,13 +186,13 @@
 
         <?php if($grandmasters_second): ?>
             <div class="championships masters second">
-                <p><?php echo count($grandmasters_first); ?>x U.S. Grandmasters Runner Up (<?php echo implode(', ', $grandmasters_second); ?>)</p>
+                <p><?php echo count($grandmasters_second); ?>x U.S. Grandmasters Runner Up (<?php echo implode(', ', $grandmasters_second); ?>)</p>
             </div>
         <?php endif; ?>
 
         <?php if($great_grandmasters_second): ?>
             <div class="championships masters second">
-                <p><?php echo count($great_grandmasters_first); ?>x U.S. Great Grandmasters Runner Up (<?php echo implode(', ', $great_grandmasters_second); ?>)</p>
+                <p><?php echo count($great_grandmasters_second); ?>x U.S. Great Grandmasters Runner Up (<?php echo implode(', ', $great_grandmasters_second); ?>)</p>
             </div>
         <?php endif; ?>
     </div>

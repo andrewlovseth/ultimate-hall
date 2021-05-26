@@ -1,5 +1,6 @@
 <?php
-
+    bearsmith_global_vars();
+    
     $teams = get_field('playing_career');
     $college = array();
     $club = array();
@@ -7,7 +8,7 @@
     $masters = array();
     $grandmasters = array();
     $great_grandmasters = array();
-    $pro = array();
+    $professional = array();
 
     if($teams) {
         foreach($teams as $team) {
@@ -15,28 +16,28 @@
             $division = $division_obj[0]->post_name;
             $year = $team['year'];
     
-            if (in_array($division, array("college-women", "college-men", "college-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['college'])) {
                 array_push($college, $team);
             }
     
-            if (in_array($division, array("club-women", "club-men", "club-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['club'])) {
                 array_push($club, $team);
             }
     
-            if (in_array($division, array("masters-women", "masters-men", "masters-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['masters'])) {
                 array_push($masters, $team);
             }
 
-            if (in_array($division, array("grandmasters-women", "grandmasters-men", "grandmasters-mixed"))) {
+            if (in_array($division, $GLOBALS['divisions']['grandmasters'])) {
                 array_push($grandmasters, $team);
             }
 
-            if (in_array($division, array("great-grandmasters-men"))) {
+            if (in_array($division, $GLOBALS['divisions']['great_grandmasters'])) {
                 array_push($great_grandmasters, $team);
             }
 
-            if (in_array($division, array("american-ultimate-disc-league", "major-league-ultimate", "premier-ultimate-league", "western-ultimate-league"))) {
-                array_push($pro, $team);
+            if (in_array($division, $GLOBALS['divisions']['professional'])) {
+                array_push($professional, $team);
             }
         }
     }
@@ -211,14 +212,13 @@
             </div>
         <?php endif; ?>
 
-
-        <?php if($pro): ?>
+        <?php if($professional): ?>
             <div class="pro division">
                 <div class="division-header">
                     <h4>Professional</h4>
                 </div>
 
-                <?php foreach($pro as $pro_team): ?>
+                <?php foreach($professional as $pro_team): ?>
                     
                     <?php
                         $year = $pro_team['year'];
