@@ -1,19 +1,17 @@
 <?php
+    bearsmith_global_vars();
 
     $teams = get_field('pro_seasons');
     $pro_teams = array();
-
 
     if($teams) {
         foreach($teams as $team) {
             $division_obj = get_field('division', $team['team']);
             $division = $division_obj[0]->post_name;
     
-            if (in_array($division, array("american-ultimate-disc-league", "major-league-ultimate", "premier-ultimate-league", "western-ultimate-league"))) {
+            if (in_array($division, $GLOBALS['divisions']['professional'])) {
                 array_push($pro_teams, $team);
             }
-    
-
         }
     }
 
@@ -34,8 +32,6 @@
             array_push($pro_team_second, $year);
         }
     }
-
-
 
     if($pro_team_first || $pro_team_second ): 
 

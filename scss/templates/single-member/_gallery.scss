@@ -15,10 +15,19 @@ section.gallery {
 
     .slick-slide {
         cursor: pointer;
+        
+        .photo-wrapper {
+            opacity: 0.5;
+            transition: all 0.4s ease-in;
+        }
     }
 
     .slick-current {
         cursor: default;
+
+        .photo-wrapper {
+            opacity: 1;
+        }
     }
 
     .photo {
@@ -32,7 +41,7 @@ section.gallery {
         display: flex;
         align-items: center;
         justify-content: center;
-        @include aspect-ratio(16, 9);
+        @include aspect-ratio(16, 8);
 
         .content {
             display: flex;
