@@ -11,9 +11,9 @@
     </div>
 
     <?php if(have_rows('contributions_and_service')): ?>
-        <section class="contributions-and-services">
+        <section class="contributions-and-service">
             <div class="section-header">
-                <h3 class="small">Contributions & Services</h3>
+                <h3 class="small">Contributions & Service</h3>
             </div>
 
             <ul>

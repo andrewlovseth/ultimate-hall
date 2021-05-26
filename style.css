@@ -863,18 +863,18 @@ body.single-member .vitals {
 body.single-member .biography p {
   padding-bottom: 2rem; }
 
-body.single-member .biography .contributions-and-services {
+body.single-member .biography .contributions-and-service {
   padding-top: 2rem; }
-  body.single-member .biography .contributions-and-services .section-header {
+  body.single-member .biography .contributions-and-service .section-header {
     padding-bottom: 1rem; }
-  body.single-member .biography .contributions-and-services ul {
+  body.single-member .biography .contributions-and-service ul {
     list-style-type: disc;
     padding-left: 1.25rem; }
-    body.single-member .biography .contributions-and-services ul li {
+    body.single-member .biography .contributions-and-service ul li {
       line-height: 1.5em; }
-      body.single-member .biography .contributions-and-services ul li + li {
+      body.single-member .biography .contributions-and-service ul li + li {
         margin-top: 0.75rem; }
-  body.single-member .biography .contributions-and-services .year {
+  body.single-member .biography .contributions-and-service .year {
     font-weight: bold; }
 
 body.single-member .championship-tournaments {
