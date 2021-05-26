@@ -2,8 +2,7 @@
 
 /*
   
-    Template Name: Homepage
-
+    Template Name: About
 */
 
 get_header(); ?>
