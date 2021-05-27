@@ -4,6 +4,8 @@
 	$(document).ready(function($) {
 		$('.smooth').smoothScroll();
 
+		MicroModal.init();
+
 		// rel="external"
 		$('a[rel="external"]').click( function() {
 			window.open( $(this).attr('href') );
@@ -32,8 +34,18 @@
 			var index = $(this).data("slick-index");
 			if ($('.slick-slider').slick('slickCurrentSlide') !== index) {
 				$('.slick-slider').slick('slickGoTo', index);
+			} else {
+
 			}
 		  });
+
+			$('.js-modal').on('click', function() {
+				var target_modal = $(this).attr('data-modal');
+				MicroModal.show(target_modal);
+
+
+				return false;
+			});
 
 	});
 

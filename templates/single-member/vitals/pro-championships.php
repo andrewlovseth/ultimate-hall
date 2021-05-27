@@ -21,7 +21,7 @@
     foreach($pro_teams as $pro_team) {
         $season = $pro_team['season'];
         $season_year = get_field('details_year', $season);
-        $year = $season_year->post_title;
+        $year = get_the_title($season_year);
         $placement = $pro_team['placement'];
 
         if ($placement == '1st') {
