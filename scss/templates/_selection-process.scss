@@ -1,0 +1,127 @@
+body.page-template-selection-process {
+
+    .page-header {
+        @include desktop-small {
+            padding-bottom: 8rem;
+        }
+    }
+
+    section.info {
+        @include desktop-small {
+            grid-column: 2 / span 7;
+        }
+
+        .headline {
+            padding-bottom: 1rem;
+        }
+
+        .resources {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+
+            @include desktop-small {
+                padding-bottom: 0;
+            }
+            .section-header {
+                padding-bottom: 1rem;
+            }
+            .documents {
+                list-style-type: disc;
+                padding-left: 1.5rem;
+
+                li {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+    }
+
+    aside.sidebar {
+        align-self: start;
+        padding-bottom: 3rem;
+
+        @include desktop-small {
+            grid-column: 10 / span 4;
+            padding-bottom: 0;
+        }
+
+        .section-header {
+            padding-bottom: 1rem;
+        }
+
+        .nominate-cta {
+            background: $light-gray;
+            padding: 3rem;
+        }
+
+        .vetting-committee {
+            margin-top: 3rem;
+
+            .members {
+                display: grid;
+                gap: 2rem;
+                
+                @include tablet-small {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                @include desktop-small {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+            }
+
+            .member {
+
+                a {
+                    display: grid;
+                    grid-template-columns: 5rem 1fr;
+                    gap: 1rem;
+                    color: $charcoal;
+                }
+
+                .photo {
+                    @include aspect-ratio(1, 1);
+                    @include cover-fill-image;
+
+                    img {
+                        border-radius: 50%;    
+                    }
+                }
+
+                .info {
+                    align-self: center;
+                    font-family: $work-sans;
+
+                    .name {
+                        font-size: 1rem;
+
+                        h4 {
+                            font-weight: bold;
+                        }
+
+                        .class {
+                            padding-top: 0.125rem;
+                            display: block;
+                            font-family: $averia;
+                            font-style: italic;
+                            font-size: 0.75rem;
+                            font-weight: normal;
+                        }
+                    }
+
+                    .title {
+                        padding-top: 0.5rem;
+                        
+                        h5 {
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+
+}

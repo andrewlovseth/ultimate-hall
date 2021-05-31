@@ -63,3 +63,9 @@
 		color: $gold;
 	}
 }
+
+
+.page-title {
+	font-weight: 300;
+	font-size: clamp(2rem, 2vw, 2.5rem);
+}

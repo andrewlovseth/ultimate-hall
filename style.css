@@ -487,6 +487,10 @@ a {
   font-weight: bold;
   color: #E7C22C; }
 
+.page-title {
+  font-weight: 300;
+  font-size: clamp(2rem, 2vw, 2.5rem); }
+
 .copy.extended > * {
   margin-bottom: 2rem; }
 
@@ -712,6 +716,17 @@ body {
         text-transform: uppercase;
         letter-spacing: 0.1em; }
 
+.cta .btn {
+  display: inline-block;
+  background: #E7C22C;
+  padding: 1rem 2rem;
+  color: #fff;
+  font-family: "Work Sans", sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em; }
+
 /**************************\
   Basic Modal Styles
 \**************************/
@@ -864,6 +879,9 @@ body {
 
 .modal.is-open {
   display: block; }
+
+.modal__content img {
+  max-height: 75vh; }
 
 section.hero-image {
   position: relative;
@@ -1610,6 +1628,100 @@ body.single-tournaments .years {
       background: #3E80AD;
       color: #fff; }
 
+@media screen and (min-width: 992px) {
+  body.page-template-selection-process .page-header {
+    padding-bottom: 8rem; } }
+
+@media screen and (min-width: 992px) {
+  body.page-template-selection-process section.info {
+    grid-column: 2 / span 7; } }
+
+body.page-template-selection-process section.info .headline {
+  padding-bottom: 1rem; }
+
+body.page-template-selection-process section.info .resources {
+  padding-top: 2rem;
+  padding-bottom: 3rem; }
+  @media screen and (min-width: 992px) {
+    body.page-template-selection-process section.info .resources {
+      padding-bottom: 0; } }
+  body.page-template-selection-process section.info .resources .section-header {
+    padding-bottom: 1rem; }
+  body.page-template-selection-process section.info .resources .documents {
+    list-style-type: disc;
+    padding-left: 1.5rem; }
+    body.page-template-selection-process section.info .resources .documents li {
+      margin-bottom: 1rem; }
+
+body.page-template-selection-process aside.sidebar {
+  align-self: start;
+  padding-bottom: 3rem; }
+  @media screen and (min-width: 992px) {
+    body.page-template-selection-process aside.sidebar {
+      grid-column: 10 / span 4;
+      padding-bottom: 0; } }
+  body.page-template-selection-process aside.sidebar .section-header {
+    padding-bottom: 1rem; }
+  body.page-template-selection-process aside.sidebar .nominate-cta {
+    background: #F8F9FA;
+    padding: 3rem; }
+  body.page-template-selection-process aside.sidebar .vetting-committee {
+    margin-top: 3rem; }
+    body.page-template-selection-process aside.sidebar .vetting-committee .members {
+      display: grid;
+      gap: 2rem; }
+      @media screen and (min-width: 480px) {
+        body.page-template-selection-process aside.sidebar .vetting-committee .members {
+          grid-template-columns: repeat(2, 1fr); } }
+      @media screen and (min-width: 992px) {
+        body.page-template-selection-process aside.sidebar .vetting-committee .members {
+          grid-template-columns: repeat(1, 1fr); } }
+    body.page-template-selection-process aside.sidebar .vetting-committee .member a {
+      display: grid;
+      grid-template-columns: 5rem 1fr;
+      gap: 1rem;
+      color: #404040; }
+    body.page-template-selection-process aside.sidebar .vetting-committee .member .photo {
+      position: relative; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .photo:before {
+        display: block;
+        content: "";
+        width: 100%;
+        padding-top: 100%; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .photo > .content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .photo img {
+        width: 100%;
+        height: 100%;
+        -o-object-fit: cover;
+           object-fit: cover; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .photo img {
+        border-radius: 50%; }
+    body.page-template-selection-process aside.sidebar .vetting-committee .member .info {
+      align-self: center;
+      font-family: "Work Sans", sans-serif; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .info .name {
+        font-size: 1rem; }
+        body.page-template-selection-process aside.sidebar .vetting-committee .member .info .name h4 {
+          font-weight: bold; }
+        body.page-template-selection-process aside.sidebar .vetting-committee .member .info .name .class {
+          padding-top: 0.125rem;
+          display: block;
+          font-family: "Averia Serif Libre", cursive;
+          font-style: italic;
+          font-size: 0.75rem;
+          font-weight: normal; }
+      body.page-template-selection-process aside.sidebar .vetting-committee .member .info .title {
+        padding-top: 0.5rem; }
+        body.page-template-selection-process aside.sidebar .vetting-committee .member .info .title h5 {
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em; }
+
 @media screen and (min-width: 768px) {
   body.blog section.page-header h1 {
     grid-column: 3 / span 6; } }
@@ -1688,9 +1800,6 @@ body.single-post article.post .article-header {
 @media screen and (min-width: 992px) {
   body.single-post article.post .article-body {
     grid-column: 6 / span 8; } }
-
-body.page-template-contact .site-content {
-  padding-top: 0; }
 
 @media screen and (min-width: 992px) {
   body.page-template-contact .page-header {
