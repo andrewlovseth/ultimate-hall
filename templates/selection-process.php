@@ -6,6 +6,7 @@
 */
 
 get_header(); ?>
+    <?php get_template_part('template-parts/global/hero-image'); ?>
 
     <?php get_template_part('template-parts/global/page-header'); ?>
 

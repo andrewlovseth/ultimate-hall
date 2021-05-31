@@ -1,0 +1,35 @@
+section.hero-image {
+    @include aspect-ratio(16, 6);
+    @include cover-fill-image;
+    max-height: 300px;
+
+    & + section.page-header {
+        margin-top: -1.75rem;
+
+        @include tablet {
+            margin-top: -2.75rem;
+        }
+
+        h1 {
+            background: $white;
+            padding: 1rem 2rem;
+            box-shadow: rgba(50, 50, 93, 0.1) 0px 13px 27px -5px, rgba(0, 0, 0, 0.15) 0px 8px 16px -8px;
+            font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+
+            @include tablet-small {
+                grid-column: 3 / span 6;
+            }
+
+            @include tablet {
+                font-size: clamp(1.375rem, 3vw, 2rem);
+                padding: 2rem;
+            }
+            
+            @include desktop-small {
+                grid-column: 5 / span 6;
+            }
+        }
+    }
+
+
+}

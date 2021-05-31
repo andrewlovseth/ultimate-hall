@@ -534,6 +534,8 @@ body {
   @media screen and (min-width: 1280px) {
     .site-content {
       padding: 8rem 0; } }
+  .site-content.has-hero {
+    padding-top: 0; }
 
 .grid {
   display: grid;
@@ -863,13 +865,54 @@ body {
 .modal.is-open {
   display: block; }
 
+section.hero-image {
+  position: relative;
+  max-height: 300px; }
+  section.hero-image:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: 37.5%; }
+  section.hero-image > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+  section.hero-image img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover; }
+  section.hero-image + section.page-header {
+    margin-top: -1.75rem; }
+    @media screen and (min-width: 768px) {
+      section.hero-image + section.page-header {
+        margin-top: -2.75rem; } }
+    section.hero-image + section.page-header h1 {
+      background: #fff;
+      padding: 1rem 2rem;
+      box-shadow: rgba(50, 50, 93, 0.1) 0px 13px 27px -5px, rgba(0, 0, 0, 0.15) 0px 8px 16px -8px;
+      font-size: clamp(1.25rem, 1.7vw, 1.5rem); }
+      @media screen and (min-width: 480px) {
+        section.hero-image + section.page-header h1 {
+          grid-column: 3 / span 6; } }
+      @media screen and (min-width: 768px) {
+        section.hero-image + section.page-header h1 {
+          font-size: clamp(1.375rem, 3vw, 2rem);
+          padding: 2rem; } }
+      @media screen and (min-width: 992px) {
+        section.hero-image + section.page-header h1 {
+          grid-column: 5 / span 6; } }
+
 section.block-hall-class {
   padding: 3rem 0; }
 
 .site-header {
   padding: 2rem 0;
   background: #404040;
-  color: #fff; }
+  color: #fff;
+  z-index: 10; }
   @media screen and (min-width: 480px) {
     .site-header {
       padding: 2.5rem 0; } }
@@ -957,8 +1000,8 @@ section.block-hall-class {
       position: absolute;
       top: 0;
       z-index: 1000;
-      left: -50vw;
-      width: 50vw;
+      left: -60vw;
+      width: 60vw;
       height: 100vh;
       background: #E7C22C;
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
@@ -973,7 +1016,7 @@ section.block-hall-class {
         .site-header .site-nav .link:before {
           display: none; }
         .site-header .site-nav .link a {
-          font-size: 1.125rem; } }
+          font-size: clamp(1rem, 1vw, 1.125rem); } }
 
 body.nav-overlay-open .hamburger {
   z-index: 100; }
@@ -1645,3 +1688,65 @@ body.single-post article.post .article-header {
 @media screen and (min-width: 992px) {
   body.single-post article.post .article-body {
     grid-column: 6 / span 8; } }
+
+body.page-template-contact .site-content {
+  padding-top: 0; }
+
+@media screen and (min-width: 992px) {
+  body.page-template-contact .page-header {
+    padding-bottom: 8rem; } }
+
+body.page-template-contact section.contact-info {
+  padding-bottom: 2rem; }
+  @media screen and (min-width: 768px) {
+    body.page-template-contact section.contact-info .copy {
+      grid-column: 2 / span 4; } }
+  @media screen and (min-width: 992px) {
+    body.page-template-contact section.contact-info .copy {
+      grid-column: 3 / span 5; } }
+  body.page-template-contact section.contact-info .links {
+    background: #F8F9FA;
+    padding: 2rem;
+    align-self: start;
+    margin-top: 3rem;
+    font-family: "Work Sans", sans-serif; }
+    @media screen and (min-width: 768px) {
+      body.page-template-contact section.contact-info .links {
+        margin-top: 0;
+        grid-column: 6 / span 4; } }
+    @media screen and (min-width: 992px) {
+      body.page-template-contact section.contact-info .links {
+        grid-column: 9 / span 4; } }
+    body.page-template-contact section.contact-info .links h4 {
+      font-family: "Work Sans", sans-serif;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.875rem;
+      padding-bottom: 0.75rem; }
+    body.page-template-contact section.contact-info .links .email a {
+      font-size: 0.875rem;
+      display: inline-block; }
+      body.page-template-contact section.contact-info .links .email a:hover {
+        text-decoration: underline; }
+    body.page-template-contact section.contact-info .links .social {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap; }
+      body.page-template-contact section.contact-info .links .social h4 {
+        width: 100%; }
+      body.page-template-contact section.contact-info .links .social .link {
+        width: 1.5rem;
+        height: 1.25rem; }
+        body.page-template-contact section.contact-info .links .social .link + .link {
+          margin-left: 1.5rem; }
+        body.page-template-contact section.contact-info .links .social .link a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          -o-object-fit: contain;
+             object-fit: contain; }
+          body.page-template-contact section.contact-info .links .social .link a img {
+            width: 100%;
+            height: 100%; }

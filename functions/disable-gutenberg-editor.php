@@ -9,7 +9,10 @@
 function bearsmith_disable_editor( $id = false ) {
 
 	$excluded_templates = array(
-		// 'template-name.php',
+		'templates/home.php',
+		'templates/about.php',
+		'templates/selection-process.php',
+		'templates/contact.php'
 	);
 
 	$excluded_ids = array(

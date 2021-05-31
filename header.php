@@ -21,4 +21,4 @@
 		<?php get_template_part('template-parts/header/navigation'); ?>
 	</header>
 
-	<main class="site-content">
+	<main class="site-content<?php if(get_field('hero_image')): ?> has-hero<?php endif; ?>">
