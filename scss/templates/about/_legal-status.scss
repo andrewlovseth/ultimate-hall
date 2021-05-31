@@ -1,0 +1,13 @@
+section.legal-status {
+    padding-top: 4rem;
+
+    @include desktop-small {
+        padding-top: 8rem;
+    }
+
+    .headline, .copy {
+        @include desktop-small {
+            grid-column: 2 / span 8;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+section.donate {
+    .info  {
+        background: $blue;
+        color: $white;
+        padding: 3rem;
+        margin-top: 2rem;
+
+        @include desktop-small {
+            grid-column: 3 / span 10;
+        }
+
+        .section-header {
+            padding-bottom: 1rem;
+
+            h3 {
+                font-family: $work-sans;
+                font-weight: bold;
+            }
+        }
+
+        .copy {
+            p {
+                font-family: $work-sans;
+            }
+        }
+
+        .cta {
+            padding-top: 2rem;
+
+            .btn {
+                background: $white;
+                color: $blue;
+            }
+        }
+    }
+
+}

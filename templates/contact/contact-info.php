@@ -1,6 +1,7 @@
 <?php
 
     $contact = get_field('contact');
+    $headline =  $contact['headline']; 
     $copy =  $contact['copy']; 
     $email =  $contact['email']; 
     $facebook =  $contact['facebook']; 
@@ -10,9 +11,14 @@
 ?>
 
 <section class="contact-info grid">
+    <div class="info">
+        <div class="headline">
+            <h2 class="page-title"><?php echo $headline; ?></h2>
+        </div>
 
-    <div class="copy p1">
-        <?php echo $copy; ?>
+        <div class="copy p1">
+            <?php echo $copy; ?>
+        </div>
     </div>
 
     <div class="links">
@@ -41,10 +47,6 @@
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-instagram-blue.svg" alt="Instagram" />
                 </a>
             </div>
-        
-        
         </div>    
     </div>
-
-
 </section>

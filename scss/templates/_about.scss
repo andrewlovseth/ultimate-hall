@@ -1,0 +1,27 @@
+body.page-template-about {
+
+    .page-header {
+        @include desktop-small {
+            padding-bottom: 8rem;
+        }
+    }
+
+    section.info {
+        @include desktop-small {
+            grid-column: 2 / span 7;
+            padding-bottom: 4rem;
+        }
+
+        .headline {
+            padding-bottom: 1rem;
+        }
+
+    }
+
+    @import 'templates/about/mission';
+    
+    @import 'templates/about/board-of-directors';
+
+    @import 'templates/about/legal-status';
+
+}

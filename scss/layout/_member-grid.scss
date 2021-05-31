@@ -43,10 +43,11 @@
         }
     }    
 
+
+
     // List of 3
     .member:nth-last-child(n+3):nth-last-child(-n+3):first-child,
     .member:nth-last-child(n+3):nth-last-child(-n+3):first-child ~ .member {
-
         @include desktop-small {
             
             &:nth-child(1) {
@@ -59,7 +60,7 @@
 
             &:nth-child(3) {
                 grid-column: 7 / span 2;
-            }     
+            }  
         }
     }    
 
@@ -126,6 +127,29 @@
             }
         }
     }
+
+    // List of 8 + 13
+    .member:nth-last-child(n+8):nth-last-child(-n+8):first-child,
+    .member:nth-last-child(n+8):nth-last-child(-n+8):first-child ~ .member,     
+    .member:nth-last-child(n+13):nth-last-child(-n+13):first-child,
+    .member:nth-last-child(n+13):nth-last-child(-n+13):first-child ~ .member {
+        @include desktop-small {
+            &:last-child:nth-child(8),
+            &:last-child:nth-child(13) {
+                grid-column-end: -3;
+            }
+
+            &:nth-last-child(2):nth-child(7),
+            &:nth-last-child(2):nth-child(12) {
+                grid-column-end: -5;
+            }  
+
+            &:nth-last-child(3):nth-child(6),
+            &:nth-last-child(3):nth-child(11) {
+                grid-column-end: -7;
+            }  
+        }
+    }    
 
     .member {
         grid-column: span 2;
