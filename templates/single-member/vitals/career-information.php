@@ -62,7 +62,7 @@
         }
     }
 
-    if($college || $club || $masters || $national_team || $pro ):
+    if($college || $club || $masters || $national_teams || $professional ):
 ?>
 
     <div class="career-information vitals-section">

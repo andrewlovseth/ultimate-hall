@@ -1,6 +1,7 @@
 <?php
     $type = get_field('meta_induction_type');
-    if($type['value'] == 'player'): ?>
+    $championships = get_field('us_championships');
+    if($type['value'] == 'player' && $championships !== false): ?>
 
     <?php
         // Init teammates array
@@ -8,7 +9,6 @@
         
         // Build array of tournaments
         $tournaments = array();
-        $championships = get_field('us_championships');
         if($championships) {
             foreach($championships as $championship) {
                 $event = $championship['tournament'];
