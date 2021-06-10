@@ -26,7 +26,6 @@
     padding: 2rem;
     max-width: 1000px;
     max-height: 100vh;
-    overflow-y: auto;
     box-sizing: border-box;
   }
   
@@ -39,11 +38,40 @@
 
   
   .modal__close {
-    background: transparent;
+    position: absolute;
+    z-index: 10;
+    top: -1rem;
+    right: -1rem;
     border: 0;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    display: block;
+    transition: all 0.2s ease;
+    background: $white;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      transition: all 0.2s ease;
+
+      path {
+        transition: all 0.3s ease;
+      }
+    }
+
+
+
+    &:hover {
+      background: $black;
+      cursor: pointer;
+      #x {
+        fill: $white;
+      }
+    }
   }
   
-  .modal__header .modal__close:before { content: "\2715"; }
   
   
   .modal__btn {
@@ -151,5 +179,21 @@
   .modal__content {
     img {
       max-height: 75vh;
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+
+      p {
+        color: $white;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
     }
   }

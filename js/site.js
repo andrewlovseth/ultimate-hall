@@ -47,6 +47,14 @@
 				return false;
 			});
 
+			$('.js-close-modal').on('click', function() {
+				MicroModal.close();
+				console.log('hit!');
+
+
+				return false;
+			});
+
 	});
 
 

@@ -2,6 +2,7 @@
     bearsmith_global_vars();
     
     $teams = get_field('playing_career');
+    $youth = array();
     $college = array();
     $club = array();
     $masters = array();
@@ -16,7 +17,11 @@
                 $division_obj = get_field('division', $team['team']->ID);
                 if($division_obj) {
                     $division = $division_obj[0]->post_name;
-            
+
+                    if (in_array($division, $GLOBALS['divisions']['youth'])) {
+                        array_push($youth, $team);
+                    }
+
                     if (in_array($division, $GLOBALS['divisions']['college'])) {
                         array_push($college, $team);
                     }
@@ -62,13 +67,37 @@
         }
     }
 
-    if($college || $club || $masters || $national_teams || $professional ):
+    if($youth || $college || $club || $masters || $national_teams || $professional ):
 ?>
 
     <div class="career-information vitals-section">
         <div class="vitals-header">
             <h3>Career Information</h3>
         </div>
+
+
+        <?php if($youth): ?>
+            <div class="youth division">
+                <div class="division-header">
+                    <h4>Youth</h4>
+                </div>
+
+                <?php foreach($youth as $youth_team): ?>
+                    
+                    <?php
+                        $year = $youth_team['year'];
+                        $team = $youth_team['team'];
+
+                        $args = [
+                            'year' => $year,
+                            'team' => $team
+                        ];
+                        get_template_part('templates/single-member/vitals/career-entry', null, $args);
+
+                    ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
         <?php if($college): ?>
             <div class="college division">

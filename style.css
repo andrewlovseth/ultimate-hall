@@ -777,7 +777,6 @@ body {
   padding: 2rem;
   max-width: 1000px;
   max-height: 100vh;
-  overflow-y: auto;
   box-sizing: border-box; }
 
 .modal__header {
@@ -786,11 +785,29 @@ body {
   align-items: center; }
 
 .modal__close {
-  background: transparent;
-  border: 0; }
-
-.modal__header .modal__close:before {
-  content: "\2715"; }
+  position: absolute;
+  z-index: 10;
+  top: -1rem;
+  right: -1rem;
+  border: 0;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  display: block;
+  transition: all 0.2s ease;
+  background: #fff; }
+  .modal__close svg {
+    width: 2rem;
+    height: 2rem;
+    transition: all 0.2s ease; }
+    .modal__close svg path {
+      transition: all 0.3s ease; }
+  .modal__close:hover {
+    background: #000;
+    cursor: pointer; }
+    .modal__close:hover #x {
+      fill: #fff; }
 
 .modal__btn {
   font-size: .875rem;
@@ -907,6 +924,19 @@ body {
 
 .modal__content img {
   max-height: 75vh; }
+
+.modal__content .caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem; }
+  .modal__content .caption p {
+    color: #fff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.05em; }
 
 section.hero-image {
   position: relative;

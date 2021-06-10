@@ -13,7 +13,8 @@ function bearsmith_divisions_array($acf_divisions) {
 function bearsmith_global_vars() {
 	global $divisions;
 	$divisions = array(
-		'college'  => bearsmith_divisions_array('college_divisions'),
+		'youth'  => bearsmith_divisions_array('youth_divisions'),
+        'college'  => bearsmith_divisions_array('college_divisions'),
         'club'  => bearsmith_divisions_array('club_divisions'),
         'masters'  => bearsmith_divisions_array('masters_divisions'),
         'grandmasters'  => bearsmith_divisions_array('grandmasters_divisions'),

@@ -27,16 +27,23 @@
             <div class="modal__overlay" tabindex="-1" data-micromodal-close>
                 <div class="modal__container" role="dialog" aria-modal="true">
 
-                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                    <div class="modal__close js-close-modal" aria-label="Close modal" data-micromodal-close>
+                        <?php get_template_part('template-parts/svg/icon-close'); ?>
+                    </div>
 
                     <div class="modal__content" id="modal-<?php echo $count; ?>-content">
                         <img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>" />
+
+                        <?php if($image['caption']): ?>
+                            <div class="caption">
+                                <p><?php echo $image['caption']; ?></p>
+                            </div>
+                        <?php endif; ?>                        
                     </div>
 
                 </div>
             </div>
         </div>
     <?php $count++; endforeach; ?>
-
 
 <?php endif; ?>
