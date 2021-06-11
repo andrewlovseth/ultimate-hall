@@ -1,0 +1,15 @@
+body.page-template-home {
+    .site-content {
+        padding: 0;
+    }
+
+    @import 'home/hero';
+
+    @import 'home/about';
+
+    @import 'home/latest-class';
+
+    @import 'home/selection';
+
+    @import 'home/news';
+}

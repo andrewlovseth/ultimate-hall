@@ -1,0 +1,68 @@
+section.news {
+    background: $light-gray;
+    padding: 4rem 0;
+
+    @include desktop-small {
+        padding: 8rem 0;
+    }
+
+    .recent-news-grid {
+        display: grid;
+        gap: 2rem;
+
+        @include desktop-small {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+
+    article.post-teaser {
+        .meta {
+            padding-bottom: 1rem;
+
+            .date {
+                display: block;
+                text-transform: uppercase;
+                font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
+                letter-spacing: 0.05em;
+                font-family: $work-sans;
+                font-weight: bold;
+                color: $blue;
+            }
+        }
+
+        .info {
+
+
+
+            .headline {
+                h3 {
+                    font-size: clamp(1rem, 1.2vw, 1.25rem);
+                    line-height: 1.25em;
+
+                    a {
+                        color: $slate;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                }
+            }
+
+            .excerpt {
+                padding-top: 1rem;
+            }
+        }        
+    }
+
+    .cta {
+        padding-top: 3rem;
+
+        @include desktop-small {
+            padding-top: 6rem;
+        }
+    }
+
+}

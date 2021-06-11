@@ -1,5 +1,9 @@
 body.page-template-about {
 
+    .site-content {
+        padding-bottom: 0;
+    }
+
     .page-header {
         @include desktop-small {
             padding-bottom: 8rem;
@@ -15,13 +19,13 @@ body.page-template-about {
         .headline {
             padding-bottom: 1rem;
         }
-
     }
 
     @import 'templates/about/mission';
     
     @import 'templates/about/board-of-directors';
 
-    @import 'templates/about/legal-status';
+    @import 'templates/about/partners';
 
+    @import 'templates/about/legal-status';
 }

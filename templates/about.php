@@ -19,6 +19,8 @@ get_header(); ?>
 
     <?php get_template_part('templates/about/board-of-directors'); ?>
 
+    <?php get_template_part('templates/about/partners'); ?>
+
     <?php get_template_part('templates/about/legal-status'); ?>
 
 <?php get_footer(); ?>

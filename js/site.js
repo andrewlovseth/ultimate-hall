@@ -51,11 +51,27 @@
 				MicroModal.close();
 				console.log('hit!');
 
-
 				return false;
 			});
 
+			$('.hero-slider').slick({
+				dots: false,
+				arrows: false,
+				infinite: true,
+				speed: 300,
+				slidesToShow: 1,
+				fade: true,
+				cssEase: 'linear',
+				autoplay: true,
+				autoplaySpeed: 5000,
+			  });
+	
+
+
 	});
+
+
+
 
 
 	$(document).mouseup(function(e) {

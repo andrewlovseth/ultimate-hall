@@ -1,0 +1,78 @@
+section.hero {
+    .gallery {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        z-index: 1;
+    }
+    .photo {
+
+        @include aspect-ratio(1, 1);
+
+        @include tablet-small {
+            @include aspect-ratio(4, 3);
+        }
+
+        @include tablet {
+            @include aspect-ratio(16, 9);
+        }
+
+        @include desktop-medium {
+            @include aspect-ratio(16, 7);
+        }
+
+        @include cover-fill-image;
+
+        img {
+            object-position: top center;
+            filter: brightness(70%);
+        }
+    }
+
+    .info {
+        grid-row: 1;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .headline {
+        padding-bottom: 1rem;
+
+        &:after {
+            display: block;
+            content: '';
+            width: 6rem;
+            height: 0.25rem;
+            background: $white;
+            margin-top: 1rem;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 300;
+            line-height: 1.25em;
+            font-size: clamp(2rem, 4vw, 4rem);
+            color: $white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .sub-headline {
+        max-width: 12rem;
+
+        @include tablet-small {
+            max-width: 100%;
+        }
+
+        h2 {
+            line-height: 1.5em;
+            font-weight: 300;
+            font-style: italic;
+            font-size: clamp(1rem, 1.4vw, 1.5rem);
+            color: $white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}

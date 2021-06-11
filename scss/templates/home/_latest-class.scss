@@ -1,4 +1,4 @@
-section.legal-status {
+section.latest-class {
     background: $light-gray;
     padding: 4rem 0;
 
@@ -6,17 +6,24 @@ section.legal-status {
         padding: 8rem 0;
     }
 
-    .section-header, .copy {
+    .copy {
+        text-align: center;
+        padding-bottom: 3rem;
+
         @include tablet {
             grid-column: 3 / span 6;
         }
 
         @include desktop-small {
-            grid-column: 2 / span 8;
+            grid-column: 4 / span 8;
         }
     }
 
     .section-header {
         padding-bottom: 1rem;
+    }
+
+    .cta {
+        padding-top: 3rem;
     }
 }
