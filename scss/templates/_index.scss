@@ -84,4 +84,66 @@ body.blog {
             }
         }
     }
+
+    nav.pagination {
+        padding-top: 3rem;
+        border-top: 1px solid #eee;
+        margin-top: 3rem;
+
+        @include desktop-small {
+            grid-column: 4 / span 8;
+        }
+
+        h2 {
+            font-family: $work-sans;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+            padding-bottom: 0.5rem;
+            display: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            font-family: $work-sans;
+
+            & > * + * {
+                display: block;
+                margin-left: 0.5rem;
+            }
+
+            .page-numbers {
+                padding: 0.5rem 0.75rem 0.375rem 0.75rem;
+                border: 1px solid $blue;
+                line-height: 1em;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: $blue;
+                    color: $white;
+                }
+                
+                &.current {
+                    border-color: $slate;
+                    background: $slate;
+                    color: $white;
+                }
+
+                &.next,
+                &.prev {
+                    border: none;
+
+                    &:hover {
+                        background: transparent;
+                        color: $blue;
+                        text-decoration: underline;
+
+                    }
+                }
+            }
+        }
+
+    }
 }

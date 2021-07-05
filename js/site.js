@@ -2,7 +2,7 @@
 
 
 	$(document).ready(function($) {
-		$('.smooth').smoothScroll();
+		$('.smooth, .copy a').smoothScroll();
 
 		MicroModal.init();
 

@@ -6,7 +6,7 @@
 
 ?>
 
-<section class="legal-status grid">
+<section id="legal" class="legal-status grid">
     <div class="section-header">
         <h3><?php echo $headline; ?></h3>
     </div>
@@ -15,4 +15,3 @@
         <?php echo $copy; ?>
     </div>
 </section>
-

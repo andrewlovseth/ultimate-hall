@@ -430,10 +430,10 @@ optgroup,
 textarea {
   color: #231F20;
   font-family: "Averia Serif Libre", cursive;
-  font-weight: 300; }
+  font-weight: 400; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 300; }
+  font-weight: 400; }
 
 a {
   color: #3E80AD; }
@@ -500,6 +500,19 @@ a {
   font-size: clamp(1.125rem, 1.2vw, 1.25rem);
   margin-bottom: 1rem;
   padding-top: 2rem; }
+
+.copy.extended > h4 {
+  font-family: "Work Sans", sans-serif;
+  font-weight: bold;
+  font-size: clamp(1rem, 1vw, 1.125rem);
+  margin-bottom: 0.5rem;
+  padding-top: 1rem; }
+
+.copy.extended ul, .copy.extended ol {
+  padding-bottom: 0; }
+
+.copy.extended a {
+  text-decoration: underline; }
 
 .copy ul {
   list-style-type: disc; }
@@ -1940,9 +1953,19 @@ body.page-template-selection-process aside.sidebar {
       padding-bottom: 0; } }
   body.page-template-selection-process aside.sidebar .section-header {
     padding-bottom: 1rem; }
+    body.page-template-selection-process aside.sidebar .section-header h3.small {
+      font-size: clamp(1.125rem, 1.25vw, 1.25rem); }
   body.page-template-selection-process aside.sidebar .nominate-cta {
     background: #F8F9FA;
     padding: 3rem; }
+    body.page-template-selection-process aside.sidebar .nominate-cta .cta + .cta {
+      margin-top: 1.5rem; }
+    body.page-template-selection-process aside.sidebar .nominate-cta .more-info {
+      padding-top: 1rem; }
+      body.page-template-selection-process aside.sidebar .nominate-cta .more-info a {
+        font-family: "Work Sans", sans-serif;
+        font-size: 0.75rem;
+        border-bottom: 1px dotted; }
   body.page-template-selection-process aside.sidebar .vetting-committee {
     margin-top: 3rem; }
     body.page-template-selection-process aside.sidebar .vetting-committee .members {
@@ -2093,7 +2116,8 @@ body.page-template-about .board-of-directors {
       body.page-template-about .board-of-directors .member .info .title h5 {
         font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em; }
+        letter-spacing: 0.05em;
+        line-height: 1.25em; }
 
 body.page-template-about section.partners {
   padding: 4rem 0 2rem 0; }
@@ -2199,6 +2223,47 @@ body.blog article.post-teaser .info .headline h3 {
 
 body.blog article.post-teaser .info .excerpt {
   padding-top: 1rem; }
+
+body.blog nav.pagination {
+  padding-top: 3rem;
+  border-top: 1px solid #eee;
+  margin-top: 3rem; }
+  @media screen and (min-width: 992px) {
+    body.blog nav.pagination {
+      grid-column: 4 / span 8; } }
+  body.blog nav.pagination h2 {
+    font-family: "Work Sans", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+    padding-bottom: 0.5rem;
+    display: none; }
+  body.blog nav.pagination .nav-links {
+    display: flex;
+    align-items: center;
+    font-family: "Work Sans", sans-serif; }
+    body.blog nav.pagination .nav-links > * + * {
+      display: block;
+      margin-left: 0.5rem; }
+    body.blog nav.pagination .nav-links .page-numbers {
+      padding: 0.5rem 0.75rem 0.375rem 0.75rem;
+      border: 1px solid #3E80AD;
+      line-height: 1em;
+      transition: all 0.2s ease; }
+      body.blog nav.pagination .nav-links .page-numbers:hover {
+        background: #3E80AD;
+        color: #fff; }
+      body.blog nav.pagination .nav-links .page-numbers.current {
+        border-color: #231F20;
+        background: #231F20;
+        color: #fff; }
+      body.blog nav.pagination .nav-links .page-numbers.next, body.blog nav.pagination .nav-links .page-numbers.prev {
+        border: none; }
+        body.blog nav.pagination .nav-links .page-numbers.next:hover, body.blog nav.pagination .nav-links .page-numbers.prev:hover {
+          background: transparent;
+          color: #3E80AD;
+          text-decoration: underline; }
 
 body.single-post article.post .article-header {
   padding-bottom: 2rem; }

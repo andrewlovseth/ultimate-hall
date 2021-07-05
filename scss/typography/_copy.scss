@@ -12,6 +12,22 @@
 			margin-bottom: 1rem;
 			padding-top: 2rem;
 		}
+
+		& > h4 {
+			font-family: $work-sans;
+			font-weight: bold;
+			font-size: clamp(1rem, 1vw, 1.125rem);
+			margin-bottom: 0.5rem;
+			padding-top: 1rem;
+		}
+
+		ul, ol {
+			padding-bottom: 0;
+		}
+		
+		a {
+			text-decoration: underline;
+		}
 	}
 
 	ul {

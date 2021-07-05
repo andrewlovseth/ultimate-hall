@@ -8,11 +8,11 @@ if(have_rows('board_of_directors')): while(have_rows('board_of_directors')): the
 
 ?>
 
-    <section class="board-of-directors grid">
+    <section id="board-of-directors" class="board-of-directors grid">
         <div class="section-header align-center">
             <h3><?php echo $headline; ?></h3>
 
-            <div class="copy p2">
+            <div class="copy p2 extended">
                 <?php echo $copy; ?>
             </div>
         </div>

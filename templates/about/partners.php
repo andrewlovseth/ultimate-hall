@@ -12,11 +12,13 @@
         <h3><?php echo $headline; ?></h3>
     </div>
 
-    <div class="copy p1 extended">
-        <?php echo $copy; ?>
-    </div>
+    <?php if($copy): ?>
+        <div class="copy p1 extended">
+            <?php echo $copy; ?>
+        </div>
+    <?php endif; ?>
 
-    <?php  if( $logos ): ?>
+    <?php if( $logos ): ?>
         <div class="logos">
             <?php foreach( $logos as $logo ): ?>
                 <div class="logo">

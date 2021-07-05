@@ -7,7 +7,7 @@
 
 ?>
 
-    <div class="resources">
+    <div id="resources" class="resources">
         <div class="section-header">
             <h3 class="small"><?php echo $headline; ?></h3>
         </div>

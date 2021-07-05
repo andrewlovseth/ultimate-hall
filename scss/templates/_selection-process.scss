@@ -29,11 +29,32 @@ body.page-template-selection-process {
 
         .section-header {
             padding-bottom: 1rem;
+
+            h3.small {
+                font-size: clamp(1.125rem, 1.25vw, 1.25rem);
+                
+            }
         }
 
         .nominate-cta {
             background: $light-gray;
             padding: 3rem;
+
+            .cta {
+                & + .cta {
+                    margin-top: 1.5rem;
+                }
+            }
+
+            .more-info {
+                padding-top: 1rem;
+
+                a {
+                    font-family: $work-sans;
+                    font-size: 0.75rem;
+                    border-bottom: 1px dotted;
+                }
+            }
         }
 
         @import 'templates/selection-process/vetting-committee';
