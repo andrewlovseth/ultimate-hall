@@ -21,6 +21,18 @@ section.donate {
         .copy {
             p {
                 font-family: $work-sans;
+
+                &:last-of-type {
+                    margin: 0;
+                }
+            }
+        }
+
+        form {
+            padding-top: 2rem;
+
+            input[type="image"] {
+                max-width: 200px;
             }
         }
 

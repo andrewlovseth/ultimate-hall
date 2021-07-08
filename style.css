@@ -952,13 +952,13 @@ body {
   bottom: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.7);
-  padding: 1rem; }
+  padding: 1rem;
+  width: 100%; }
   .modal__content .caption p {
     color: #fff;
     font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 500;
-    letter-spacing: 0.05em; }
+    line-height: 1.5em;
+    font-weight: 500; }
 
 section.hero-image {
   position: relative;
@@ -2038,23 +2038,29 @@ body.page-template-about .site-content {
 body.page-template-about section.info .headline {
   padding-bottom: 1rem; }
 
-body.page-template-about .mission {
+body.page-template-about .sidebar {
   align-self: start;
   margin-top: 3rem;
   margin-bottom: 3rem; }
-  body.page-template-about .mission .info {
-    background: #E7C22C;
+  body.page-template-about .sidebar .module {
     padding: 2rem; }
+    body.page-template-about .sidebar .module + .module {
+      margin-top: 1rem; }
+  body.page-template-about .sidebar .mission {
+    background: #E7C22C;
+    color: #fff; }
+  body.page-template-about .sidebar .vision {
+    border: 2px solid #E7C22C; }
   @media screen and (min-width: 768px) {
-    body.page-template-about .mission {
+    body.page-template-about .sidebar {
       margin-top: 0;
       margin-bottom: 3rem; } }
   @media screen and (min-width: 992px) {
-    body.page-template-about .mission {
+    body.page-template-about .sidebar {
       grid-column: 10 / span 4; } }
-  body.page-template-about .mission .section-header {
+  body.page-template-about .sidebar .section-header {
     padding-bottom: 1rem; }
-    body.page-template-about .mission .section-header h3 {
+    body.page-template-about .sidebar .section-header h3 {
       font-weight: bold;
       font-family: "Work Sans", sans-serif; }
 
@@ -2364,6 +2370,12 @@ body.page-template-contact section.donate .info {
       font-weight: bold; }
   body.page-template-contact section.donate .info .copy p {
     font-family: "Work Sans", sans-serif; }
+    body.page-template-contact section.donate .info .copy p:last-of-type {
+      margin: 0; }
+  body.page-template-contact section.donate .info form {
+    padding-top: 2rem; }
+    body.page-template-contact section.donate .info form input[type="image"] {
+      max-width: 200px; }
   body.page-template-contact section.donate .info .cta {
     padding-top: 2rem; }
     body.page-template-contact section.donate .info .cta .btn {

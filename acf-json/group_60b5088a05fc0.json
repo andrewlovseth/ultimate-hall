@@ -219,10 +219,10 @@
                     "delay": 0
                 },
                 {
-                    "key": "field_60b54d11b5f57",
-                    "label": "Link",
-                    "name": "link",
-                    "type": "link",
+                    "key": "field_60e72eaa6f400",
+                    "label": "PayPal Embed",
+                    "name": "paypal_embed",
+                    "type": "textarea",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -231,7 +231,11 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": "",
+                    "new_lines": ""
                 }
             ]
         },
@@ -293,5 +297,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1622494496
+    "modified": 1625763855
 }

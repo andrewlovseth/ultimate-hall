@@ -1,11 +1,24 @@
-.mission {
+.sidebar {
     align-self: start;
     margin-top: 3rem;
     margin-bottom: 3rem;
 
-    .info {
-        background: $gold;
+    .module {
         padding: 2rem;
+
+        & + .module {
+            margin-top: 1rem;
+        }
+    }
+
+    .mission {
+        background: $gold;
+        color: $white;
+
+    }
+
+    .vision {
+        border: 2px solid $gold;
     }
 
     @include tablet {
