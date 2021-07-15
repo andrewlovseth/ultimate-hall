@@ -1002,6 +1002,8 @@ section.hero-image {
 
 section.block-hall-class {
   padding: 3rem 0; }
+  section.block-hall-class .member-grid .info h3 a {
+    text-decoration: none; }
 
 .site-header {
   padding: 2rem 0;
@@ -1330,7 +1332,7 @@ body.page-template-home section.selection {
   @media screen and (min-width: 992px) {
     body.page-template-home section.selection {
       padding: 8rem 0;
-      align-items: center; } }
+      align-items: start; } }
   body.page-template-home section.selection .info {
     padding-top: 2rem; }
     @media screen and (min-width: 768px) {
@@ -2209,7 +2211,7 @@ body.blog article.post-teaser .meta {
     letter-spacing: 0.05em;
     font-family: "Work Sans", sans-serif;
     font-weight: bold;
-    color: #E7C22C; }
+    color: #3E80AD; }
 
 @media screen and (min-width: 768px) {
   body.blog article.post-teaser .info {
@@ -2284,7 +2286,7 @@ body.single-post article.post .article-header {
       font-size: clamp(0.75rem, 0.9vw, 0.875rem);
       letter-spacing: 0.1em;
       font-weight: bold;
-      color: #E7C22C;
+      color: #3E80AD;
       font-family: "Work Sans", sans-serif; }
   body.single-post article.post .article-header .title {
     font-weight: 300;

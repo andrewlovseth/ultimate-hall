@@ -96,3 +96,10 @@ function bearsmith_remove_wp_embed_js() {
     }
 }
 add_action('init', 'bearsmith_remove_wp_embed_js');
+
+
+
+function wpdocs_excerpt_more( $more ) {
+    return '...';
+}
+add_filter( 'excerpt_more', 'wpdocs_excerpt_more' );
