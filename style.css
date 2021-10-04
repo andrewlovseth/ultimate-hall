@@ -2291,6 +2291,25 @@ body.single-post article.post .article-header {
   body.single-post article.post .article-header .title {
     font-weight: 300;
     font-size: clamp(1.5rem, 1.8vw, 2rem); }
+  body.single-post article.post .article-header .byline {
+    padding-top: 2rem; }
+    body.single-post article.post .article-header .byline .author {
+      display: flex;
+      align-items: center; }
+      body.single-post article.post .article-header .byline .author + .author {
+        margin-top: 1rem; }
+      body.single-post article.post .article-header .byline .author .photo {
+        max-width: 3rem; }
+        body.single-post article.post .article-header .byline .author .photo img {
+          border-radius: 50%; }
+      body.single-post article.post .article-header .byline .author .info {
+        padding-left: 0.75rem; }
+        body.single-post article.post .article-header .byline .author .info a {
+          color: #231F20;
+          font-style: italic;
+          font-size: clamp(1rem, 1.4vw, 1.25rem); }
+          body.single-post article.post .article-header .byline .author .info a:hover {
+            text-decoration: underline; }
 
 @media screen and (min-width: 992px) {
   body.single-post article.post .article-body {
