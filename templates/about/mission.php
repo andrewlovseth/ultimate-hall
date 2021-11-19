@@ -31,5 +31,8 @@
             <?php echo $vision_copy; ?>
         </div>
     </div>
+
+    <?php get_template_part('templates/about/history-book'); ?>
+
 </aside>
 

@@ -2040,6 +2040,15 @@ body.page-template-about .site-content {
 body.page-template-about section.info .headline {
   padding-bottom: 1rem; }
 
+body.page-template-about .history-book {
+  margin-top: 1rem;
+  border: 2px solid #404040;
+  padding: 2rem;
+  background: #404040;
+  color: #fff; }
+  body.page-template-about .history-book .copy a {
+    color: #E7C22C; }
+
 body.page-template-about .sidebar {
   align-self: start;
   margin-top: 3rem;
