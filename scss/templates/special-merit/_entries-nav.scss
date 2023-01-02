@@ -1,0 +1,24 @@
+.entries-nav {
+    ul {
+        background: $charcoal;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+
+    li {
+        padding: 0.5rem 1.5rem;
+    }
+
+    a {
+        display: block;
+        color: $gold;
+        font-family: $work-sans;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

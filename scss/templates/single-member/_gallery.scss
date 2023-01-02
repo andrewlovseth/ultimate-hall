@@ -15,7 +15,7 @@ section.gallery {
 
     .slick-slide {
         cursor: pointer;
-        
+
         .photo-wrapper {
             opacity: 0.5;
             transition: all 0.4s ease-in;
@@ -86,7 +86,5 @@ section.gallery {
             object-fit: contain;
             max-height: 100%;
         }
-
-
     }
 }

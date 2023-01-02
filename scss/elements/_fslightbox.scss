@@ -1,0 +1,33 @@
+body {
+    .fslightbox-container {
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .fslightbox-toolbar {
+        top: 6px;
+        right: 6px;
+        background: unset;
+    }
+
+    .fslightbox-slide-btn,
+    .fslightbox-toolbar-button {
+        background: $blue;
+        border: 1px solid rgba(0, 0, 0, 0.075);
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            transform: translateY(-2px);
+        }
+
+        &[title='Exit fullscreen'] {
+            display: none;
+        }
+
+        .fslightbox-svg-path {
+            fill: $white;
+
+            &:hover {
+                fill: $white;
+            }
+        }
+    }
+}

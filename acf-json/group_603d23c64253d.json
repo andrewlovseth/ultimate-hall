@@ -6,6 +6,7 @@
             "key": "field_603d2434f8cee",
             "label": "Vitals",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -22,6 +23,7 @@
             "key": "field_603d23ecce2e2",
             "label": "Vitals",
             "name": "vitals",
+            "aria-label": "",
             "type": "group",
             "instructions": "",
             "required": 0,
@@ -37,6 +39,7 @@
                     "key": "field_603d23f6ce2e3",
                     "label": "First Name",
                     "name": "first_name",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -56,6 +59,7 @@
                     "key": "field_603d23fdce2e4",
                     "label": "Last Name",
                     "name": "last_name",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -75,6 +79,7 @@
                     "key": "field_603d2405ce2e5",
                     "label": "Hometown",
                     "name": "hometown",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -94,6 +99,7 @@
                     "key": "field_603d240ece2e6",
                     "label": "Birthdate",
                     "name": "birthdate",
+                    "aria-label": "",
                     "type": "date_picker",
                     "instructions": "",
                     "required": 0,
@@ -111,6 +117,7 @@
                     "key": "field_60ae99551c081",
                     "label": "Date of Death",
                     "name": "date_of_death",
+                    "aria-label": "",
                     "type": "date_picker",
                     "instructions": "",
                     "required": 0,
@@ -130,6 +137,7 @@
             "key": "field_603d2448f8cef",
             "label": "Biography",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -146,6 +154,7 @@
             "key": "field_603d244ff8cf0",
             "label": "Biography",
             "name": "biography",
+            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
@@ -165,6 +174,7 @@
             "key": "field_603d2467f8cf1",
             "label": "Career",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -181,6 +191,7 @@
             "key": "field_603d252cf8d01",
             "label": "Playing Career",
             "name": "playing_career",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -200,6 +211,7 @@
                     "key": "field_603d252cf8d04",
                     "label": "Year",
                     "name": "year",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -213,12 +225,14 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_603d252cf8d01"
                 },
                 {
                     "key": "field_603d252cf8d02",
                     "label": "Team",
                     "name": "team",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -235,12 +249,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_603d252cf8d01"
                 },
                 {
                     "key": "field_605e3ee9bd6f7",
                     "label": "Note",
                     "name": "note",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -254,14 +270,17 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_603d252cf8d01"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_603d2499f8cf2",
             "label": "US Championships",
             "name": "us_championships",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -281,6 +300,7 @@
                     "key": "field_60528acf4152b",
                     "label": "Team",
                     "name": "team",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -297,12 +317,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_603d2499f8cf2"
                 },
                 {
                     "key": "field_603eaa1044b5d",
                     "label": "Tournament",
                     "name": "tournament",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -319,12 +341,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_603d2499f8cf2"
                 },
                 {
                     "key": "field_603eaa67ed37c",
                     "label": "Placement",
                     "name": "placement",
+                    "aria-label": "",
                     "type": "select",
                     "instructions": "",
                     "required": 0,
@@ -358,7 +382,11 @@
                         "Semifinals": "Semifinals",
                         "Finals": "Finals",
                         "Regionals": "Regionals",
-                        "Sectionals": "Sectionals"
+                        "Sectionals": "Sectionals",
+                        "1st Round": "1st Round",
+                        "2nd Round": "2nd Round",
+                        "3rd Round": "3rd Round",
+                        "4th Round": "4th Round"
                     },
                     "default_value": false,
                     "allow_null": 0,
@@ -366,14 +394,17 @@
                     "ui": 0,
                     "return_format": "value",
                     "ajax": 0,
-                    "placeholder": ""
+                    "placeholder": "",
+                    "parent_repeater": "field_603d2499f8cf2"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_603d24cff8cf8",
             "label": "WFDF Championships",
             "name": "wfdf_championships",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -393,6 +424,7 @@
                     "key": "field_60528b0904ec0",
                     "label": "Team",
                     "name": "team",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -409,12 +441,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_603d24cff8cf8"
                 },
                 {
                     "key": "field_603ea8c9259e9",
                     "label": "Tournament",
                     "name": "tournament",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -431,12 +465,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_603d24cff8cf8"
                 },
                 {
                     "key": "field_603d24cff8cfd",
                     "label": "Placement",
                     "name": "placement",
+                    "aria-label": "",
                     "type": "select",
                     "instructions": "",
                     "required": 0,
@@ -468,7 +504,11 @@
                         "Pre-Quarterfinals": "Pre-Quarterfinals",
                         "Quarterfinals": "Quarterfinals",
                         "Semifinals": "Semifinals",
-                        "Finals": "Finals"
+                        "Finals": "Finals",
+                        "1st Round": "1st Round",
+                        "2nd Round": "2nd Round",
+                        "3rd Round": "3rd Round",
+                        "4th Round": "4th Round"
                     },
                     "default_value": false,
                     "allow_null": 0,
@@ -476,14 +516,17 @@
                     "ui": 0,
                     "return_format": "value",
                     "ajax": 0,
-                    "placeholder": ""
+                    "placeholder": "",
+                    "parent_repeater": "field_603d24cff8cf8"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_60a3e3a643140",
             "label": "Pro Seasons",
             "name": "pro_seasons",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -503,6 +546,7 @@
                     "key": "field_60a3e3a743141",
                     "label": "Team",
                     "name": "team",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -519,12 +563,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_60a3e3a643140"
                 },
                 {
                     "key": "field_60a3e3a743142",
                     "label": "Season",
                     "name": "season",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -541,12 +587,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_60a3e3a643140"
                 },
                 {
                     "key": "field_60a3e3a743143",
                     "label": "Placement",
                     "name": "placement",
+                    "aria-label": "",
                     "type": "select",
                     "instructions": "",
                     "required": 0,
@@ -580,7 +628,11 @@
                         "Semifinals": "Semifinals",
                         "Finals": "Finals",
                         "Playoffs": "Playoffs",
-                        "Missed Playoffs": "Missed Playoffs"
+                        "Missed Playoffs": "Missed Playoffs",
+                        "1st Round": "1st Round",
+                        "2nd Round": "2nd Round",
+                        "3rd Round": "3rd Round",
+                        "4th Round": "4th Round"
                     },
                     "default_value": false,
                     "allow_null": 0,
@@ -588,14 +640,17 @@
                     "ui": 0,
                     "return_format": "value",
                     "ajax": 0,
-                    "placeholder": ""
+                    "placeholder": "",
+                    "parent_repeater": "field_60a3e3a643140"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_603d24e0f8cfe",
             "label": "Contributions and Service",
             "name": "contributions_and_service",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -615,6 +670,7 @@
                     "key": "field_603d24eff8cff",
                     "label": "Year",
                     "name": "year",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -628,12 +684,14 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_603d24e0f8cfe"
                 },
                 {
                     "key": "field_603d24f2f8d00",
                     "label": "Description",
                     "name": "description",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -647,14 +705,17 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_603d24e0f8cfe"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_6052909faef55",
             "label": "Awards",
             "name": "awards",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -674,6 +735,7 @@
                     "key": "field_605290a5aef56",
                     "label": "Year",
                     "name": "year",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -690,12 +752,14 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "parent_repeater": "field_6052909faef55"
                 },
                 {
                     "key": "field_605290bfaef57",
                     "label": "Award",
                     "name": "award",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -709,14 +773,17 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_6052909faef55"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         },
         {
             "key": "field_603d255bf8d07",
             "label": "Interview",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -733,6 +800,7 @@
             "key": "field_603d2563f8d08",
             "label": "Interview",
             "name": "interview",
+            "aria-label": "",
             "type": "flexible_content",
             "instructions": "",
             "required": 0,
@@ -753,6 +821,7 @@
                             "key": "field_603d2579f8d09",
                             "label": "Question",
                             "name": "question",
+                            "aria-label": "",
                             "type": "textarea",
                             "instructions": "",
                             "required": 0,
@@ -772,6 +841,7 @@
                             "key": "field_603d2582f8d0a",
                             "label": "Answer",
                             "name": "answer",
+                            "aria-label": "",
                             "type": "wysiwyg",
                             "instructions": "",
                             "required": 0,
@@ -791,6 +861,7 @@
                             "key": "field_605294e5a4820",
                             "label": "Photo",
                             "name": "photo",
+                            "aria-label": "",
                             "type": "image",
                             "instructions": "",
                             "required": 0,
@@ -824,6 +895,7 @@
             "key": "field_60528fe97b4b0",
             "label": "Letters of Recommendation",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -840,6 +912,7 @@
             "key": "field_60528ff67b4b1",
             "label": "Letters of Recommendation",
             "name": "letters_of_recommendation",
+            "aria-label": "",
             "type": "flexible_content",
             "instructions": "",
             "required": 0,
@@ -860,6 +933,7 @@
                             "key": "field_6052900a7b4b4",
                             "label": "Text",
                             "name": "text",
+                            "aria-label": "",
                             "type": "wysiwyg",
                             "instructions": "",
                             "required": 0,
@@ -879,6 +953,7 @@
                             "key": "field_605290137b4b5",
                             "label": "Recommender",
                             "name": "recommender",
+                            "aria-label": "",
                             "type": "text",
                             "instructions": "",
                             "required": 0,
@@ -898,6 +973,7 @@
                             "key": "field_60529211a878a",
                             "label": "Photo",
                             "name": "photo",
+                            "aria-label": "",
                             "type": "image",
                             "instructions": "",
                             "required": 0,
@@ -931,6 +1007,7 @@
             "key": "field_603d25a2d5694",
             "label": "Media",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -947,6 +1024,7 @@
             "key": "field_603d25b7d5696",
             "label": "Photos",
             "name": "photos",
+            "aria-label": "",
             "type": "group",
             "instructions": "",
             "required": 0,
@@ -962,6 +1040,7 @@
                     "key": "field_603d25a7d5695",
                     "label": "Headshot",
                     "name": "headshot",
+                    "aria-label": "",
                     "type": "image",
                     "instructions": "",
                     "required": 0,
@@ -986,6 +1065,7 @@
                     "key": "field_603d25c6d5698",
                     "label": "Player Card",
                     "name": "player_card",
+                    "aria-label": "",
                     "type": "image",
                     "instructions": "",
                     "required": 0,
@@ -1012,6 +1092,7 @@
             "key": "field_60529225e2c90",
             "label": "Gallery",
             "name": "gallery",
+            "aria-label": "",
             "type": "gallery",
             "instructions": "",
             "required": 0,
@@ -1039,6 +1120,7 @@
             "key": "field_603d25d4d5699",
             "label": "Meta",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -1055,6 +1137,7 @@
             "key": "field_603d25dbd569a",
             "label": "Meta",
             "name": "meta",
+            "aria-label": "",
             "type": "group",
             "instructions": "",
             "required": 0,
@@ -1070,6 +1153,7 @@
                     "key": "field_603d25e0d569b",
                     "label": "Induction Type",
                     "name": "induction_type",
+                    "aria-label": "",
                     "type": "button_group",
                     "instructions": "",
                     "required": 0,
@@ -1093,6 +1177,7 @@
                     "key": "field_603d261e08b2c",
                     "label": "Class",
                     "name": "class",
+                    "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
                     "required": 0,
@@ -1115,6 +1200,7 @@
                     "key": "field_603d29fb3f3f5",
                     "label": "Years Active",
                     "name": "years_active",
+                    "aria-label": "",
                     "type": "relationship",
                     "instructions": "",
                     "required": 0,
@@ -1138,6 +1224,7 @@
                     "key": "field_60528f187c47d",
                     "label": "Divisions",
                     "name": "divisions",
+                    "aria-label": "",
                     "type": "relationship",
                     "instructions": "",
                     "required": 0,
@@ -1168,6 +1255,11 @@
                 "param": "post_type",
                 "operator": "==",
                 "value": "member"
+            },
+            {
+                "param": "post_template",
+                "operator": "==",
+                "value": "default"
             }
         ]
     ],
@@ -1192,5 +1284,6 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1622055260
+    "show_in_rest": 0,
+    "modified": 1669227701
 }
