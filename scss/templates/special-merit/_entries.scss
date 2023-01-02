@@ -4,7 +4,7 @@
     &-default {
         &__gallery {
             display: grid;
-            gap: 2rem 1rem;
+            gap: 1rem;
             grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
         }
     }
@@ -12,48 +12,48 @@
     &-media {
         &__gallery {
             display: grid;
-            gap: 2rem;
+            gap: 8rem;
 
             @include desktop-small {
-                gap: 4rem;
+                gap: 8rem;
             }
         }
     }
 
     .entry {
-        background: $charcoal;
-        color: $white;
-
         &__default {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            height: 100%;
+            .vitals {
+                height: 100%;
+            }
         }
 
         &__media {
             display: grid;
             gap: 2rem;
-            grid-template-columns: 20rem 1fr;
-            align-items: start;
 
-            &:nth-child(even) {
-                grid-template-columns: 1fr 20rem;
+            @include desktop-small {
+                grid-template-columns: 20rem 1fr;
+                align-items: start;
 
-                .vitals {
-                    order: 2;
+                &:nth-child(even) {
+                    grid-template-columns: 1fr 20rem;
+
+                    .vitals {
+                        order: 2;
+                    }
                 }
-            }
 
-            &.no-photos {
-                grid-template-columns: 20rem;
+                &.no-photos {
+                    grid-template-columns: 20rem;
+                }
             }
         }
     }
 
     .info {
-        padding-top: 1rem;
+        @include desktop-small {
+            padding-top: 1rem;
+        }
 
         .section-header {
             padding-bottom: 1rem;
@@ -63,7 +63,11 @@
     .media {
         display: grid;
         gap: 0.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+
+        @include desktop-small {
+            grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        }
 
         &__photo {
             aspect-ratio: 1 / 1;
@@ -81,10 +85,13 @@
     .vitals {
         grid-column: unset;
         grid-row: unset;
-        padding-bottom: 0;
+        padding-bottom: 2rem;
+        margin-bottom: 0;
         width: 100%;
         background: $charcoal;
         color: $white;
+        max-width: 20rem;
+        margin: 0 auto;
 
         .header {
             padding-bottom: 0;
@@ -99,9 +106,7 @@
             }
 
             img {
-                @include desktop-small {
-                    max-width: unset;
-                }
+                max-width: 100%;
             }
         }
     }
@@ -110,7 +115,7 @@
         font-family: $work-sans;
         font-size: 0.8125rem;
         line-height: 1.5em;
-        padding: 1rem;
+        padding: 0 1rem;
         text-align: center;
         font-style: italic;
     }

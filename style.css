@@ -2093,7 +2093,12 @@ body.single-member section.championship-tournaments + section.teammates {
 body.member-template-special-merit .introduction {
   padding-bottom: 3rem;
   gap: 2rem;
-  align-items: start;
+}
+@media screen and (min-width: 992px) {
+  body.member-template-special-merit .introduction {
+    align-items: start;
+    grid-template-rows: auto 1fr;
+  }
 }
 body.member-template-special-merit .introduction .profile-header {
   padding-bottom: 0;
@@ -2134,6 +2139,9 @@ body.member-template-special-merit .introduction .photo img {
     grid-column: 3/span 6;
   }
 }
+body.member-template-special-merit .introduction .copy > * + * {
+  margin-top: 2rem;
+}
 body.member-template-special-merit .entries-nav ul {
   background: #404040;
   display: flex;
@@ -2158,46 +2166,44 @@ body.member-template-special-merit .entries {
 }
 body.member-template-special-merit .entries-default__gallery {
   display: grid;
-  gap: 2rem 1rem;
+  gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 body.member-template-special-merit .entries-media__gallery {
   display: grid;
-  gap: 2rem;
+  gap: 8rem;
 }
 @media screen and (min-width: 992px) {
   body.member-template-special-merit .entries-media__gallery {
-    gap: 4rem;
+    gap: 8rem;
   }
 }
-body.member-template-special-merit .entries .entry {
-  background: #404040;
-  color: #fff;
-}
-body.member-template-special-merit .entries .entry__default {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-wrap: wrap;
+body.member-template-special-merit .entries .entry__default .vitals {
   height: 100%;
 }
 body.member-template-special-merit .entries .entry__media {
   display: grid;
   gap: 2rem;
-  grid-template-columns: 20rem 1fr;
-  align-items: start;
 }
-body.member-template-special-merit .entries .entry__media:nth-child(even) {
-  grid-template-columns: 1fr 20rem;
+@media screen and (min-width: 992px) {
+  body.member-template-special-merit .entries .entry__media {
+    grid-template-columns: 20rem 1fr;
+    align-items: start;
+  }
+  body.member-template-special-merit .entries .entry__media:nth-child(even) {
+    grid-template-columns: 1fr 20rem;
+  }
+  body.member-template-special-merit .entries .entry__media:nth-child(even) .vitals {
+    order: 2;
+  }
+  body.member-template-special-merit .entries .entry__media.no-photos {
+    grid-template-columns: 20rem;
+  }
 }
-body.member-template-special-merit .entries .entry__media:nth-child(even) .vitals {
-  order: 2;
-}
-body.member-template-special-merit .entries .entry__media.no-photos {
-  grid-template-columns: 20rem;
-}
-body.member-template-special-merit .entries .info {
-  padding-top: 1rem;
+@media screen and (min-width: 992px) {
+  body.member-template-special-merit .entries .info {
+    padding-top: 1rem;
+  }
 }
 body.member-template-special-merit .entries .info .section-header {
   padding-bottom: 1rem;
@@ -2205,7 +2211,12 @@ body.member-template-special-merit .entries .info .section-header {
 body.member-template-special-merit .entries .media {
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+}
+@media screen and (min-width: 992px) {
+  body.member-template-special-merit .entries .media {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
 }
 body.member-template-special-merit .entries .media__photo {
   aspect-ratio: 1/1;
@@ -2224,10 +2235,13 @@ body.member-template-special-merit .entries .media__photo img {
 body.member-template-special-merit .entries .vitals {
   grid-column: unset;
   grid-row: unset;
-  padding-bottom: 0;
+  padding-bottom: 2rem;
+  margin-bottom: 0;
   width: 100%;
   background: #404040;
   color: #fff;
+  max-width: 20rem;
+  margin: 0 auto;
 }
 body.member-template-special-merit .entries .vitals .header {
   padding-bottom: 0;
@@ -2244,16 +2258,14 @@ body.member-template-special-merit .entries .vitals .header {
        object-fit: cover;
   }
 }
-@media screen and (min-width: 992px) {
-  body.member-template-special-merit .entries .vitals .photo img {
-    max-width: unset;
-  }
+body.member-template-special-merit .entries .vitals .photo img {
+  max-width: 100%;
 }
 body.member-template-special-merit .entries .copy {
   font-family: "Work Sans", sans-serif;
   font-size: 0.8125rem;
   line-height: 1.5em;
-  padding: 1rem;
+  padding: 0 1rem;
   text-align: center;
   font-style: italic;
 }
