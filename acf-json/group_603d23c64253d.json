@@ -206,6 +206,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Team",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_603d252cf8d04",
@@ -273,8 +274,7 @@
                     "maxlength": "",
                     "parent_repeater": "field_603d252cf8d01"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_603d2499f8cf2",
@@ -295,6 +295,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Tournament",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_60528acf4152b",
@@ -397,8 +398,7 @@
                     "placeholder": "",
                     "parent_repeater": "field_603d2499f8cf2"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_603d24cff8cf8",
@@ -419,6 +419,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Tournament",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_60528b0904ec0",
@@ -519,8 +520,7 @@
                     "placeholder": "",
                     "parent_repeater": "field_603d24cff8cf8"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_60a3e3a643140",
@@ -541,6 +541,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Tournament",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_60a3e3a743141",
@@ -643,8 +644,7 @@
                     "placeholder": "",
                     "parent_repeater": "field_60a3e3a643140"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_603d24e0f8cfe",
@@ -665,6 +665,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Entry",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_603d24eff8cff",
@@ -708,8 +709,7 @@
                     "maxlength": "",
                     "parent_repeater": "field_603d24e0f8cfe"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_6052909faef55",
@@ -730,6 +730,7 @@
             "max": 0,
             "layout": "table",
             "button_label": "+ Add Award",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_605290a5aef56",
@@ -776,8 +777,7 @@
                     "maxlength": "",
                     "parent_repeater": "field_6052909faef55"
                 }
-            ],
-            "rows_per_page": 20
+            ]
         },
         {
             "key": "field_603d255bf8d07",
@@ -1197,6 +1197,36 @@
                     "ui": 1
                 },
                 {
+                    "key": "field_63cb30f51502a",
+                    "label": "Induction Division",
+                    "name": "induction_division",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "open-division": "Open Division",
+                        "womens-division": "Women's Division",
+                        "mixed-division": "Mixed Division",
+                        "open-division-look-back": "Open Division\/Look Back",
+                        "womens-division-look-back": "Women's Division\/Look Back",
+                        "mixed-division-look-back": "Mixed Division\/Look Back"
+                    },
+                    "default_value": false,
+                    "return_format": "array",
+                    "multiple": 0,
+                    "allow_null": 1,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": ""
+                },
+                {
                     "key": "field_603d29fb3f3f5",
                     "label": "Years Active",
                     "name": "years_active",
@@ -1285,5 +1315,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1669227701
+    "modified": 1674261165
 }

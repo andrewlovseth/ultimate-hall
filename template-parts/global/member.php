@@ -9,6 +9,8 @@
     
     $image = get_field('photos_headshot', $member_ID); 
     $type = get_field('meta_induction_type', $member_ID);
+    $division = get_field('meta_induction_division', $member_ID);
+
 
 ?>
 
@@ -30,9 +32,17 @@
             <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
         </div>
 
-        <?php if($type): ?>
-            <div class="type">
-                <h4><?php echo $type['label']; ?></h4>
+        <?php if($type || $division): ?>
+            <div class="meta">
+                <h4>
+                    <?php if($type): ?>
+                        <span class="type"><?php echo $type['label']; ?></span>                        
+                    <?php endif; ?>
+
+                    <?php if($division): ?>
+                        <span class="division"><?php echo $division['label']; ?></span>
+                    <?php endif; ?>                
+                </h4>
             </div>
         <?php endif; ?>
     </div>

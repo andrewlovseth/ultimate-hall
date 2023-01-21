@@ -16,84 +16,72 @@
     }
 
     // List of 1
-    .member:nth-last-child(n+1):nth-last-child(-n+1):first-child,
-    .member:nth-last-child(n+1):nth-last-child(-n+1):first-child ~ .member {
-
+    .member:nth-last-child(n + 1):nth-last-child(-n + 1):first-child,
+    .member:nth-last-child(n + 1):nth-last-child(-n + 1):first-child ~ .member {
         @include desktop-small {
-            
             &:nth-child(1) {
                 grid-column: 5 / span 2;
-            }   
+            }
         }
-    }    
+    }
 
     // List of 2
-    .member:nth-last-child(n+2):nth-last-child(-n+2):first-child,
-    .member:nth-last-child(n+2):nth-last-child(-n+2):first-child ~ .member {
-
+    .member:nth-last-child(n + 2):nth-last-child(-n + 2):first-child,
+    .member:nth-last-child(n + 2):nth-last-child(-n + 2):first-child ~ .member {
         @include desktop-small {
-            
             &:nth-child(1) {
                 grid-column: 4 / span 2;
-            }   
+            }
 
             &:nth-child(2) {
                 grid-column: 6 / span 2;
-            }   
+            }
         }
-    }    
-
-
+    }
 
     // List of 3
-    .member:nth-last-child(n+3):nth-last-child(-n+3):first-child,
-    .member:nth-last-child(n+3):nth-last-child(-n+3):first-child ~ .member {
+    .member:nth-last-child(n + 3):nth-last-child(-n + 3):first-child,
+    .member:nth-last-child(n + 3):nth-last-child(-n + 3):first-child ~ .member {
         @include desktop-small {
-            
             &:nth-child(1) {
                 grid-column: 3 / span 2;
             }
 
             &:nth-child(2) {
                 grid-column: 5 / span 2;
-            }            
+            }
 
             &:nth-child(3) {
                 grid-column: 7 / span 2;
-            }  
+            }
         }
-    }    
-
+    }
 
     // List of 6 + 11
-    .member:nth-last-child(n+6):nth-last-child(-n+6):first-child,
-    .member:nth-last-child(n+6):nth-last-child(-n+6):first-child ~ .member,
-    .member:nth-last-child(n+11):nth-last-child(-n+11):first-child,
-    .member:nth-last-child(n+11):nth-last-child(-n+11):first-child ~ .member {
-
+    .member:nth-last-child(n + 6):nth-last-child(-n + 6):first-child,
+    .member:nth-last-child(n + 6):nth-last-child(-n + 6):first-child ~ .member,
+    .member:nth-last-child(n + 11):nth-last-child(-n + 11):first-child,
+    .member:nth-last-child(n + 11):nth-last-child(-n + 11):first-child ~ .member {
         @include desktop-small {
             // 1 Orphans
             &:last-child:nth-child(1n - 1) {
                 grid-column-end: -5;
             }
-
         }
-    }    
+    }
 
     // List of 4 + 9
-    .member:nth-last-child(n+4):nth-last-child(-n+4):first-child,
-    .member:nth-last-child(n+4):nth-last-child(-n+4):first-child ~ .member
-    .member:nth-last-child(n+9):nth-last-child(-n+9):first-child,
-    .member:nth-last-child(n+9):nth-last-child(-n+9):first-child ~ .member,
-    .member:nth-last-child(n+14):nth-last-child(-n+14):first-child,
-    .member:nth-last-child(n+14):nth-last-child(-n+14):first-child ~ .member {
-
+    .member:nth-last-child(n + 4):nth-last-child(-n + 4):first-child,
+    .member:nth-last-child(n + 4):nth-last-child(-n + 4):first-child ~ .member .member:nth-last-child(n + 9):nth-last-child(-n + 9):first-child,
+    .member:nth-last-child(n + 9):nth-last-child(-n + 9):first-child ~ .member,
+    .member:nth-last-child(n + 14):nth-last-child(-n + 14):first-child,
+    .member:nth-last-child(n + 14):nth-last-child(-n + 14):first-child ~ .member {
         @include desktop-small {
             // 4 Orphans
             &:last-child:nth-child(5n - 1) {
                 grid-column-end: -2;
             }
-          
+
             &:nth-last-child(2):nth-child(5n - 2) {
                 grid-column-end: -4;
             }
@@ -109,18 +97,17 @@
     }
 
     // List of 7 + 12
-    .member:nth-last-child(n+7):nth-last-child(-n+7):first-child,
-    .member:nth-last-child(n+7):nth-last-child(-n+7):first-child ~ .member,
-    .member:nth-last-child(n+12):nth-last-child(-n+12):first-child,
-    .member:nth-last-child(n+12):nth-last-child(-n+12):first-child ~ .member {
-
+    .member:nth-last-child(n + 7):nth-last-child(-n + 7):first-child,
+    .member:nth-last-child(n + 7):nth-last-child(-n + 7):first-child ~ .member,
+    .member:nth-last-child(n + 12):nth-last-child(-n + 12):first-child,
+    .member:nth-last-child(n + 12):nth-last-child(-n + 12):first-child ~ .member {
         @include desktop-small {
             // 2 Orphans
             &:last-child:nth-child(7),
             &:last-child:nth-child(12) {
                 grid-column-end: -4;
             }
-          
+
             &:nth-last-child(2):nth-child(6),
             &:nth-last-child(2):nth-child(11) {
                 grid-column-end: -6;
@@ -129,10 +116,10 @@
     }
 
     // List of 8 + 13
-    .member:nth-last-child(n+8):nth-last-child(-n+8):first-child,
-    .member:nth-last-child(n+8):nth-last-child(-n+8):first-child ~ .member,     
-    .member:nth-last-child(n+13):nth-last-child(-n+13):first-child,
-    .member:nth-last-child(n+13):nth-last-child(-n+13):first-child ~ .member {
+    .member:nth-last-child(n + 8):nth-last-child(-n + 8):first-child,
+    .member:nth-last-child(n + 8):nth-last-child(-n + 8):first-child ~ .member,
+    .member:nth-last-child(n + 13):nth-last-child(-n + 13):first-child,
+    .member:nth-last-child(n + 13):nth-last-child(-n + 13):first-child ~ .member {
         @include desktop-small {
             &:last-child:nth-child(8),
             &:last-child:nth-child(13) {
@@ -142,14 +129,14 @@
             &:nth-last-child(2):nth-child(7),
             &:nth-last-child(2):nth-child(12) {
                 grid-column-end: -5;
-            }  
+            }
 
             &:nth-last-child(3):nth-child(6),
             &:nth-last-child(3):nth-child(11) {
                 grid-column-end: -7;
-            }  
+            }
         }
-    }    
+    }
 
     .member {
         grid-column: span 2;
@@ -160,11 +147,10 @@
     }
 
     .photo {
-
         a {
             max-width: 160px;
             margin: 0 auto;
-            display: block;            
+            display: block;
             @include aspect-ratio(1, 1);
             @include cover-fill-image;
 
@@ -193,22 +179,30 @@
 
             a {
                 color: $slate;
-                
+
                 &:hover {
                     text-decoration: underline;
                 }
             }
         }
 
-        .type {
+        .meta {
             padding-top: 0.125rem;
 
             h4 {
                 font-size: clamp(0.6125rem, 0.7vw, 0.75rem);
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
+                display: flex;
+                justify-content: center;
+
+                span + span {
+                    &:before {
+                        content: '-';
+                        padding: 0 0.25rem;
+                    }
+                }
             }
         }
-
     }
 }
