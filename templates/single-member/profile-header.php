@@ -18,7 +18,7 @@
                 <?php endif; ?>
 
                 <?php if($induction_division): ?>
-                 - <?php echo $induction_division; ?>
+                 - <?php echo $induction_division['value']; ?>
                 <?php endif; ?>
             </h2>
         </div>
