@@ -923,18 +923,19 @@ body {
   text-decoration: underline;
 }
 .member-grid .info .meta {
-  padding-top: 0.125rem;
+  padding-top: 0.25rem;
 }
-.member-grid .info .meta h4 {
-  font-size: clamp(0.6125rem, 0.7vw, 0.75rem);
+.member-grid .info .meta .type {
+  display: block;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  display: flex;
-  justify-content: center;
+  font-size: clamp(0.6125rem, 0.7vw, 0.75rem);
 }
-.member-grid .info .meta h4 span + span:before {
-  content: "-";
-  padding: 0 0.25rem;
+.member-grid .info .meta .division {
+  padding-top: 0.125rem;
+  display: block;
+  font-size: clamp(0.75rem, 0.8vw, 0.8125rem);
+  font-style: italic;
 }
 
 .cta.align-center {
@@ -1670,17 +1671,33 @@ body.single-member .profile-header {
     text-align: left;
   }
 }
-body.single-member .profile-header h2 {
-  font-family: "Work Sans", sans-serif;
-  color: #E7C22C;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: clamp(1rem, 1.2vw, 1.125rem);
-  padding-bottom: 0.5rem;
-  font-weight: 600;
+body.single-member .profile-header .class {
+  padding-bottom: 0.25rem;
 }
-body.single-member .profile-header h1 {
+body.single-member .profile-header .class__title {
+  display: inline-block;
+  font-family: "Work Sans", sans-serif;
+  background: #E7C22C;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+  font-weight: 600;
+  padding: 0.5rem 0.75rem 0.375rem 0.75rem;
+  border-radius: 3px;
+}
+body.single-member .profile-header .name__title {
   font-size: clamp(2rem, 3vw, 5rem);
+}
+body.single-member .profile-header .meta {
+  padding-top: 0.5rem;
+  text-transform: uppercase;
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  letter-spacing: 0.1em;
+}
+body.single-member .profile-header .meta__division::before {
+  content: "·";
+  padding: 0 0.375rem 0 0.125rem;
 }
 body.single-member .vitals {
   background: #F8F9FA;
