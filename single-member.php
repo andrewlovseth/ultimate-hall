@@ -8,6 +8,8 @@
         <?php get_template_part('templates/single-member/biography'); ?>
     </section>
 
+    <?php get_template_part('templates/single-member/letters-of-recommendation'); ?>
+
     <?php get_template_part('templates/single-member/gallery'); ?>
 
     <?php get_template_part('templates/single-member/championship-tournaments'); ?>

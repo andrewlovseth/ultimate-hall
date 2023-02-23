@@ -1,5 +1,4 @@
 body.single-member {
-
     .site-content {
         padding-bottom: 0;
     }
@@ -19,6 +18,8 @@ body.single-member {
 
     @import 'single-member/biography';
 
+    @import 'single-member/letters-of-recommendation';
+
     @import 'single-member/gallery';
 
     @import 'single-member/championship-tournaments';
@@ -26,5 +27,4 @@ body.single-member {
     @import 'single-member/interview';
 
     @import 'single-member/teammates';
-
 }

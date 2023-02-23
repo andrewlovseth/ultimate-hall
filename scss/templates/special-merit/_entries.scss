@@ -4,8 +4,7 @@
     &-default {
         &__gallery {
             display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+            gap: 8rem;
         }
     }
 
@@ -13,17 +12,28 @@
         &__gallery {
             display: grid;
             gap: 8rem;
-
-            @include desktop-small {
-                gap: 8rem;
-            }
         }
     }
 
     .entry {
         &__default {
-            .vitals {
-                height: 100%;
+            @include desktop-small {
+                display: grid;
+                gap: 4rem;
+                grid-template-columns: 20rem 1fr;
+                align-items: start;
+
+                &:nth-child(even) {
+                    grid-template-columns: 1fr 20rem;
+
+                    .vitals {
+                        order: 2;
+                    }
+                }
+            }
+
+            .info {
+                padding-top: 2rem;
             }
         }
 
@@ -51,10 +61,6 @@
     }
 
     .info {
-        @include desktop-small {
-            padding-top: 1rem;
-        }
-
         .section-header {
             padding-bottom: 1rem;
         }
@@ -98,12 +104,10 @@
         }
 
         .photo {
-            @include desktop-small {
-                max-width: unset;
-                aspect-ratio: 3 / 4;
+            max-width: unset;
+            aspect-ratio: 3 / 4;
 
-                @include cover-fill-image;
-            }
+            @include cover-fill-image;
 
             img {
                 max-width: 100%;
@@ -111,12 +115,10 @@
         }
     }
 
-    .copy {
+    .bio {
         font-family: $work-sans;
-        font-size: 0.8125rem;
+        font-size: 1rem;
         line-height: 1.5em;
-        padding: 0 1rem;
-        text-align: center;
-        font-style: italic;
+        padding-bottom: 2rem;
     }
 }

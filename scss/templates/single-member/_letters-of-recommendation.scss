@@ -1,0 +1,20 @@
+.letters-of-recommendation {
+    padding: 3rem 0;
+    background: $light-gray;
+
+    @include desktop-small {
+        padding: 6rem 0;
+    }
+
+    & > * {
+        @include desktop-small {
+            grid-column: 5 / span 6;
+        }
+    }
+
+    .letter {
+        & + letter {
+            padding-top: 3rem;
+        }
+    }
+}

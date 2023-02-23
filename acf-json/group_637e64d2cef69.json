@@ -265,6 +265,26 @@
                                     "maxlength": ""
                                 },
                                 {
+                                    "key": "field_63f7c3bd4e739",
+                                    "label": "Show Year Only",
+                                    "name": "show_year_only",
+                                    "aria-label": "",
+                                    "type": "true_false",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "message": "",
+                                    "default_value": 0,
+                                    "ui_on_text": "",
+                                    "ui_off_text": "",
+                                    "ui": 1
+                                },
+                                {
                                     "key": "field_637e64d2d23f7",
                                     "label": "Birthdate",
                                     "name": "birthdate",
@@ -464,6 +484,30 @@
             "layout": "block",
             "sub_fields": [
                 {
+                    "key": "field_63b364e9ce6f2",
+                    "label": "Induction Type",
+                    "name": "induction_type",
+                    "aria-label": "",
+                    "type": "button_group",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "player": "Player",
+                        "contributor": "Contributor",
+                        "special-merit": "Special Merit"
+                    },
+                    "default_value": "",
+                    "return_format": "",
+                    "allow_null": 0,
+                    "layout": ""
+                },
+                {
                     "key": "field_637e64d309829",
                     "label": "Class",
                     "name": "class",
@@ -509,6 +553,31 @@
                     "min": "",
                     "max": "",
                     "return_format": "object"
+                },
+                {
+                    "key": "field_63d2b7e15e469",
+                    "label": "Induction Division",
+                    "name": "induction_division",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "look-back": "Look Back"
+                    },
+                    "default_value": false,
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 1,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": ""
                 }
             ]
         }
@@ -549,5 +618,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1672694460
+    "modified": 1677181906
 }

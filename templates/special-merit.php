@@ -11,8 +11,6 @@ get_header(); ?>
     
     <?php get_template_part('templates/special-merit/introduction'); ?>
 
-    <?php // get_template_part('templates/special-merit/entries-nav'); ?>
-
     <?php get_template_part('templates/special-merit/entries'); ?>
     
     <?php get_template_part('templates/single-member/gallery'); ?>

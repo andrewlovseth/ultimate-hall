@@ -12,20 +12,15 @@
 
 <section class="introduction grid">
     <div class="profile-header">
-        <?php if($year == '2004'): ?>
-            <div class="class">
-                <h2>Inaugural Class of <?php echo $year; ?> - Special Merit</h2>
-            </div>
-        <?php else: ?>
-            <div class="class">
-                <h2>Class of <?php echo $year; ?> - Special Merit</h2>
-            </div>
-        <?php endif; ?>
+        <div class="class">
+            <h2 class="class__title"><?php if($year == '2004'): ?>Inaugural <?php endif; ?> Class of <?php echo $year; ?></h2>
+        </div>
 
         <div class="name">
-            <h1><?php the_title(); ?></h1>
+            <h1 class="name__title"><?php the_title(); ?></h1>
         </div>
     </div>
+
 
     <?php if($photo): ?>
         <div class="photo">

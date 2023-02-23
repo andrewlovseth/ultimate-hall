@@ -96,6 +96,26 @@
                     "maxlength": ""
                 },
                 {
+                    "key": "field_63f7c77880848",
+                    "label": "Show Only Year",
+                    "name": "show_only_year",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "ui": 1
+                },
+                {
                     "key": "field_603d240ece2e6",
                     "label": "Birthdate",
                     "name": "birthdate",
@@ -909,6 +929,26 @@
             "endpoint": 0
         },
         {
+            "key": "field_63f7c6d51f1c1",
+            "label": "Show Letters",
+            "name": "show_letters",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
             "key": "field_60528ff67b4b1",
             "label": "Letters of Recommendation",
             "name": "letters_of_recommendation",
@@ -948,51 +988,6 @@
                             "toolbar": "full",
                             "media_upload": 0,
                             "delay": 0
-                        },
-                        {
-                            "key": "field_605290137b4b5",
-                            "label": "Recommender",
-                            "name": "recommender",
-                            "aria-label": "",
-                            "type": "text",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": "",
-                            "maxlength": ""
-                        },
-                        {
-                            "key": "field_60529211a878a",
-                            "label": "Photo",
-                            "name": "photo",
-                            "aria-label": "",
-                            "type": "image",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "return_format": "array",
-                            "preview_size": "medium",
-                            "library": "all",
-                            "min_width": "",
-                            "min_height": "",
-                            "min_size": "",
-                            "max_width": "",
-                            "max_height": "",
-                            "max_size": "",
-                            "mime_types": ""
                         }
                     ],
                     "min": "",
@@ -1216,7 +1211,9 @@
                         "mixed-division": "Mixed Division",
                         "open-division-look-back": "Open Division\/Look Back",
                         "womens-division-look-back": "Women's Division\/Look Back",
-                        "mixed-division-look-back": "Mixed Division\/Look Back"
+                        "mixed-division-look-back": "Mixed Division\/Look Back",
+                        "look-back": "Look Back",
+                        "inaugural-class": "Inaugural Class"
                     },
                     "default_value": false,
                     "return_format": "array",
@@ -1315,5 +1312,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1674261165
+    "modified": 1677183042
 }

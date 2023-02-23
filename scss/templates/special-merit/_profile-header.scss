@@ -1,0 +1,47 @@
+.profile-header {
+    text-align: center;
+    padding-bottom: 2rem;
+
+    @include desktop-small {
+        grid-column: 2 / span 8;
+        grid-row: 1;
+        text-align: left;
+    }
+
+    .class {
+        padding-bottom: 0.25rem;
+
+        &__title {
+            display: inline-block;
+            font-family: $work-sans;
+            background: $gold;
+            color: $white;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+            font-weight: 600;
+            padding: 0.5rem 0.75rem 0.375rem 0.75rem;
+            border-radius: 3px;
+        }
+    }
+
+    .name {
+        &__title {
+            font-size: clamp(2rem, 3vw, 5rem);
+        }
+    }
+
+    .meta {
+        padding-top: 0.5rem;
+        text-transform: uppercase;
+        font-size: clamp(0.875rem, 1vw, 1rem);
+        letter-spacing: 0.1em;
+
+        &__division {
+            &::before {
+                content: '·';
+                padding: 0 0.375rem 0 0.125rem;
+            }
+        }
+    }
+}

@@ -616,7 +616,8 @@ a {
   margin-bottom: 0.5rem;
   padding-top: 1rem;
 }
-.copy.extended ul, .copy.extended ol {
+.copy.extended ul,
+.copy.extended ol {
   padding-bottom: 0;
 }
 .copy.extended a {
@@ -628,11 +629,13 @@ a {
 .copy ol {
   list-style-type: decimal;
 }
-.copy ul, .copy ol {
+.copy ul,
+.copy ol {
   padding-left: 2rem;
   padding-bottom: 2rem;
 }
-.copy ul li + li, .copy ol li + li {
+.copy ul li + li,
+.copy ol li + li {
   margin-top: 1rem;
 }
 .copy.p1 {
@@ -646,6 +649,9 @@ a {
 .copy.p3 {
   line-height: 1.55em;
   font-size: clamp(0.875rem, 1vw, 1rem);
+}
+.copy a:hover {
+  text-decoration: underline;
 }
 
 body {
@@ -1872,6 +1878,23 @@ body.single-member .biography .contributions-and-service ul li + li {
 body.single-member .biography .contributions-and-service .year {
   font-weight: bold;
 }
+body.single-member .letters-of-recommendation {
+  padding: 3rem 0;
+  background: #F8F9FA;
+}
+@media screen and (min-width: 992px) {
+  body.single-member .letters-of-recommendation {
+    padding: 6rem 0;
+  }
+}
+@media screen and (min-width: 992px) {
+  body.single-member .letters-of-recommendation > * {
+    grid-column: 5/span 6;
+  }
+}
+body.single-member .letters-of-recommendation .letter + letter {
+  padding-top: 3rem;
+}
 body.single-member section.gallery {
   padding-bottom: 4rem;
 }
@@ -2113,6 +2136,45 @@ body.single-member section.championship-tournaments + section.teammates {
   background: #fff;
 }
 
+body.member-template-special-merit .profile-header {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+@media screen and (min-width: 992px) {
+  body.member-template-special-merit .profile-header {
+    grid-column: 2/span 8;
+    grid-row: 1;
+    text-align: left;
+  }
+}
+body.member-template-special-merit .profile-header .class {
+  padding-bottom: 0.25rem;
+}
+body.member-template-special-merit .profile-header .class__title {
+  display: inline-block;
+  font-family: "Work Sans", sans-serif;
+  background: #E7C22C;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+  font-weight: 600;
+  padding: 0.5rem 0.75rem 0.375rem 0.75rem;
+  border-radius: 3px;
+}
+body.member-template-special-merit .profile-header .name__title {
+  font-size: clamp(2rem, 3vw, 5rem);
+}
+body.member-template-special-merit .profile-header .meta {
+  padding-top: 0.5rem;
+  text-transform: uppercase;
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  letter-spacing: 0.1em;
+}
+body.member-template-special-merit .profile-header .meta__division::before {
+  content: "·";
+  padding: 0 0.375rem 0 0.125rem;
+}
 body.member-template-special-merit .introduction {
   padding-bottom: 3rem;
   gap: 2rem;
@@ -2189,20 +2251,28 @@ body.member-template-special-merit .entries {
 }
 body.member-template-special-merit .entries-default__gallery {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 8rem;
 }
 body.member-template-special-merit .entries-media__gallery {
   display: grid;
   gap: 8rem;
 }
 @media screen and (min-width: 992px) {
-  body.member-template-special-merit .entries-media__gallery {
-    gap: 8rem;
+  body.member-template-special-merit .entries .entry__default {
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 20rem 1fr;
+    align-items: start;
+  }
+  body.member-template-special-merit .entries .entry__default:nth-child(even) {
+    grid-template-columns: 1fr 20rem;
+  }
+  body.member-template-special-merit .entries .entry__default:nth-child(even) .vitals {
+    order: 2;
   }
 }
-body.member-template-special-merit .entries .entry__default .vitals {
-  height: 100%;
+body.member-template-special-merit .entries .entry__default .info {
+  padding-top: 2rem;
 }
 body.member-template-special-merit .entries .entry__media {
   display: grid;
@@ -2221,11 +2291,6 @@ body.member-template-special-merit .entries .entry__media {
   }
   body.member-template-special-merit .entries .entry__media.no-photos {
     grid-template-columns: 20rem;
-  }
-}
-@media screen and (min-width: 992px) {
-  body.member-template-special-merit .entries .info {
-    padding-top: 1rem;
   }
 }
 body.member-template-special-merit .entries .info .section-header {
@@ -2269,28 +2334,24 @@ body.member-template-special-merit .entries .vitals {
 body.member-template-special-merit .entries .vitals .header {
   padding-bottom: 0;
 }
-@media screen and (min-width: 992px) {
-  body.member-template-special-merit .entries .vitals .photo {
-    max-width: unset;
-    aspect-ratio: 3/4;
-  }
-  body.member-template-special-merit .entries .vitals .photo img {
-    width: 100%;
-    height: 100%;
-    -o-object-fit: cover;
-       object-fit: cover;
-  }
+body.member-template-special-merit .entries .vitals .photo {
+  max-width: unset;
+  aspect-ratio: 3/4;
+}
+body.member-template-special-merit .entries .vitals .photo img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 body.member-template-special-merit .entries .vitals .photo img {
   max-width: 100%;
 }
-body.member-template-special-merit .entries .copy {
+body.member-template-special-merit .entries .bio {
   font-family: "Work Sans", sans-serif;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.5em;
-  padding: 0 1rem;
-  text-align: center;
-  font-style: italic;
+  padding-bottom: 2rem;
 }
 
 body.single-team .site-content {

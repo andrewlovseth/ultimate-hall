@@ -6,17 +6,20 @@
 
     $info = get_sub_field('info');
     $images = $info['gallery'];
-
+    $bio = $info['bio'];
 ?>
 
 <div class="entry__media<?php if(!$images): ?> no-photos<?php endif; ?>">
     <?php get_template_part('templates/special-merit/vitals'); ?>
 
-    <?php if($images): ?>
-        <div class="info">
-            <div class="section-header">
-                <h3 class="small"><?php echo $first_name . ' ' . $last_name; ?>'s Photos</h3>
+    <div class="info">
+        <?php if($bio): ?>
+            <div class="copy bio extended">
+                <?php echo $bio; ?>
             </div>
+        <?php endif; ?>
+        
+        <?php if($images): ?>
             <div class="media">
                 <?php foreach( $images as $image ): ?>
                     <div class="media__photo">
@@ -27,7 +30,6 @@
                     
                 <?php endforeach; ?>
             </div>
-        </div>
-    <?php endif; ?>
-
+        <?php endif; ?>
+    </div>
 </div>
