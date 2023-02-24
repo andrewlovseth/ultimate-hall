@@ -503,9 +503,9 @@
                         "special-merit": "Special Merit"
                     },
                     "default_value": "",
-                    "return_format": "",
+                    "return_format": "array",
                     "allow_null": 0,
-                    "layout": ""
+                    "layout": "horizontal"
                 },
                 {
                     "key": "field_637e64d309829",
@@ -572,7 +572,7 @@
                         "look-back": "Look Back"
                     },
                     "default_value": false,
-                    "return_format": "value",
+                    "return_format": "array",
                     "multiple": 0,
                     "allow_null": 1,
                     "ui": 0,
@@ -618,5 +618,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1677181906
+    "modified": 1677258339
 }

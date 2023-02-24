@@ -6,11 +6,15 @@
     } else {
         $member_ID = $post->ID;
     }
-    
-    $image = get_field('photos_headshot', $member_ID); 
+
     $type = get_field('meta_induction_type', $member_ID);
     $division = get_field('meta_induction_division', $member_ID);
 
+    if($type['value'] == 'special-merit') {
+        $image = get_field('introduction_photo', $member_ID); 
+    } else {
+        $image = get_field('photos_headshot', $member_ID); 
+    }
 
 ?>
 
