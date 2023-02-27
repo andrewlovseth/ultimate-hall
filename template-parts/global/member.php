@@ -9,8 +9,9 @@
 
     $type = get_field('meta_induction_type', $member_ID);
     $division = get_field('meta_induction_division', $member_ID);
+    $template = get_page_template_slug($member_ID);
 
-    if($type['value'] == 'special-merit') {
+    if($template == 'templates/special-merit.php') {
         $image = get_field('introduction_photo', $member_ID); 
     } else {
         $image = get_field('photos_headshot', $member_ID); 
