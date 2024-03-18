@@ -1,12 +1,20 @@
 <?php
 
     $biography = get_field('biography');
+    $photos = get_field('photos');
+    $player_card = $photos['player_card'];
 
 ?>
 
 <section class="biography">
 
     <div class="copy p1">
+        <?php if($player_card): ?>
+            <div class="player-card">
+                <?php echo wp_get_attachment_image($player_card['ID'], 'full'); ?>
+            </div>
+        <?php endif; ?>
+        
         <?php echo $biography; ?>
     </div>
 

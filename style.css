@@ -1852,12 +1852,27 @@ body.single-member .vitals .awards p .year {
 }
 @media screen and (min-width: 992px) {
   body.single-member .biography {
-    grid-column: 3/span 6;
+    grid-column: 2/span 8;
     grid-row: 2;
   }
 }
 body.single-member .biography p {
   padding-bottom: 2rem;
+}
+body.single-member .biography .player-card {
+  margin: 0 auto 2rem;
+  max-width: 16rem;
+}
+@media screen and (min-width: 992px) {
+  body.single-member .biography .player-card {
+    float: left;
+    margin: 0 2rem 2rem 0;
+  }
+}
+@media screen and (min-width: 1280px) {
+  body.single-member .biography .player-card {
+    max-width: 20rem;
+  }
 }
 body.single-member .biography .contributions-and-service {
   padding-top: 2rem;

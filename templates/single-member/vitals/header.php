@@ -9,7 +9,6 @@
     if($date_of_death_field) {
         $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
     }
-    $year_only = $vitals['show_year_only'];
 
     $photos = get_field('photos');
     $headshot = $photos['headshot'];
@@ -47,13 +46,13 @@
         <?php if($lifespan): ?>
             <div class="birthdate vital">
                 <p>
-                    <strong>Born:</strong> <?php if($year_only) { echo $birthdate->format('Y'); } else { echo $birthdate->format('F j, Y'); }; ?><br/>
-                    <strong>Died:</strong> <?php if($year_only) { echo $date_of_death->format('Y'); } else { echo $date_of_death->format('F j, Y'); }; ?> (Age <?php echo $lifespan->y; ?>)<br/>
+                    <strong>Born:</strong> <?php echo $birthdate->format('Y'); ?><br/>
+                    <strong>Died:</strong> <?php echo $date_of_death->format('Y'); ?> (Age <?php echo $lifespan->y; ?>)<br/>
                 </p>
             </div>
         <?php else: ?>
             <div class="birthdate vital">
-                <p><strong>Born:</strong> <?php if($year_only) { echo $birthdate->format('Y'); } else { echo $birthdate->format('F j, Y'); }; ?> (Age <?php echo $age->y; ?>)</p>
+                <p><strong>Born:</strong> <?php echo $birthdate->format('Y'); ?> (Age <?php echo $age->y; ?>)</p>
             </div>
         <?php endif; ?>
     <?php endif; ?>

@@ -1,6 +1,6 @@
 .biography {
     @include desktop-small {
-        grid-column: 3 / span 6;
+        grid-column: 2 / span 8;
         grid-row: 2;
     }
 
@@ -8,9 +8,23 @@
         padding-bottom: 2rem;
     }
 
+    .player-card {
+        margin: 0 auto 2rem;
+        max-width: 16rem;
+
+        @include desktop-small {
+            float: left;
+            margin: 0 2rem 2rem 0;
+        }
+
+        @include desktop-medium {
+            max-width: 20rem;
+        }
+    }
+
     .contributions-and-service {
         padding-top: 2rem;
-        
+
         .section-header {
             padding-bottom: 1rem;
         }
@@ -21,7 +35,7 @@
 
             li {
                 line-height: 1.5em;
-                
+
                 & + li {
                     margin-top: 0.75rem;
                 }
