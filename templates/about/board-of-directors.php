@@ -23,7 +23,19 @@ if(have_rows('board_of_directors')): while(have_rows('board_of_directors')): the
                 <?php
                     $title = get_sub_field('title');
                     $member = get_sub_field('member');
-                    $photo = get_field('photos_headshot', $member->ID);
+
+                    if(get_field('board_of_directors_headshot', $member->ID)) {
+                        $photo = get_field('board_of_directors_headshot', $member->ID);
+                    } else {
+                        $photo = get_field('photos_headshot', $member->ID);
+                    }
+
+                    if(get_field('board_of_directors_name', $member->ID)) {
+                        $name = get_field('board_of_directors_name', $member->ID);
+                    } else {
+                        $name = get_the_title($member);
+                    }
+
                     $class = get_field('meta_class', $member->ID);
 
                 ?>
@@ -43,7 +55,7 @@ if(have_rows('board_of_directors')): while(have_rows('board_of_directors')): the
                         <div class="info">
                             <div class="name">
                                 <h4>
-                                    <?php echo get_the_title($member); ?>
+                                    <?php echo $name; ?>
                                     <span class="class">Class of <?php echo $class->post_title; ?></span>
                                 </h4>
                             </div>
