@@ -96,26 +96,6 @@
                     "maxlength": ""
                 },
                 {
-                    "key": "field_63f7c77880848",
-                    "label": "Show Only Year",
-                    "name": "show_only_year",
-                    "aria-label": "",
-                    "type": "true_false",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "message": "",
-                    "default_value": 0,
-                    "ui_on_text": "",
-                    "ui_off_text": "",
-                    "ui": 1
-                },
-                {
                     "key": "field_603d240ece2e6",
                     "label": "Birthdate",
                     "name": "birthdate",
@@ -271,7 +251,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d252cf8d01"
+                    "parent_repeater": "field_603d252cf8d01",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_605e3ee9bd6f7",
@@ -339,7 +320,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d2499f8cf2"
+                    "parent_repeater": "field_603d2499f8cf2",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_603eaa1044b5d",
@@ -363,7 +345,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d2499f8cf2"
+                    "parent_repeater": "field_603d2499f8cf2",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_603eaa67ed37c",
@@ -463,7 +446,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d24cff8cf8"
+                    "parent_repeater": "field_603d24cff8cf8",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_603ea8c9259e9",
@@ -487,7 +471,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d24cff8cf8"
+                    "parent_repeater": "field_603d24cff8cf8",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_603d24cff8cfd",
@@ -585,7 +570,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_60a3e3a643140"
+                    "parent_repeater": "field_60a3e3a643140",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_60a3e3a743142",
@@ -609,7 +595,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_60a3e3a643140"
+                    "parent_repeater": "field_60a3e3a643140",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_60a3e3a743143",
@@ -774,7 +761,8 @@
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_6052909faef55"
+                    "parent_repeater": "field_6052909faef55",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_605290bfaef57",
@@ -1112,6 +1100,26 @@
             "mime_types": ""
         },
         {
+            "key": "field_65f8850bb203d",
+            "label": "Induction Speech",
+            "name": "induction_speech",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
             "key": "field_603d25d4d5699",
             "label": "Meta",
             "name": "",
@@ -1189,7 +1197,8 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "return_format": "object",
-                    "ui": 1
+                    "ui": 1,
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_63cb30f51502a",
@@ -1245,7 +1254,8 @@
                     "elements": "",
                     "min": "",
                     "max": "",
-                    "return_format": "object"
+                    "return_format": "object",
+                    "bidirectional_target": []
                 },
                 {
                     "key": "field_60528f187c47d",
@@ -1271,7 +1281,8 @@
                     "elements": "",
                     "min": "",
                     "max": "",
-                    "return_format": "object"
+                    "return_format": "object",
+                    "bidirectional_target": []
                 }
             ]
         }
@@ -1312,5 +1323,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1677183042
+    "modified": 1710785829
 }

@@ -965,6 +965,9 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
+.cta .btn__charcoal {
+  background: #404040;
+}
 
 section.hero-image {
   position: relative;
@@ -1892,6 +1895,12 @@ body.single-member .biography .contributions-and-service ul li + li {
 }
 body.single-member .biography .contributions-and-service .year {
   font-weight: bold;
+}
+body.single-member .biography .induction-speech {
+  padding-top: 2rem;
+}
+body.single-member .biography .induction-speech .section-header {
+  padding-bottom: 1rem;
 }
 body.single-member .letters-of-recommendation {
   padding: 3rem 0;
