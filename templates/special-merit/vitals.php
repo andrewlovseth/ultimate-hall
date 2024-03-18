@@ -52,7 +52,7 @@
             <?php if($lifespan): ?>
                 <div class="birthdate vital">
                     <p>
-                        <strong>Born:</strong> <?php $birthdate->format('Y'); }; ?><br/>
+                        <strong>Born:</strong> <?php $birthdate->format('Y'); ?><br/>
                         <strong>Died:</strong> <?php $date_of_death->format('Y'); ?> (Age <?php echo $lifespan->y; ?>)<br/>
                     </p>
                 </div>
