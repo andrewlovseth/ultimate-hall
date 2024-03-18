@@ -37,7 +37,7 @@
                     <div class="team">
                         <a href="<?php the_permalink(); ?>">
                             <span class="name"><?php the_title(); ?></span>
-                            <span class="location"><?php the_field('city'); ?></span>
+                            <span class="location"><?php echo get_field('city'); ?></span>
                         </a>
 
                     </div>

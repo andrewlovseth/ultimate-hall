@@ -14,7 +14,7 @@
                 <?php echo wp_get_attachment_image($player_card['ID'], 'full'); ?>
             </div>
         <?php endif; ?>
-        
+
         <?php echo $biography; ?>
     </div>
 
@@ -28,8 +28,8 @@
                 <?php while(have_rows('contributions_and_service')): the_row(); ?>
                 
                     <li>
-                        <?php if(get_sub_field('year')): ?><span class="year"><?php the_sub_field('year'); ?>:</span><?php endif; ?>
-                        <span class="description"><?php the_sub_field('description'); ?></span>
+                        <?php if(get_sub_field('year')): ?><span class="year"><?php echo get_sub_field('year'); ?>:</span><?php endif; ?>
+                        <span class="description"><?php echo get_sub_field('description'); ?></span>
                     </li>
 
                 <?php endwhile; ?>

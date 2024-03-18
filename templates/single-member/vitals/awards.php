@@ -8,7 +8,7 @@
 
             <p>
                 <span class="award">
-                    <?php the_sub_field('award'); ?>
+                    <?php echo get_sub_field('award'); ?>
                     <?php if(get_sub_field('year')): ?><span class="year">(<?php $year = get_sub_field('year'); echo $year->post_title; ?>)</span><?php endif; ?>
                 </span>
             </p>

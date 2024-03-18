@@ -12,7 +12,7 @@
 
                     <div class="letter">
                         <div class="copy p2 extended">
-                            <?php the_sub_field('text'); ?>
+                            <?php echo get_sub_field('text'); ?>
                         </div>		
                     </div>
 

@@ -11,10 +11,10 @@
 
                 <div class="q-and-a">
                     <div class="question headline">
-                        <h4><?php the_sub_field('question'); ?></h4>
+                        <h4><?php echo get_sub_field('question'); ?></h4>
                     </div>
                     <div class="answer copy p2">
-                        <?php the_sub_field('answer'); ?>
+                        <?php echo get_sub_field('answer'); ?>
                     </div>		
                 </div>
 
