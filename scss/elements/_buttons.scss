@@ -18,12 +18,24 @@
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 
         &:hover {
+            text-decoration: none !important;
             transform: translateY(-3px);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
         }
 
         &__charcoal {
             background: $charcoal;
+        }
+
+        &__nav {
+            padding: 0.5rem 1rem;
+            color: $black;
+
+            &:hover {
+                text-decoration: none;
+
+                transform: none;
+            }
         }
     }
 }

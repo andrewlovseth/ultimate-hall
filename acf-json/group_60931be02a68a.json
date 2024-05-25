@@ -6,6 +6,7 @@
             "key": "field_60931be7cc39b",
             "label": "Header Logo",
             "name": "header_logo",
+            "aria-label": "",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -30,6 +31,7 @@
             "key": "field_60931c75d8f9a",
             "label": "Navigation",
             "name": "navigation",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -49,6 +51,7 @@
                     "key": "field_60931c7ad8f9b",
                     "label": "Link",
                     "name": "link",
+                    "aria-label": "",
                     "type": "link",
                     "instructions": "",
                     "required": 0,
@@ -58,9 +61,32 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "return_format": "array",
+                    "parent_repeater": "field_60931c75d8f9a"
+                },
+                {
+                    "key": "field_6651286e68715",
+                    "label": "Button",
+                    "name": "button",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "ui": 1,
+                    "parent_repeater": "field_60931c75d8f9a"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         }
     ],
     "location": [
@@ -80,5 +106,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1620253828
+    "show_in_rest": 0,
+    "modified": 1716594807
 }

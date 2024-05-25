@@ -1,31 +1,28 @@
 .site-nav {
-
     @include desktop-small {
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        grid-column: 5 / span 9;
+        grid-column: 4 / span 10;
     }
 
     .link.desktop {
-        &  + .link.desktop {
+        & + .link.desktop:not(.button) {
             @include desktop-small {
-                margin-left: 1.5rem;
-            }
-            
-            @include desktop-medium {
-                margin-left: 2.5rem;
+                margin-left: 1rem;
             }
 
             &:before {
                 @include desktop-small {
-                    content: '·';
-                    margin-right: 1.5rem;
+                    content: "·";
+                    margin-right: 1rem;
                 }
+            }
+        }
 
-                @include desktop-medium {
-                    margin-right: 2.5rem;
-                }
+        &.button {
+            @include desktop-small {
+                margin-left: 1rem;
             }
         }
     }
@@ -45,13 +42,11 @@
             font-size: 0.8125rem;
             letter-spacing: 0.075em;
         }
-        
+
         &:hover {
             text-decoration: underline;
         }
     }
-
-    
 
     @media screen and (max-width: 991px) {
         position: absolute;
@@ -60,7 +55,8 @@
         left: -60vw;
         width: 60vw;
         height: 100vh;
-        background: $gold;
+        background: $slate;
+        border-right: 1px solid $gold;
         box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
         opacity: 0;
         transition: all 0.2s ease-in-out;
@@ -81,7 +77,5 @@
                 font-size: clamp(1rem, 1vw, 1.125rem);
             }
         }
-
-
     }
 }

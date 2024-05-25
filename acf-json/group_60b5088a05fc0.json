@@ -6,6 +6,7 @@
             "key": "field_60b51153c0d29",
             "label": "Contact Info",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -16,12 +17,14 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_60b5089483ad0",
             "label": "Contact",
             "name": "contact",
+            "aria-label": "",
             "type": "group",
             "instructions": "",
             "required": 0,
@@ -37,6 +40,7 @@
                     "key": "field_60b54cc8e659b",
                     "label": "Headline",
                     "name": "headline",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -56,6 +60,7 @@
                     "key": "field_60b5089983ad1",
                     "label": "Copy",
                     "name": "copy",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -75,6 +80,7 @@
                     "key": "field_60b5089f83ad2",
                     "label": "Email",
                     "name": "email",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -94,6 +100,7 @@
                     "key": "field_60b508a483ad3",
                     "label": "Facebook",
                     "name": "facebook",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -113,6 +120,7 @@
                     "key": "field_60b508a983ad4",
                     "label": "Twitter",
                     "name": "twitter",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -132,6 +140,7 @@
                     "key": "field_60b508af83ad5",
                     "label": "Instagram",
                     "name": "instagram",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -146,6 +155,26 @@
                     "prepend": "",
                     "append": "",
                     "maxlength": ""
+                },
+                {
+                    "key": "field_66512616f8b38",
+                    "label": "YouTube",
+                    "name": "youtube",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
                 }
             ]
         },
@@ -153,6 +182,7 @@
             "key": "field_60b54cf8b5f4e",
             "label": "Donate",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -163,12 +193,14 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_60b54d06b5f50",
             "label": "Donate",
             "name": "donate",
+            "aria-label": "",
             "type": "group",
             "instructions": "",
             "required": 0,
@@ -184,6 +216,7 @@
                     "key": "field_60b54d06b5f51",
                     "label": "Headline",
                     "name": "headline",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -203,6 +236,7 @@
                     "key": "field_60b54d06b5f52",
                     "label": "Copy",
                     "name": "copy",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -222,6 +256,7 @@
                     "key": "field_60e72eaa6f400",
                     "label": "PayPal Embed",
                     "name": "paypal_embed",
+                    "aria-label": "",
                     "type": "textarea",
                     "instructions": "",
                     "required": 0,
@@ -243,6 +278,7 @@
             "key": "field_60b51145c0d27",
             "label": "Hero",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -253,12 +289,14 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_60b5114cc0d28",
             "label": "Hero Image",
             "name": "hero_image",
+            "aria-label": "",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -297,5 +335,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1625763855
+    "show_in_rest": 0,
+    "modified": 1716594204
 }

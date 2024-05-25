@@ -7,12 +7,20 @@
     $facebook =  $contact['facebook']; 
     $twitter =  $contact['twitter']; 
     $instagram =  $contact['instagram']; 
+    $youtube =  $contact['youtube']; 
 
 ?>
 
 <section class="contact-info grid">
     <div class="info">
-        <div class="headline">
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+    <input type="hidden" name="hosted_button_id" value="YDQJR76F7T4ES" />
+Donate    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+</form>
+
+
+    <div class="headline">
             <h2 class="page-title"><?php echo $headline; ?></h2>
         </div>
 
@@ -45,6 +53,12 @@
             <div class="link instagram">
                 <a href="<?php echo $instagram; ?>" rel="external">
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-instagram-blue.svg" alt="Instagram" />
+                </a>
+            </div>
+
+            <div class="link youtube">
+                <a href="<?php echo $youtube; ?>" rel="external">
+                    <img src="<?php bloginfo('template_directory'); ?>/images/icon-youtube-blue.svg" alt="YouTube" />
                 </a>
             </div>
         </div>    

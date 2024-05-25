@@ -962,11 +962,20 @@ body {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 }
 .cta .btn:hover {
+  text-decoration: none !important;
   transform: translateY(-3px);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 .cta .btn__charcoal {
   background: #404040;
+}
+.cta .btn__nav {
+  padding: 0.5rem 1rem;
+  color: #000;
+}
+.cta .btn__nav:hover {
+  text-decoration: none;
+  transform: none;
 }
 
 section.hero-image {
@@ -1139,28 +1148,23 @@ section.block-hall-class .member-grid .info h3 a {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    grid-column: 5/span 9;
+    grid-column: 4/span 10;
   }
 }
 @media screen and (min-width: 992px) {
-  .site-header .site-nav .link.desktop + .link.desktop {
-    margin-left: 1.5rem;
-  }
-}
-@media screen and (min-width: 1280px) {
-  .site-header .site-nav .link.desktop + .link.desktop {
-    margin-left: 2.5rem;
+  .site-header .site-nav .link.desktop + .link.desktop:not(.button) {
+    margin-left: 1rem;
   }
 }
 @media screen and (min-width: 992px) {
-  .site-header .site-nav .link.desktop + .link.desktop:before {
+  .site-header .site-nav .link.desktop + .link.desktop:not(.button):before {
     content: "·";
-    margin-right: 1.5rem;
+    margin-right: 1rem;
   }
 }
-@media screen and (min-width: 1280px) {
-  .site-header .site-nav .link.desktop + .link.desktop:before {
-    margin-right: 2.5rem;
+@media screen and (min-width: 992px) {
+  .site-header .site-nav .link.desktop.button {
+    margin-left: 1rem;
   }
 }
 @media screen and (min-width: 992px) {
@@ -1190,7 +1194,8 @@ section.block-hall-class .member-grid .info h3 a {
     left: -60vw;
     width: 60vw;
     height: 100vh;
-    background: #E7C22C;
+    background: #231F20;
+    border-right: 1px solid #E7C22C;
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
     opacity: 0;
     transition: all 0.2s ease-in-out;
@@ -3148,8 +3153,8 @@ body.page-template-contact section.contact-info .links .social .link a img {
   height: 100%;
 }
 body.page-template-contact section.donate .info {
-  background: #3E80AD;
-  color: #fff;
+  background: #E7C22C;
+  color: #000;
   padding: 3rem;
   margin-top: 2rem;
 }
