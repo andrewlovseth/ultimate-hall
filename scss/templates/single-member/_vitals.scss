@@ -1,5 +1,6 @@
 .vitals {
-    background: $light-gray;
+    background: $gray-50;
+    border: 1px solid $gray-100;
     padding: 2rem;
     font-family: $work-sans;
     margin-bottom: 3rem;
@@ -26,6 +27,7 @@
             font-size: 0.75rem;
             letter-spacing: 0.1em;
             padding: 0.5rem;
+            font-weight: 500;
         }
     }
 
@@ -35,7 +37,7 @@
             max-width: 230px;
         }
     }
-    
+
     .header {
         text-align: center;
         padding-bottom: 2rem;
@@ -122,8 +124,6 @@
                 }
             }
         }
-
-
     }
 
     .us-championships,
@@ -137,7 +137,6 @@
             &.first {
                 p {
                     font-weight: bold;
-
                 }
             }
 
@@ -148,7 +147,7 @@
                 line-height: 1.25em;
 
                 &:before {
-                    content: '·';
+                    content: "·";
                     margin-right: 0.5rem;
                     font-size: 1.25rem;
                     font-weight: normal;
@@ -166,7 +165,7 @@
             line-height: 1.25em;
 
             &:before {
-                content: '·';
+                content: "·";
                 font-size: 1.25rem;
                 font-weight: normal;
             }
@@ -182,8 +181,6 @@
             .year {
                 font-weight: normal;
             }
-        }        
+        }
     }
-
-
 }

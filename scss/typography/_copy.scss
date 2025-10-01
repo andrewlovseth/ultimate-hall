@@ -51,17 +51,17 @@
     }
 
     &.p1 {
-        font-size: clamp(1.125rem, 1.2vw, 1.25rem);
-        line-height: 1.5em;
+        font-size: 1.125rem;
+        line-height: 1.75em;
     }
 
     &.p2 {
-        line-height: 1.55em;
+        line-height: 1.75em;
         font-size: clamp(1rem, 1.1vw, 1.125rem);
     }
 
     &.p3 {
-        line-height: 1.55em;
+        line-height: 1.75em;
         font-size: clamp(0.875rem, 1vw, 1rem);
     }
 

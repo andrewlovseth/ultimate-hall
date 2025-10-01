@@ -13,8 +13,12 @@ section.hero-image {
         h1 {
             background: $white;
             padding: 1rem 2rem;
-            box-shadow: rgba(50, 50, 93, 0.1) 0px 13px 27px -5px, rgba(0, 0, 0, 0.15) 0px 8px 16px -8px;
+            //  box-shadow: rgba(50, 50, 93, 0.1) 0px 13px 27px -5px, rgba(0, 0, 0, 0.15) 0px 8px 16px -8px;
             font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+            font-family: $sorts-mill-goudy;
+            text-transform: none;
+            letter-spacing: 0;
+            line-height: 1em;
 
             @include tablet-small {
                 grid-column: 3 / span 6;
@@ -22,14 +26,12 @@ section.hero-image {
 
             @include tablet {
                 font-size: clamp(1.375rem, 3vw, 2rem);
-                padding: 2rem;
+                padding: 2rem 2rem 1.5rem 2rem;
             }
-            
+
             @include desktop-small {
                 grid-column: 5 / span 6;
             }
         }
     }
-
-
 }

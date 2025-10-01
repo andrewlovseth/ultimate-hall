@@ -11,12 +11,16 @@ section.news {
         gap: 2rem;
 
         @include desktop-small {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
 
-
     article.post-teaser {
+        border-radius: 0.25rem;
+        padding: 2rem;
+        background: $white;
+        border: 1px solid $gray-100;
+
         .meta {
             padding-bottom: 1rem;
 
@@ -26,19 +30,17 @@ section.news {
                 font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
                 letter-spacing: 0.05em;
                 font-family: $work-sans;
-                font-weight: bold;
+                font-weight: 500;
                 color: $blue;
             }
         }
 
         .info {
-
-
-
             .headline {
                 h3 {
                     font-size: clamp(1rem, 1.2vw, 1.25rem);
                     line-height: 1.25em;
+                    font-weight: 800;
 
                     a {
                         color: $slate;
@@ -47,22 +49,20 @@ section.news {
                             text-decoration: underline;
                         }
                     }
-
                 }
             }
 
             .excerpt {
                 padding-top: 1rem;
             }
-        }        
-    }
-
-    .cta {
-        padding-top: 3rem;
-
-        @include desktop-small {
-            padding-top: 6rem;
         }
     }
 
+    .cta {
+        padding-top: 2rem;
+
+        @include desktop-small {
+            padding-top: 4rem;
+        }
+    }
 }

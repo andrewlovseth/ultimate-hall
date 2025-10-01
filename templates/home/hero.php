@@ -13,9 +13,7 @@
             <?php if( $photos ): ?>
                 <?php foreach( $photos as $photo ): ?>
                     <div class="photo">
-                        <div class="content">
-                            <?php echo wp_get_attachment_image($photo['ID'], 'full'); ?>
-                        </div>
+                        <?php echo wp_get_attachment_image($photo['ID'], 'full'); ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

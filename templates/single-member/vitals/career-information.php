@@ -57,13 +57,25 @@
     if($wfdfs) {
         foreach($wfdfs as $wfdf) {
             $needles = array('world-games', 'wugc', 'wcbu');
-            $haystack = $wfdf['tournament']->post_name;
-            
-            foreach($needles as $needle) {
-                if(strpos($haystack, $needle)){
-                    array_push($national_teams, $wfdf);
+            $tournament = isset($wfdf['tournament']) ? $wfdf['tournament'] : null;
+
+            // Normalize tournament to a WP_Post object if possible
+            if ($tournament && is_numeric($tournament)) {
+                $tournament = get_post((int) $tournament);
+            }
+
+            if ($tournament && is_object($tournament) && !empty($tournament->post_name)) {
+                $haystack = $tournament->post_name;
+
+                foreach($needles as $needle) {
+                    if(strpos($haystack, $needle) !== false){
+                        // Ensure downstream expects a post object
+                        $wfdf['tournament'] = $tournament;
+                        array_push($national_teams, $wfdf);
+                        break;
+                    }
                 }
-            }        
+            }
         }
     }
 

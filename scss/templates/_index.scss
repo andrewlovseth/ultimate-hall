@@ -1,5 +1,4 @@
 body.blog {
-
     section.page-header {
         h1 {
             @include tablet {
@@ -13,10 +12,9 @@ body.blog {
     }
 
     article.post-teaser {
-
         & + article.post-teaser {
             &:before {
-                content: '';
+                content: "";
                 display: block;
                 height: 1px;
                 background: #eee;
@@ -27,7 +25,6 @@ body.blog {
                     grid-column: 3 / span 8;
                     margin: 4rem 0;
                 }
-
             }
         }
 
@@ -48,17 +45,16 @@ body.blog {
                 font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
                 letter-spacing: 0.05em;
                 font-family: $work-sans;
-                font-weight: bold;
+                font-weight: 500;
                 color: $blue;
             }
         }
 
         .info {
-
             @include tablet {
                 grid-column: 4 / span 4;
             }
-            
+
             @include desktop-small {
                 grid-column: 5 / span 6;
             }
@@ -67,6 +63,7 @@ body.blog {
                 h3 {
                     font-size: clamp(1.5rem, 1.5vw, 2rem);
                     line-height: 1.25em;
+                    font-weight: 800;
 
                     a {
                         color: $slate;
@@ -75,7 +72,6 @@ body.blog {
                             text-decoration: underline;
                         }
                     }
-
                 }
             }
 
@@ -124,7 +120,7 @@ body.blog {
                     background: $blue;
                     color: $white;
                 }
-                
+
                 &.current {
                     border-color: $slate;
                     background: $slate;
@@ -139,11 +135,9 @@ body.blog {
                         background: transparent;
                         color: $blue;
                         text-decoration: underline;
-
                     }
                 }
             }
         }
-
     }
 }

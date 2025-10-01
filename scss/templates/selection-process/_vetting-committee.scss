@@ -4,7 +4,7 @@
     .members {
         display: grid;
         gap: 2rem;
-        
+
         @include tablet-small {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -15,7 +15,6 @@
     }
 
     .member {
-
         a {
             display: grid;
             grid-template-columns: 5rem 1fr;
@@ -28,7 +27,7 @@
             @include cover-fill-image;
 
             img {
-                border-radius: 50%;    
+                border-radius: 50%;
             }
         }
 
@@ -44,25 +43,25 @@
                 }
 
                 .class {
-                    padding-top: 0.125rem;
+                    padding-top: 0.5rem;
                     display: block;
-                    font-family: $averia;
+                    font-family: $merriweather;
                     font-style: italic;
-                    font-size: 0.75rem;
+                    font-size: 0.8125rem;
                     font-weight: normal;
                 }
             }
 
             .title {
                 padding-top: 0.5rem;
-                
+
                 h5 {
                     font-size: 0.75rem;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
+                    font-weight: 500;
                 }
             }
         }
-        
     }
 }

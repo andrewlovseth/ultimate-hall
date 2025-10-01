@@ -1,5 +1,4 @@
 body.single-post {
-
     article.post {
         .article-header {
             padding-bottom: 2rem;
@@ -15,15 +14,18 @@ body.single-post {
                     text-transform: uppercase;
                     font-size: clamp(0.75rem, 0.9vw, 0.875rem);
                     letter-spacing: 0.1em;
-                    font-weight: bold;
+                    font-weight: 600;
                     color: $blue;
                     font-family: $work-sans;
                 }
             }
 
             .title {
-                font-weight: 300;
-                font-size: clamp(1.5rem, 1.8vw, 2rem);
+                h1 {
+                    font-weight: 700;
+                    font-size: 3rem;
+                    line-height: 1.125em;
+                }
             }
 
             .byline {
@@ -65,9 +67,8 @@ body.single-post {
         .article-body {
             @include desktop-small {
                 grid-column: 6 / span 8;
+                padding-top: 1.5rem;
             }
         }
     }
-
-
 }

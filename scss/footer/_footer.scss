@@ -12,9 +12,8 @@
         color: $white;
     }
 
-
     .logo {
-        grid-column: 2  / span 2;
+        grid-column: 2 / span 2;
         align-self: start;
 
         a {
@@ -25,13 +24,9 @@
                 max-width: 128px;
             }
         }
-
     }
 
     .footer-nav {
-
-
-
         @include desktop-small {
             grid-column: 4 / span 10;
             align-self: center;
@@ -47,14 +42,14 @@
                 margin-bottom: 0;
             }
 
-            &  + .link {
+            & + .link {
                 @include desktop-small {
                     margin-left: 1.25rem;
                 }
 
                 &:before {
                     @include desktop-small {
-                        content: '·';
+                        content: "·";
                         margin-right: 1.25rem;
                     }
                 }
@@ -63,18 +58,25 @@
 
         a {
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.15em;
             font-size: 0.75rem;
+            font-family: $sorts-mill-goudy;
+            white-space: nowrap;
+
+            @include desktop-small {
+                font-size: 0.675rem;
+            }
 
             @include desktop-medium {
                 font-size: 0.8125rem;
-                letter-spacing: 0.075em;
             }
-            
+
             &:hover {
                 text-decoration: underline;
+                text-underline-offset: 8px;
+                text-decoration-thickness: 0.5px;
+                text-decoration-color: rgba($white, 0.5);
             }
         }
-
     }
 }

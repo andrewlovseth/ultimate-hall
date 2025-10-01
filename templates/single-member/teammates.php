@@ -1,7 +1,7 @@
 <?php
     $type = get_field('meta_induction_type');
     $championships = get_field('us_championships');
-    if($type['value'] == 'player' && $championships !== false): ?>
+    if(isset($type['value']) && $type['value'] == 'player' && !empty($championships)): ?>
 
     <?php
         // Init teammates array
@@ -50,17 +50,21 @@
             }
         }
 
-        // Remove this member from array
+        // Ensure unique teammate IDs and remove this member from array
+        $teammates = array_unique($teammates);
         $teammates = array_diff($teammates, array( get_the_ID() ));
-        $args = array(
-            'post_type' => 'member',
-            'posts_per_page' => -1,
-            'post__in' => $teammates
-        );
+        // Reindex to avoid WP treating an empty array unexpectedly
+        $teammates = array_values($teammates);
         $first_name = get_field('vitals_first_name');
 
-        $query = new WP_Query( $args );
-        if ( $query->have_posts() ) : ?>
+        if ( !empty($teammates) ) {
+            $args = array(
+                'post_type' => 'member',
+                'posts_per_page' => -1,
+                'post__in' => $teammates
+            );
+            $query = new WP_Query( $args );
+            if ( $query->have_posts() ) : ?>
 
             <section class="teammates grid">
                 <div class="section-header align-center">
@@ -74,6 +78,6 @@
                 </div>
             </section>
 
-    <?php endif; wp_reset_postdata(); ?>
+    <?php endif; wp_reset_postdata(); } ?>
 
 <?php endif; ?>

@@ -33,7 +33,7 @@
                     <div class="excerpt copy p3">
                         <?php
                             $excerpt = get_the_excerpt(); 
-                            $excerpt = substr( $excerpt, 0, 200 );
+                            $excerpt = substr( $excerpt, 0, 140 );
                             $result = substr( $excerpt, 0, strrpos( $excerpt, ' ' ) );
                             echo $result . ' ...';
                         ?>

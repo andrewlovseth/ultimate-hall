@@ -15,7 +15,9 @@
             &:before {
                 @include desktop-small {
                     content: "·";
+                    display: inline-block;
                     margin-right: 1rem;
+                    transform: translateY(3px);
                 }
             }
         }
@@ -23,6 +25,10 @@
         &.button {
             @include desktop-small {
                 margin-left: 1rem;
+            }
+
+            @include desktop-medium {
+                margin-left: 1.5rem;
             }
         }
     }
@@ -35,16 +41,24 @@
 
     a {
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.15em;
         font-size: 0.75rem;
+        font-family: $sorts-mill-goudy;
+        white-space: nowrap;
+
+        @include desktop-small {
+            font-size: 0.675rem;
+        }
 
         @include desktop-medium {
             font-size: 0.8125rem;
-            letter-spacing: 0.075em;
         }
 
         &:hover {
             text-decoration: underline;
+            text-underline-offset: 8px;
+            text-decoration-thickness: 0.5px;
+            text-decoration-color: rgba($white, 0.5);
         }
     }
 
@@ -56,7 +70,7 @@
         width: 60vw;
         height: 100vh;
         background: $slate;
-        border-right: 1px solid $gold;
+        border-right: 1px solid $gray-700;
         box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
         opacity: 0;
         transition: all 0.2s ease-in-out;

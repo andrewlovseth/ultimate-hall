@@ -6,16 +6,28 @@
 
     if($worlds_teams) {
         foreach($worlds_teams as $worlds_team) {
-            $tournament = $worlds_team['tournament'];
-            $tournament_year = get_field('details_year', $tournament->ID);
-            $year = get_the_title($tournament_year);
-            $placement = $worlds_team['placement'];
+            $tournament = isset($worlds_team['tournament']) ? $worlds_team['tournament'] : null;
+
+            // Normalize to WP_Post object if an ID was stored
+            if ($tournament && is_numeric($tournament)) {
+                $tournament = get_post((int) $tournament);
+            }
+
+            $year = null;
+            if ($tournament && is_object($tournament) && !empty($tournament->ID)) {
+                $tournament_year = get_field('details_year', $tournament->ID);
+                if ($tournament_year) {
+                    $year = get_the_title($tournament_year);
+                }
+            }
+
+            $placement = isset($worlds_team['placement']) ? $worlds_team['placement'] : null;
     
-            if ($placement == '1st') {
+            if ($year && $placement == '1st') {
                 array_push($worlds_first, $year);
             }
-    
-            if ($placement == '2nd') {
+
+            if ($year && $placement == '2nd') {
                 array_push($worlds_second, $year);
             }
         }

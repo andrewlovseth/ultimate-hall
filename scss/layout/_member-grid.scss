@@ -72,7 +72,9 @@
 
     // List of 4 + 9
     .member:nth-last-child(n + 4):nth-last-child(-n + 4):first-child,
-    .member:nth-last-child(n + 4):nth-last-child(-n + 4):first-child ~ .member .member:nth-last-child(n + 9):nth-last-child(-n + 9):first-child,
+    .member:nth-last-child(n + 4):nth-last-child(-n + 4):first-child
+        ~ .member
+        .member:nth-last-child(n + 9):nth-last-child(-n + 9):first-child,
     .member:nth-last-child(n + 9):nth-last-child(-n + 9):first-child ~ .member,
     .member:nth-last-child(n + 14):nth-last-child(-n + 14):first-child,
     .member:nth-last-child(n + 14):nth-last-child(-n + 14):first-child ~ .member {
@@ -148,11 +150,18 @@
 
     .photo {
         a {
-            max-width: 160px;
+            max-width: 170px;
             margin: 0 auto;
             display: block;
             @include aspect-ratio(1, 1);
             @include cover-fill-image;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+
+            &:hover {
+                border-color: $gold;
+            }
 
             img {
                 border-radius: 50%;
@@ -173,9 +182,9 @@
 
         h3 {
             font-family: $work-sans;
-            font-size: clamp(0.8125rem, 0.9vw, 1rem);
+            font-size: 1.125rem;
             line-height: 1.25em;
-            font-weight: bold;
+            font-weight: 600;
 
             a {
                 color: $slate;
@@ -187,20 +196,22 @@
         }
 
         .meta {
-            padding-top: 0.25rem;
+            padding-top: 0.125rem;
 
             .type {
                 display: block;
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
-                font-size: clamp(0.6125rem, 0.7vw, 0.75rem);
+                font-size: 0.675rem;
+                font-weight: 600;
             }
 
             .division {
-                padding-top: 0.125rem;
+                padding-top: 0.25rem;
                 display: block;
-                font-size: clamp(0.75rem, 0.8vw, 0.8125rem);
+                font-size: 0.675rem;
                 font-style: italic;
+                color: #5d5d5d;
             }
         }
     }

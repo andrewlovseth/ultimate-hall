@@ -2,6 +2,7 @@
     padding: 2rem 0;
     background: $slate;
     color: $white;
+    border-bottom: 1px solid $gray-700;
 
     z-index: 10;
 
@@ -13,11 +14,11 @@
         color: $white;
     }
 
-    @import 'logo';
+    @import "logo";
 
-    @import 'hamburger';
-
-    @import 'navigation';
+    @import "hamburger";
 }
 
-@import 'nav-overlay-open';
+@import "navigation";
+
+@import "nav-overlay-open";

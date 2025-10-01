@@ -6,6 +6,7 @@
     .btn {
         display: inline-block;
         background: $gold;
+        border: 1px solid darken($gold, 5%);
         padding: 1rem 2rem;
         color: $white;
         font-family: $work-sans;
@@ -13,23 +14,25 @@
         text-transform: uppercase;
         font-size: 0.75rem;
         letter-spacing: 0.1em;
-        transition: all 0.2s ease;
-        border-radius: 3px;
+        transition: all 300ms ease;
+        border-radius: 4px;
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 
         &:hover {
             text-decoration: none !important;
             transform: translateY(-3px);
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
         }
 
         &__charcoal {
             background: $charcoal;
+            border: 1px solid darken($charcoal, 5%);
         }
 
         &__nav {
             padding: 0.5rem 1rem;
             color: $black;
+            font-family: $work-sans;
+            border: 1px solid darken($gold, 5%);
 
             &:hover {
                 text-decoration: none;

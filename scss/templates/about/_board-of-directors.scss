@@ -17,9 +17,7 @@
         }
     }
 
-
     .member {
-
         a {
             color: $charcoal;
         }
@@ -29,7 +27,7 @@
             @include cover-fill-image;
 
             img {
-                border-radius: 50%;    
+                border-radius: 50%;
             }
 
             .empty {
@@ -45,33 +43,31 @@
             font-family: $work-sans;
 
             .name {
-                font-size: 1rem;
-
                 h4 {
-                    font-weight: bold;
+                    font-weight: 600;
+                    font-size: 1.125rem;
                 }
 
                 .class {
-                    padding-top: 0.125rem;
+                    padding-top: 0.5rem;
                     display: block;
-                    font-family: $averia;
+                    font-family: $merriweather;
+                    color: $gray-600;
                     font-style: italic;
-                    font-size: 0.75rem;
+                    font-size: 0.8125rem;
                     font-weight: normal;
                 }
             }
 
             .title {
                 padding-top: 0.5rem;
-                
+
                 h5 {
                     font-size: 0.75rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.05em;
                     line-height: 1.25em;
+                    font-weight: 500;
                 }
             }
         }
-        
     }
 }
