@@ -12,6 +12,7 @@ if(function_exists('acf_add_options_page')) {
     acf_add_options_sub_page('Footer');
     acf_add_options_sub_page('Members');
     acf_add_options_sub_page('Divisions');
+    acf_add_options_sub_page('Events');
 }
 
 
@@ -48,3 +49,18 @@ function bearsmith_team_relationship_order($args, $field, $post_id) {
 add_filter('acf/fields/relationship/query/key=field_603e78e196eea', 'bearsmith_team_relationship_order', 10, 3);
 add_filter('acf/fields/relationship/query/key=field_60528f187c47d', 'bearsmith_team_relationship_order', 10, 3);
 add_filter('acf/fields/relationship/query/key=field_60528c634455f', 'bearsmith_team_relationship_order', 10, 3);
+
+
+add_action('init', function () {
+    register_post_type('year', array(
+        'label'               => 'Years',
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_rest'        => true,
+        'supports'            => array('title','editor','thumbnail','page-attributes'),
+        'has_archive'         => false,
+        'rewrite'             => array('slug' => 'class', 'with_front' => false),
+        'query_var'           => 'year_cpt', // avoid conflict with core 'year'
+    ));
+});

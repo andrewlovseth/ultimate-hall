@@ -1,7 +1,4 @@
 <nav class="footer-nav">
-    <div class="link">
-        <a href="<?php echo site_url('/') ?>">Home</a>
-    </div>
     
     <?php if(have_rows('navigation', 'options')): while(have_rows('navigation', 'options')): the_row(); ?>
         <?php 

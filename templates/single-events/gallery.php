@@ -6,6 +6,10 @@
 ?>
 
     <section class="gallery grid">
+        <div class="section-header align-center">
+            <h3>Gallery</h3>
+        </div>
+
         <div class="gallery__wrapper">
             <?php foreach( $images as $image ): ?>
                 <div class="photo">

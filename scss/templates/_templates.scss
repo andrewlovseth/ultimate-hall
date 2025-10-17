@@ -1,16 +1,19 @@
-@import 'home';
+@import "home";
 
-@import 'archive-member';
-@import 'single-member';
-@import 'special-merit';
-@import 'single-team';
-@import 'single-tournaments';
+@import "archive-member";
+@import "single-member";
+@import "special-merit";
+@import "single-team";
+@import "single-tournaments";
 
-@import 'selection-process';
+@import "selection-process";
 
-@import 'about';
+@import "about";
 
-@import 'index';
-@import 'single-post';
+@import "index";
+@import "single-post";
 
-@import 'contact';
+@import "archive-events";
+@import "single-events";
+
+@import "contact";
