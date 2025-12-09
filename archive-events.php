@@ -25,11 +25,9 @@ get_header(); ?>
     <section class="events-list grid">
         <div class="events-list__wrapper">
             <?php
-                $args = array(
-                    'post_type' => 'events',
-                    'posts_per_page' => -1,
+                $args = bearsmith_default_query_args('events', array(
                     'post_status' => 'publish, future',
-                );
+                ));
                 $query = new WP_Query( $args );
             ?>
 

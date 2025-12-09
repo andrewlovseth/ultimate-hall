@@ -5,12 +5,7 @@
 
     <div class="years-list">
         <?php
-            $args = array(
-                'post_type' => 'year',
-                'posts_per_page' => -1,
-                'orderby' => 'title',
-                'order' => 'ASC',
-            );
+            $args = bearsmith_default_query_args('year');
             $query = new WP_Query( $args );
             if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); ?>
 

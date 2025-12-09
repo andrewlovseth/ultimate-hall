@@ -13,11 +13,7 @@
         <?php
             $class_ids = array_map(function($y) { return $y->ID; }, $classes);
 
-            $args = array(
-                'post_type' => 'member',
-                'posts_per_page' => -1,
-                'orderby' => 'title',
-                'order' => 'ASC',
+            $args = bearsmith_default_query_args('member', array(
                 'meta_query' => array(
                     array(
                         'key'       => 'meta_class',
@@ -25,7 +21,7 @@
                         'value'     => $class_ids,
                     ),
                 ),
-            );
+            ));
 
             $query = new WP_Query($args);
         ?>
