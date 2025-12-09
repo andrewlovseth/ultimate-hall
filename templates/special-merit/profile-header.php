@@ -10,7 +10,7 @@
     </div>
 
     <div class="name">
-        <h1 class="name__title">hi<?php the_title(); ?></h1>
+        <h1 class="name__title"><?php the_title(); ?></h1>
     </div>
 
     <div class="meta">
