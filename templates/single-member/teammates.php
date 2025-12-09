@@ -6,43 +6,79 @@
     <?php
         // Init teammates array
         $teammates = array();
-        
-        // Build array of tournaments
+
+        // Build arrays of tournaments and teams for the current member
         $tournaments = array();
+        $tournament_ids = array();
+
         if($championships) {
             foreach($championships as $championship) {
                 $event = $championship['tournament'];
                 $team = $championship['team'];
-                array_push($tournaments, array('event' => $event, 'team' => $team));
+
+                // Extract tournament ID if it's a WP_Post object
+                $event_id = is_object($event) ? $event->ID : $event;
+                $team_id = is_object($team) ? $team->ID : $team;
+
+                $tournaments[] = array('event' => $event_id, 'team' => $team_id);
+
+                // Collect unique tournament IDs for querying
+                if ($event_id && !in_array($event_id, $tournament_ids)) {
+                    $tournament_ids[] = $event_id;
+                }
             }
         }
 
-        // Build array of all members [IDs]
-        $member_args = array(
-            'numberposts' => -1,
-            'post_type' => 'member',
-            'fields' => 'ids'
-        );
-        $members = get_posts($member_args);
-        
-        if($tournaments) {
+        if(!empty($tournament_ids) && !empty($tournaments)) {
+            // Build meta_query to find members who participated in ANY of these tournaments
+            // This dramatically reduces the search space from ALL members to only relevant ones
+            $meta_query = array('relation' => 'OR');
 
-            // Query over all tournaments
-            foreach($tournaments as $tournament) {
+            foreach($tournament_ids as $tournament_id) {
+                $meta_query[] = array(
+                    'key'     => 'us_championships_$_tournament',
+                    'value'   => $tournament_id,
+                    'compare' => '='
+                );
+            }
 
-                // Query over all members
-                foreach($members as $member) {
-                    $us_championships = get_field('us_championships', $member);
-                    if($us_championships) {
+            // Apply filter to support ACF repeater field wildcards
+            $filter = bearsmith_modify_repeater_meta_query('us_championships');
+            add_filter('posts_where', $filter);
 
-                        // Query that members list of tournaments
-                        foreach($us_championships as $us_championship) {
+            // Query only members who participated in any of the relevant tournaments
+            $potential_teammates_query = new WP_Query(array(
+                'post_type'      => 'member',
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+                'post__not_in'   => array(get_the_ID()), // Exclude current member
+                'meta_query'     => $meta_query
+            ));
 
-                            // Query if member was at same tournament and on same team
-                            if ($tournament['event'] == $us_championship['tournament'] && $tournament['team'] == $us_championship['team']) {
+            // Remove filter after query
+            remove_filter('posts_where', $filter);
 
-                                // If so, add their ID to the teammates array
-                                array_push($teammates, $member);
+            // Now check which of these potential teammates were on the same team
+            if ($potential_teammates_query->have_posts()) {
+                foreach($potential_teammates_query->posts as $member_id) {
+                    $member_championships = get_field('us_championships', $member_id);
+
+                    if($member_championships) {
+                        // Check if this member shares any tournament/team combination
+                        foreach($tournaments as $tournament) {
+                            foreach($member_championships as $member_championship) {
+                                // Extract IDs if they're WP_Post objects
+                                $member_event = $member_championship['tournament'];
+                                $member_team = $member_championship['team'];
+                                $member_event_id = is_object($member_event) ? $member_event->ID : $member_event;
+                                $member_team_id = is_object($member_team) ? $member_team->ID : $member_team;
+
+                                if ($tournament['event'] == $member_event_id
+                                    && $tournament['team'] == $member_team_id) {
+                                    $teammates[] = $member_id;
+                                    // Break both loops once we find a match for this member
+                                    break 2;
+                                }
                             }
                         }
                     }
@@ -50,9 +86,8 @@
             }
         }
 
-        // Ensure unique teammate IDs and remove this member from array
+        // Ensure unique teammate IDs (shouldn't be necessary with break 2, but safety first)
         $teammates = array_unique($teammates);
-        $teammates = array_diff($teammates, array( get_the_ID() ));
         // Reindex to avoid WP treating an empty array unexpectedly
         $teammates = array_values($teammates);
         $first_name = get_field('vitals_first_name');
