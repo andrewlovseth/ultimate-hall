@@ -14,18 +14,6 @@
 
     .sub-title {
         padding-top: 1rem;
-
-        h2 {
-            span {
-                & + span {
-                    &:before {
-                        content: "·";
-                        display: inline-block;
-                        margin-right: 0.25rem;
-                    }
-                }
-            }
-        }
     }
 }
 

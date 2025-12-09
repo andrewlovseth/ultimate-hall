@@ -1,22 +1,18 @@
 <?php
+// Build subtitle parts from team data
+$division_obj = get_field('division');
+$division = ($division_obj) ? $division_obj[0]->post_title : '';
+$city = get_field('city');
 
-    $division_obj = get_field('division');
-    if($division_obj) {
-        $division = $division_obj[0]->post_title;
-    }
+$subtitle_parts = array();
+if ($city) {
+    $subtitle_parts['city'] = $city;
+}
+if ($division) {
+    $subtitle_parts['division'] = $division;
+}
 
-    $city = get_field('city');
-
-?>
-
-
-<section class="page-header align-center grid">
-    <h1><?php the_title(); ?></h1>
-
-    <div class="location sub-title">
-        <h2>
-            <?php if($city): ?><span class="city"><?php echo $city; ?></span><?php endif; ?>
-            <?php if($division): ?><span class="division"><?php echo $division; ?></span><?php endif; ?>
-        </h2>
-    </div>        
-</section>
+// Use unified page header template
+get_template_part('template-parts/global/page-header-unified', null, array(
+    'subtitle_parts' => $subtitle_parts
+));

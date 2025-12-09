@@ -563,11 +563,6 @@ a {
 .page-header .sub-title {
   padding-top: 1rem;
 }
-.page-header .sub-title h2 span + span:before {
-  content: "·";
-  display: inline-block;
-  margin-right: 0.25rem;
-}
 
 .section-header {
   padding-bottom: 2rem;
@@ -1737,10 +1732,6 @@ body.single-member .profile-header .meta {
   font-size: clamp(0.875rem, 1vw, 1rem);
   letter-spacing: 0.1em;
 }
-body.single-member .profile-header .meta__division::before {
-  content: "·";
-  padding: 0 0.375rem 0 0.125rem;
-}
 body.single-member .vitals {
   background: #fafafa;
   border: 1px solid #efefef;
@@ -2145,10 +2136,6 @@ body.member-template-special-merit .profile-header .meta {
   font-size: clamp(0.875rem, 1vw, 1rem);
   letter-spacing: 0.1em;
 }
-body.member-template-special-merit .profile-header .meta__division::before {
-  content: "·";
-  padding: 0 0.375rem 0 0.125rem;
-}
 body.member-template-special-merit .introduction {
   padding-bottom: 3rem;
   gap: 2rem;
@@ -2379,16 +2366,13 @@ body.single-team section.other-teams .team a .location {
   font-size: 0.675rem;
 }
 
-body.single-tournaments .site-content {
-  padding-bottom: 0;
-}
 body.single-tournaments .other-tournaments {
-  margin: 3rem 0;
+  margin: 3rem 0 0 0;
   font-family: "Work Sans", sans-serif;
 }
 @media screen and (min-width: 992px) {
   body.single-tournaments .other-tournaments {
-    margin: 6rem 0;
+    margin: 6rem 0 0 0;
   }
 }
 body.single-tournaments .other-tournaments .content {

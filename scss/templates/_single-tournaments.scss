@@ -1,14 +1,10 @@
 body.single-tournaments {
-    .site-content {
-        padding-bottom: 0;
-    }
-
     .other-tournaments {
-        margin: 3rem 0;
+        margin: 3rem 0 0 0;
         font-family: $work-sans;
 
         @include desktop-small {
-            margin: 6rem 0;
+            margin: 6rem 0 0 0;
         }
 
         .content {
@@ -33,7 +29,6 @@ body.single-tournaments {
                 align-items: center;
                 flex-wrap: wrap;
 
-
                 .tournament {
                     width: 100%;
                     padding-top: 1rem;
@@ -44,7 +39,7 @@ body.single-tournaments {
 
                         & + .tournament {
                             &:before {
-                                content: '·';
+                                content: "·";
                                 display: inline-block;
                                 margin: 0 0.5rem;
                             }
@@ -80,28 +75,28 @@ body.single-tournaments {
         &-list {
             margin: 0 auto;
             border-top: 1px solid #d5d5d5;
-            border-left: 1px solid #d5d5d5;;
+            border-left: 1px solid #d5d5d5;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-    
+
             @include tablet {
                 grid-template-columns: repeat(5, 1fr);
             }
-    
+
             @include desktop-small {
                 grid-template-columns: repeat(8, 1fr);
-            }    
-    
+            }
+
             @include desktop-medium {
                 grid-template-columns: repeat(10, 1fr);
-            }           
+            }
         }
-    
+
         .year {
             border-bottom: 1px solid #d5d5d5;
             border-right: 1px solid #d5d5d5;
         }
-    
+
         a {
             display: block;
             font-family: $work-sans;
@@ -110,14 +105,11 @@ body.single-tournaments {
             transition: all 0.2s ease-in;
             font-size: 0.8125rem;
             letter-spacing: 0.1em;
-    
+
             &:hover {
                 background: $blue;
                 color: $white;
             }
         }
     }
-
-
-
 }

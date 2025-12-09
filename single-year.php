@@ -10,10 +10,13 @@
 
 <?php get_header(); ?>
 
-    <section class="page-header align-center grid">
-        <?php $year_title = get_post_field('post_title', get_the_ID()); ?>
-        <h1><?php echo inaugural_get_class_title($year_title); ?></h1>
-    </section>
+    <?php
+        // Use unified page header with custom class title
+        $year_title = get_post_field('post_title', get_the_ID());
+        get_template_part('template-parts/global/page-header-unified', null, array(
+            'title' => inaugural_get_class_title($year_title)
+        ));
+    ?>
 
     <section class="class grid">
         <div class="member-grid">

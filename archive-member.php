@@ -1,9 +1,13 @@
 <?php get_header(); ?>
 
 
-    <section class="page-header align-center grid" id="top">
-        <h1>Hall of Famers</h1>
-    </section>
+    <?php
+        // Use unified page header with custom title
+        get_template_part('template-parts/global/page-header-unified', null, array(
+            'title' => 'Hall of Famers',
+            'id' => 'top'
+        ));
+    ?>
 
     <?php get_template_part('templates/archive-member/sub-nav'); ?>
 

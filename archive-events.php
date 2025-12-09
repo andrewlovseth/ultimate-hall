@@ -7,9 +7,13 @@ get_header(); ?>
 
     <?php get_template_part('templates/archive-events/hero-image'); ?>
 
-    <section class="page-header align-center grid" id="top">
-        <h1>Events</h1>
-    </section>
+    <?php
+        // Use unified page header with custom title
+        get_template_part('template-parts/global/page-header-unified', null, array(
+            'title' => 'Events',
+            'id' => 'top'
+        ));
+    ?>
 
     <section class="intro grid">
         <div class="copy p2">
