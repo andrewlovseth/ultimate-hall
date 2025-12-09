@@ -2,12 +2,10 @@
     <div class="member-grid">
 
         <?php
-            function my_posts_where( $where ) {                    
-                $where = str_replace("meta_key = 'playing_career_$", "meta_key LIKE 'playing_career_%", $where);
-                return $where;
-            }
+            // Add filter to support ACF repeater field wildcards
+            $filter = bearsmith_modify_repeater_meta_query('playing_career');
+            add_filter('posts_where', $filter);
 
-            add_filter('posts_where', 'my_posts_where');
             $args = array(
                 'post_type' => 'member',
                 'posts_per_page' => -1,
@@ -22,6 +20,10 @@
                 )
             );
             $query = new WP_Query( $args );
+
+            // Remove filter after query to prevent affecting other queries
+            remove_filter('posts_where', $filter);
+
             if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); ?>
 
             <?php get_template_part('template-parts/global/member'); ?>
