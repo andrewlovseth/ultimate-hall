@@ -6,9 +6,9 @@
     $year = $class->post_name;
 ?>
 
-<section class="profile-header">    
+<section class="profile-header">
     <div class="class">
-        <h2 class="class__title"><?php if($year == '2004'): ?>Inaugural <?php endif; ?> Class of <?php echo $year; ?></h2>
+        <h2 class="class__title"><?php echo inaugural_get_class_prefix($year); ?>Class of <?php echo $year; ?></h2>
     </div>
 
     <div class="name">

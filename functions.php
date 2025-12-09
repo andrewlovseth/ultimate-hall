@@ -15,3 +15,5 @@ require_once( plugin_dir_path( __FILE__ ) . '/functions/divisions.php');
 require_once( plugin_dir_path( __FILE__ ) . '/functions/query-helpers.php');
 
 require_once( plugin_dir_path( __FILE__ ) . '/functions/member-helpers.php');
+
+require_once( plugin_dir_path( __FILE__ ) . '/functions/inaugural-helpers.php');

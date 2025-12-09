@@ -7,11 +7,7 @@
         
         <section class="class grid" id="class-<?php echo $year; ?>">
             <div class="section-header align-center">
-                <?php if($year == '2004'): ?>
-                        <h3>Inaugural Class of <?php echo $year; ?></h3>
-                <?php else: ?>
-                        <h3>Class of <?php echo $year; ?> </h3>
-                <?php endif; ?>
+                <h3><?php echo inaugural_get_class_title($year); ?></h3>
             </div>
 
             <div class="member-grid">

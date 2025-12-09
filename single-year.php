@@ -11,11 +11,8 @@
 <?php get_header(); ?>
 
     <section class="page-header align-center grid">
-        <?php
-            $year_title = get_post_field('post_title', get_the_ID());
-            $is_inaugural = ($year_title === '2004');
-        ?>
-        <h1><?php echo $is_inaugural ? 'Inaugural Class of 2004' : ('Class of ' . esc_html($year_title)); ?></h1>
+        <?php $year_title = get_post_field('post_title', get_the_ID()); ?>
+        <h1><?php echo inaugural_get_class_title($year_title); ?></h1>
     </section>
 
     <section class="class grid">
