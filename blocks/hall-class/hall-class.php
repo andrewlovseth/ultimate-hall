@@ -36,20 +36,7 @@ $year_ID = $year_obj->ID;
     <div class="member-grid">
 
         <?php
-            $args = array(
-                'post_type' => 'member',
-                'posts_per_page' => -1,
-                'orderby' => 'title',
-                'order' => 'ASC',
-                'meta_query' => array(
-                    array(
-                        'key'		=> 'meta_class',
-                        'compare'	=> '=',
-                        'value'		=> $year_ID,
-                    ),
-                )
-            );
-            $query = new WP_Query( $args );
+            $query = bearsmith_get_members_by_class($year_ID);
             if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); ?>
 
             <?php 

@@ -1,20 +1,7 @@
 <?php
     // Pre-check for members in this year and redirect if none exist
     $year_id = get_the_ID();
-    $args = array(
-        'post_type'      => 'member',
-        'posts_per_page' => -1,
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-        'meta_query'     => array(
-            array(
-                'key'     => 'meta_class',
-                'compare' => '=',
-                'value'   => $year_id,
-            ),
-        ),
-    );
-    $query = new WP_Query($args);
+    $query = bearsmith_get_members_by_class($year_id);
     if (!$query->have_posts()) {
         wp_safe_redirect(get_post_type_archive_link('member'), 302);
         exit;
