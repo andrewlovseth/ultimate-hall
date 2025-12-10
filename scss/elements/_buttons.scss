@@ -5,8 +5,8 @@
 
     .btn {
         display: inline-block;
-        background: $gold;
-        border: 1px solid darken($gold, 5%);
+        background: $gold-400;
+        border: 1px solid darken($gold-400, 5%);
         padding: 1rem 2rem;
         color: $white;
         font-family: $work-sans;
@@ -32,7 +32,7 @@
             padding: 0.5rem 1rem;
             color: $black;
             font-family: $work-sans;
-            border: 1px solid darken($gold, 5%);
+            border: 1px solid darken($gold-400, 5%);
 
             &:hover {
                 text-decoration: none;

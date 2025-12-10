@@ -12,13 +12,12 @@
     }
 
     .mission {
-        background: $gold;
+        background: $gold-400;
         color: $white;
-
     }
 
     .vision {
-        border: 2px solid $gold;
+        border: 2px solid $gold-400;
     }
 
     @include tablet {
@@ -36,7 +35,6 @@
         h3 {
             font-weight: bold;
             font-family: $work-sans;
-
         }
     }
 }

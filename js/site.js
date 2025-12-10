@@ -16,7 +16,7 @@
 
         $(".slick-slider").on("click", ".slick-slide", function (e) {
             e.stopPropagation();
-            var index = $(this).data("slick-index");
+            let index = $(this).data("slick-index");
             if ($(".slick-slider").slick("slickCurrentSlide") !== index) {
                 $(".slick-slider").slick("slickGoTo", index);
             } else {
@@ -37,7 +37,7 @@
     });
 
     $(document).mouseup(function (e) {
-        var menu = $(".site-navigation, .js-nav-trigger");
+        let menu = $(".site-navigation, .js-nav-trigger");
 
         if (!menu.is(e.target) && menu.has(e.target).length === 0) {
             $("body").removeClass("nav-overlay-open");
