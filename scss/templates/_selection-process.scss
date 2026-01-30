@@ -15,7 +15,7 @@ body.page-template-selection-process {
             padding-bottom: 1rem;
         }
 
-        @import 'templates/selection-process/resources';
+        @import 'selection-process/resources';
     }
 
     aside.sidebar {
@@ -57,6 +57,6 @@ body.page-template-selection-process {
             }
         }
 
-        @import 'templates/selection-process/vetting-committee';
+        @import 'selection-process/vetting-committee';
     }
 }

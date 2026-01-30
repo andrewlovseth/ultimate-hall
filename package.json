@@ -1,28 +1,14 @@
 {
   "name": "ultimate-hall",
   "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "bun run dev.ts",
+    "build": "bun run build.ts",
+    "start": "bun run dev.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://andrewlovseth@bitbucket.org/andrewlovseth/ultimate-hall.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://bitbucket.org/andrewlovseth/ultimate-hall/issues"
-  },
-  "homepage": "https://bitbucket.org/andrewlovseth/ultimate-hall#readme",
   "devDependencies": {
-    "browser-sync": "^2.27.10",
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-sass": "^5.1.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "sass": "^1.56.1"
+    "lightningcss": "^1.28.0",
+    "sass": "^1.83.0"
   }
 }

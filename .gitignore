@@ -74,4 +74,4 @@ gulpfile.babel.js
 .eslintignore
 .eslintrc.js
 package-lock.json
-package.json
+bun.lock

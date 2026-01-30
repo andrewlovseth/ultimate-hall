@@ -21,13 +21,13 @@ body.page-template-about {
         }
     }
 
-    @import 'templates/about/history-book';
+    @import 'about/history-book';
 
-    @import 'templates/about/mission';
-    
-    @import 'templates/about/board-of-directors';
+    @import 'about/mission';
 
-    @import 'templates/about/partners';
+    @import 'about/board-of-directors';
 
-    @import 'templates/about/legal-status';
+    @import 'about/partners';
+
+    @import 'about/legal-status';
 }

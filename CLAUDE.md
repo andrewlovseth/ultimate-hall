@@ -9,14 +9,14 @@ WordPress theme for the Ultimate Hall of Fame website. This is the theme reposit
 ## Commands
 
 ```bash
-# CSS development with BrowserSync (watches SCSS and PHP)
-npx gulp watch
+# Dev server with live reload (watches SCSS and PHP)
+bun run dev
 
-# Compile SCSS only
-npx gulp style
+# Compile CSS only
+bun run build
 ```
 
-The `gulp watch` task proxies `https://ultimatehall.local` - ensure DDEV is running in the parent project.
+The dev server proxies `https://ultimatehall.dev` at `http://localhost:3030`. Ensure DDEV is running in the parent project.
 
 ## Architecture
 
