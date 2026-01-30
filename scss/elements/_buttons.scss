@@ -6,7 +6,7 @@
     .btn {
         display: inline-block;
         background: $gold-400;
-        border: 1px solid darken($gold-400, 5%);
+        border: 1px solid $gold-400-dark;
         padding: 1rem 2rem;
         color: $white;
         font-family: $work-sans;
@@ -25,14 +25,14 @@
 
         &__charcoal {
             background: $charcoal;
-            border: 1px solid darken($charcoal, 5%);
+            border: 1px solid $charcoal-dark;
         }
 
         &__nav {
             padding: 0.5rem 1rem;
             color: $black;
             font-family: $work-sans;
-            border: 1px solid darken($gold-400, 5%);
+            border: 1px solid $gold-400-dark;
 
             &:hover {
                 text-decoration: none;

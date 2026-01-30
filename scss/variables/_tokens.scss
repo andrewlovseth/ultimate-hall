@@ -1,0 +1,119 @@
+// ============================================================================
+// Design Tokens
+// ============================================================================
+// CSS Custom Properties for runtime theming + Sass aliases for migration bridge.
+// Breakpoints remain as Sass variables (CSS vars can't be used in @media queries).
+
+:root {
+    // -------------------------------------------------------------------------
+    // Neutrals
+    // -------------------------------------------------------------------------
+    --color-white: #fff;
+    --color-black: #000;
+    --color-light-gray: #f8f9fa;
+    --color-slate: #231f20;
+    --color-charcoal: #404040;
+
+    // -------------------------------------------------------------------------
+    // Gray Scale
+    // -------------------------------------------------------------------------
+    --color-gray-0: #ffffff;
+    --color-gray-50: #fafafa;
+    --color-gray-100: #efefef;
+    --color-gray-200: #dcdcdc;
+    --color-gray-300: #bdbdbd;
+    --color-gray-400: #989898;
+    --color-gray-500: #7c7c7c;
+    --color-gray-600: #656565;
+    --color-gray-700: #525252;
+    --color-gray-800: #464646;
+    --color-gray-900: #3d3d3d;
+    --color-gray-950: #292929;
+    --color-gray-1000: #000000;
+
+    // -------------------------------------------------------------------------
+    // Gold Scale (brand)
+    // -------------------------------------------------------------------------
+    --color-gold-50: #fcfaea;
+    --color-gold-100: #f9f5c8;
+    --color-gold-200: #f4e994;
+    --color-gold-300: #eed556;
+    --color-gold-400: #e7c22c;
+    --color-gold-500: #d7aa1b;
+    --color-gold-600: #b98415;
+    --color-gold-700: #946014;
+    --color-gold-800: #7b4c18;
+    --color-gold-900: #693f1a;
+    --color-gold-950: #3d210b;
+
+    // -------------------------------------------------------------------------
+    // Pre-calculated variants (replaces darken() calls)
+    // -------------------------------------------------------------------------
+    --color-gold-400-dark: #d4b228;     // darken($gold-400, 5%)
+    --color-charcoal-dark: #333333;     // darken($charcoal, 5%)
+
+    // -------------------------------------------------------------------------
+    // Accent
+    // -------------------------------------------------------------------------
+    --color-blue: #3e80ad;
+
+    // -------------------------------------------------------------------------
+    // Typography
+    // -------------------------------------------------------------------------
+    --font-sans: "Work Sans", sans-serif;
+    --font-serif: "Merriweather", serif;
+    --font-display: "Sorts Mill Goudy", serif;
+}
+
+// =============================================================================
+// Sass Aliases (migration bridge)
+// =============================================================================
+// Existing code can continue using $variable-name while we migrate.
+// These map to the CSS custom properties defined above.
+
+// Neutrals
+$white: var(--color-white);
+$black: var(--color-black);
+$light-gray: var(--color-light-gray);
+$slate: var(--color-slate);
+$charcoal: var(--color-charcoal);
+
+// Gray Scale
+$gray-0: var(--color-gray-0);
+$gray-50: var(--color-gray-50);
+$gray-100: var(--color-gray-100);
+$gray-200: var(--color-gray-200);
+$gray-300: var(--color-gray-300);
+$gray-400: var(--color-gray-400);
+$gray-500: var(--color-gray-500);
+$gray-600: var(--color-gray-600);
+$gray-700: var(--color-gray-700);
+$gray-800: var(--color-gray-800);
+$gray-900: var(--color-gray-900);
+$gray-950: var(--color-gray-950);
+$gray-1000: var(--color-gray-1000);
+
+// Gold Scale
+$gold-50: var(--color-gold-50);
+$gold-100: var(--color-gold-100);
+$gold-200: var(--color-gold-200);
+$gold-300: var(--color-gold-300);
+$gold-400: var(--color-gold-400);
+$gold-500: var(--color-gold-500);
+$gold-600: var(--color-gold-600);
+$gold-700: var(--color-gold-700);
+$gold-800: var(--color-gold-800);
+$gold-900: var(--color-gold-900);
+$gold-950: var(--color-gold-950);
+
+// Pre-calculated variants
+$gold-400-dark: var(--color-gold-400-dark);
+$charcoal-dark: var(--color-charcoal-dark);
+
+// Accent
+$blue: var(--color-blue);
+
+// Typography
+$work-sans: var(--font-sans);
+$merriweather: var(--font-serif);
+$sorts-mill-goudy: var(--font-display);

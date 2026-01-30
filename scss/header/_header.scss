@@ -1,3 +1,6 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
 .site-header {
     padding: 2rem 0;
     background: $slate;
@@ -14,9 +17,74 @@
         color: $white;
     }
 
-    @import "logo";
+    // Logo (inlined from _logo.scss)
+    .logo {
+        max-width: 128px;
+        grid-column: 2 / span 2;
 
-    @import "hamburger";
+        @include tablet-small {
+            grid-column: 2 / span 3;
+
+        }
+
+        @include desktop-medium {
+            max-width: 164px;
+        }
+
+        a {
+            display: block;
+            position: absolute;
+            top: -1.5rem;
+
+            img {
+                width: 100%;
+            }
+        }
+    }
+
+    // Hamburger menu (inlined from _hamburger.scss)
+    .hamburger {
+        @include desktop-small {
+            display: none;
+        }
+
+        a {
+            width: 2rem;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+
+            .patty {
+                width: 2rem;
+                height: 2px;
+                background: $white;
+                border-radius: 2px;
+                margin-left: auto;
+                transition: all 0.2s;
+
+                &:after, &:before {
+                    content: '';
+                    display: block;
+                    width: 2rem;
+                    height: 2px;
+                    background: $white;
+                    position: absolute;
+                    z-index: 1;
+                    border-radius: 2px;
+                    transition: all 0.2s;
+                }
+
+                &:before {
+                    top: -8px;
+                }
+
+                &:after {
+                    top: 8px;
+                }
+            }
+        }
+    }
 }
 
 @import "navigation";
