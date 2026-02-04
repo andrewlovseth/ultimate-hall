@@ -271,6 +271,27 @@
                     "maxlength": "",
                     "rows": "",
                     "new_lines": ""
+                },
+                {
+                    "key": "field_6982a7d3912c8",
+                    "label": "Venmo Embed",
+                    "name": "venmo_embed",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "rows": "",
+                    "placeholder": "",
+                    "new_lines": ""
                 }
             ]
         },
@@ -336,5 +357,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1716594204
+    "display_title": "",
+    "modified": 1770170335
 }

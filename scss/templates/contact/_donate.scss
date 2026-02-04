@@ -1,4 +1,4 @@
-section.donate {
+.donate {
     .info {
         background: $gold-400;
         border: 1px solid $gold-400-dark;
@@ -29,14 +29,6 @@ section.donate {
             }
         }
 
-        form {
-            padding-top: 2rem;
-
-            input[type="image"] {
-                max-width: 200px;
-            }
-        }
-
         .cta {
             padding-top: 2rem;
 
@@ -44,6 +36,54 @@ section.donate {
                 background: $white;
                 color: $blue;
             }
+        }
+    }
+
+    &__options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        padding-top: 2rem;
+        font-family: $work-sans;
+    }
+
+    &__option {
+        h4 {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            font-size: 0.875rem;
+            padding-bottom: 0.75rem;
+        }
+
+        &.paypal {
+            form {
+                input[type="image"] {
+                    max-width: 200px;
+                }
+            }
+        }
+    }
+
+    .venmo-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 164px));
+        gap: 2rem;
+    }
+
+    .venmo-link {
+        a {
+            display: block;
+        }
+
+        img {
+            max-width: 96px;
+        }
+
+        .username {
+            margin-top: 0.5rem;
+            color: $black;
+            text-decoration: underline;
         }
     }
 }
