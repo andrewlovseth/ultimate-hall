@@ -1,11 +1,11 @@
 section.contact-info {
-    padding-bottom: 2rem;
+    padding-top: 4rem;
 
     .info {
         @include tablet {
             grid-column: 2 / span 4;
         }
-        
+
         @include desktop-small {
             grid-column: 3 / span 5;
         }

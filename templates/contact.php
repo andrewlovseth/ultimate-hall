@@ -11,8 +11,9 @@ get_header(); ?>
 
     <?php get_template_part('template-parts/global/page-header'); ?>
 
+    <?php get_template_part('templates/contact/donate'); ?>
+
     <?php get_template_part('templates/contact/contact-info'); ?>
 
-    <?php get_template_part('templates/contact/donate'); ?>
 
 <?php get_footer(); ?>

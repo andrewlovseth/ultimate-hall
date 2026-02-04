@@ -1,12 +1,5 @@
 body.page-template-contact {
+    @import "contact/contact-info";
 
-    .page-header {
-        @include desktop-small {
-            padding-bottom: 8rem;
-        }
-    }
-
-    @import 'contact/contact-info';
-
-    @import 'contact/donate';
+    @import "contact/donate";
 }

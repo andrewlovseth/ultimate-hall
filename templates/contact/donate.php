@@ -8,7 +8,7 @@
 
 ?>
 
-<section class="donate grid">
+<section id="donate" class="donate grid">
     <div class="info">
         <div class="section-header">
             <h3 class="small"><?php echo $headline; ?></h3>
