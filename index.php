@@ -29,7 +29,6 @@
         <?php
             the_posts_pagination( array(
                 'screen_reader_text' => 'Archive',
-                'format' => '?paged=%#%',
                 'mid_size'  => 2,
                 'prev_text' => __('Prev'),
                 'next_text' => __('Next'),
