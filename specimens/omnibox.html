@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omnibox — Design Exploration · Ultimate Hall of Fame</title>
+<!--
+    Interactive design-exploration specimen for the Ultimate Hall of Fame
+    omnibox search palette. Five directions (A–E), live filtering over real
+    member/team/class/news data (inlined below), working ghost completion.
+    Self-contained: only Google Fonts and production images load over network.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ Tokens ═══ */
+:root {
+    --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+    --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+    --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+    --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+    --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+    --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+    --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+    --color-blue:#3e80ad;
+    --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+    --shadow-panel:0 24px 64px rgba(35,31,32,.35);
+    --dark-panel:#2c2829; /* slate lifted slightly for the dark palette surface */
+}
+
+/* ═══ Base ═══ */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-slate);
+    background: var(--color-gray-100);
+}
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--color-gold-500);
+    outline-offset: 2px;
+}
+
+/* ═══ Control bar ═══ */
+.ctrl {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem 1.5rem;
+    padding: .8125rem 1.5rem;
+    background: rgba(255,255,255,.84);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ctrl__title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.ctrl__title em {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-gray-600);
+}
+.ctrl__opts { display: flex; flex-wrap: wrap; gap: .375rem; }
+.opt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4375rem;
+    padding: .3125rem .8125rem .3125rem .375rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .875rem;
+    font-weight: 500;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.opt-btn:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.opt-btn.is-active { background: var(--color-slate); border-color: var(--color-slate); color: var(--color-white); }
+.opt-btn__letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: var(--color-gold-100);
+    color: var(--color-gold-700);
+    font-size: .875rem;
+    font-weight: 600;
+}
+.opt-btn.is-active .opt-btn__letter { background: var(--color-gold-400); color: var(--color-slate); }
+.opt-btn__score { font-size: .875rem; font-weight: 600; color: var(--color-gold-600); }
+.opt-btn.is-active .opt-btn__score { color: var(--color-gold-300); }
+
+.ghost-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-left: auto;
+    padding: .25rem;
+    border: 0;
+    background: none;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+}
+.ghost-toggle__track {
+    position: relative;
+    width: 2.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: var(--color-gray-300);
+    transition: background 150ms ease;
+}
+.ghost-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    background: var(--color-white);
+    box-shadow: 0 1px 2px rgba(35,31,32,.3);
+    transition: left 150ms ease;
+}
+.ghost-toggle.is-on .ghost-toggle__track { background: var(--color-gold-500); }
+.ghost-toggle.is-on .ghost-toggle__knob { left: calc(100% - 1.125rem); }
+
+.ctrl__score { display: flex; align-items: center; gap: .375rem; }
+.ctrl__score-label { font-size: .875rem; color: var(--color-gray-600); margin-right: .125rem; }
+.score-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-600);
+    font-size: .875rem;
+    font-weight: 600;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+.score-dot:hover { background: var(--color-gold-50); border-color: var(--color-gold-400); }
+.score-dot.is-on { background: var(--color-gold-400); border-color: var(--color-gold-600); color: var(--color-slate); }
+
+/* ═══ Stage & faux page backdrop ═══ */
+.stage {
+    position: relative;
+    height: 760px;
+    overflow: hidden;
+    background: var(--color-gray-100);
+}
+.faux { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.faux__header {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 1rem 3rem;
+    background: var(--color-slate);
+}
+.faux__logo { height: 56px; width: auto; }
+.faux__nav { display: flex; gap: 1.75rem; margin-left: auto; }
+.faux__nav span { color: rgba(255,255,255,.88); font-size: .9375rem; font-weight: 500; }
+.faux__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .625rem;
+    padding: .4375rem .75rem .4375rem .875rem;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 999px;
+    color: rgba(255,255,255,.85);
+    font-size: .875rem;
+    font-weight: 500;
+}
+.faux__trigger svg { width: 1rem; height: 1rem; }
+.faux__hero {
+    flex: none;
+    padding: 3rem 3rem 2.75rem;
+    background: linear-gradient(180deg, var(--color-slate) 0%, #36302f 100%);
+}
+.faux__hero h2 {
+    margin: 0;
+    max-width: 38rem;
+    font-family: var(--font-display);
+    font-size: 2.625rem;
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--color-white);
+}
+.faux__hero h2 em { color: var(--color-gold-400); font-style: italic; }
+.faux__hero p { margin: .875rem 0 0; max-width: 34rem; font-size: 1.0625rem; color: var(--color-gray-300); }
+.faux__band { flex: 1 1 auto; background: var(--color-white); padding: 2.25rem 3rem; }
+.faux__band h3 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+.faux-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 56rem;
+    margin-top: 1.25rem;
+}
+.faux-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; background: var(--color-gray-100); }
+.faux-card strong { display: block; margin-top: .625rem; font-size: 1rem; font-weight: 600; }
+.faux-card span { font-size: .875rem; color: var(--color-gray-600); }
+.scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(35,31,32,.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+[data-option="d"] .scrim { background: rgba(20,17,18,.72); }
+[data-option="e"] .scrim { display: none; }
+/* ═══ Palette — shared structure ═══ */
+/* One markup contract (.ob) restyled per option via [data-option] on .stage. */
+.ob {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-panel);
+}
+.ob__searchrow {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex: none;
+    padding: .875rem 1.25rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ob__searchicon { width: 1.25rem; height: 1.25rem; color: var(--color-gray-500); flex: none; }
+.ob__inputwrap { position: relative; flex: 1; min-width: 0; }
+.ob__input {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--color-slate);
+}
+.ob__input::placeholder { color: var(--color-gray-400); }
+/* Ghost completion twin: sits under the transparent-padding input, repeats the
+   typed text invisibly, then paints the completion remainder in muted gray. */
+.ob__ghost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: pre;
+    pointer-events: none;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: transparent;
+}
+.ob__ghost-rest { color: var(--color-gray-400); }
+.ob__scopes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    flex: none;
+    padding: .625rem 1.25rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ob__main { flex: 1 1 auto; min-height: 0; display: flex; }
+.ob__results { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: .25rem 0; }
+.ob__detail { display: none; }
+.ob__empty {
+    margin: 0;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: var(--color-gray-600);
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+.ob__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .625rem;
+    height: 100%;
+    padding: 1.5rem 2rem 2.5rem;
+    text-align: center;
+}
+.ob__hero-title { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--color-slate); }
+.ob__hero-note { margin: 0; max-width: 26rem; font-size: .875rem; line-height: 1.55; color: var(--color-gray-600); }
+.ob__hero-tries { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .375rem; }
+.try-chip {
+    padding: .25rem .75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .875rem;
+    font-weight: 500;
+}
+.try-chip:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.ob__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: none;
+    padding: .625rem 1.25rem;
+    border-top: 1px solid var(--color-gray-200);
+    background: var(--color-gray-50);
+}
+.ob__viewall {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    color: var(--color-gold-700);
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.ob__viewall:hover { text-decoration: underline; }
+.ob__viewall[hidden] { display: none; }
+.ob__hints { display: flex; gap: 1rem; }
+.ob__hints span {
+    display: inline-flex;
+    align-items: center;
+    gap: .3125rem;
+    font-size: .875rem;
+    color: var(--color-gray-500);
+}
+.ob kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 .3125rem;
+    font-family: var(--font-sans);
+    font-size: .75rem; /* 12px reserved for kbd glyphs only */
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-gray-700);
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+}
+
+/* Scope pills — active mirrors the theme's gold CTA */
+.ob-scope {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    padding: .3125rem .75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .875rem;
+    font-weight: 500;
+    transition: background 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+.ob-scope:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.ob-scope.is-active { background: var(--color-gold-400); border-color: var(--color-gold-600); color: var(--color-slate); }
+.ob-scope__count { font-weight: 400; opacity: .7; }
+
+/* Result groups */
+.ob-group { padding-block: .25rem; }
+.ob-group + .ob-group { border-top: 1px solid var(--color-gray-100); }
+.ob-group__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem 1.25rem .25rem;
+}
+.ob-group__title {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    font-size: 1rem; /* normal case, 16px, semibold — never a micro-label */
+    font-weight: 600;
+    color: var(--color-slate);
+}
+.ob-group__title svg { width: 1rem; height: 1rem; color: var(--color-gray-500); }
+.ob-group__count { font-size: .875rem; color: var(--color-gray-500); }
+
+/* Result rows — active state is a background tint, never a left border */
+.ob-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem 1.25rem;
+    color: var(--color-slate);
+    text-decoration: none;
+    cursor: pointer;
+}
+.ob-row:hover, .ob-row.is-active { background: var(--color-gold-50); }
+.ob-row:hover .ob-row__chevron, .ob-row.is-active .ob-row__chevron { opacity: 1; }
+.ob-row__lead {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    flex: none;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--color-gold-100);
+    color: var(--color-gold-700);
+    font-size: .875rem;
+    font-weight: 600;
+}
+.ob-row__lead svg { width: 1rem; height: 1rem; }
+.ob-row__lead img { width: 100%; height: 100%; object-fit: cover; }
+.ob-row__body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ob-row__title {
+    font-size: 1rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ob-row__title mark { background: var(--color-gold-200); color: inherit; border-radius: 2px; padding: 0 1px; }
+.ob-row__sub {
+    margin-top: 1px;
+    font-size: .875rem;
+    color: var(--color-gray-600);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ob-row__chevron { width: 1.125rem; height: 1.125rem; flex: none; color: var(--color-gold-600); opacity: 0; transition: opacity 100ms ease; }
+.ob-row.is-selected { animation: rowPulse 350ms ease; }
+@keyframes rowPulse {
+    0% { background: var(--color-gold-200); }
+    100% { background: var(--color-gold-50); }
+}
+/* ═══ Option A — Current build (faithful baseline) ═══ */
+[data-option="a"] .ob,
+[data-option="b"] .ob,
+[data-option="d"] .ob {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 64px; /* ~10vh of the live viewport */
+    width: 720px;
+    max-width: 92%;
+    height: min(580px, calc(100% - 112px));
+}
+
+/* ═══ Option B — Photo rows ═══ */
+[data-option="b"] .ob-row { padding: .375rem 1.25rem; gap: .875rem; }
+[data-option="b"] .ob-row__lead { width: 2.5rem; height: 2.5rem; border-radius: 999px; font-size: 1rem; }
+[data-option="b"] .ob-row__lead--team { background: color-mix(in srgb, var(--color-blue) 14%, var(--color-white)); color: var(--color-blue); }
+[data-option="b"] .ob-row__lead--class { background: var(--color-gold-100); color: var(--color-gold-700); }
+[data-option="b"] .ob-row__lead--page { background: var(--color-gray-100); color: var(--color-gray-600); }
+
+/* ═══ Option C — Split pane (Spotlight) ═══ */
+[data-option="c"] .ob {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 48px;
+    width: 960px;
+    max-width: 95%;
+    height: min(620px, calc(100% - 84px));
+}
+[data-option="c"] .ob__detail {
+    display: block;
+    width: 45%;
+    flex: none;
+    overflow-y: auto;
+    border-left: 1px solid var(--color-gray-200); /* structural pane divider */
+    background: var(--color-gray-50);
+}
+[data-option="c"] .ob-row { padding: .4375rem 1.25rem; }
+[data-option="c"] .ob-row__lead { width: 2rem; height: 2rem; border-radius: 999px; }
+[data-option="c"] .ob-row__chevron { display: none; }
+.ob-detail__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    padding: 2.25rem 2rem;
+    text-align: center;
+}
+.ob-detail__photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 14px;
+    object-fit: cover;
+    background: var(--color-gray-200);
+    box-shadow: 0 10px 28px rgba(35,31,32,.22);
+}
+.ob-detail__tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 14px;
+    background: var(--color-gold-100);
+    color: var(--color-gold-700);
+    font-size: 2rem;
+    font-weight: 600;
+}
+.ob-detail__tile svg { width: 2.25rem; height: 2.25rem; }
+.ob-detail__tile--team { background: color-mix(in srgb, var(--color-blue) 14%, var(--color-white)); color: var(--color-blue); }
+.ob-detail__tile--page { background: var(--color-gray-100); color: var(--color-gray-600); }
+.ob-detail__name {
+    margin: 1.125rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--color-slate);
+}
+.ob-detail__badge {
+    display: inline-flex;
+    margin-top: .75rem;
+    padding: .25rem .8125rem;
+    border-radius: 999px;
+    background: var(--color-gold-100);
+    color: var(--color-gold-950);
+    font-size: .875rem;
+    font-weight: 600;
+}
+.ob-detail__meta { margin: .625rem 0 0; display: flex; flex-direction: column; gap: .1875rem; }
+.ob-detail__meta span { font-size: .9375rem; color: var(--color-gray-600); }
+.ob-detail__hint { margin: 2.5rem 0 0; font-size: .875rem; color: var(--color-gray-400); }
+
+/* ═══ Option D — Dark chrome ═══ */
+[data-option="d"] .ob { background: var(--dark-panel); border: 1px solid rgba(255,255,255,.08); }
+[data-option="d"] .ob__searchrow { border-bottom-color: rgba(255,255,255,.1); }
+[data-option="d"] .ob__searchicon { color: var(--color-gold-400); }
+[data-option="d"] .ob__input { color: var(--color-white); }
+[data-option="d"] .ob__input::placeholder { color: var(--color-gray-400); }
+[data-option="d"] .ob__ghost-rest { color: var(--color-gray-400); }
+[data-option="d"] .ob__scopes { border-bottom-color: rgba(255,255,255,.1); }
+[data-option="d"] .ob-scope { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); color: var(--color-gray-200); }
+[data-option="d"] .ob-scope:hover { background: rgba(231,194,44,.12); border-color: var(--color-gold-500); }
+[data-option="d"] .ob-scope.is-active { background: var(--color-gold-400); border-color: var(--color-gold-300); color: var(--color-slate); }
+[data-option="d"] .ob-group + .ob-group { border-top-color: rgba(255,255,255,.08); }
+[data-option="d"] .ob-group__title { color: var(--color-white); }
+[data-option="d"] .ob-group__title svg { color: var(--color-gold-400); }
+[data-option="d"] .ob-group__count { color: var(--color-gray-300); }
+[data-option="d"] .ob-row { color: var(--color-white); }
+[data-option="d"] .ob-row:hover, [data-option="d"] .ob-row.is-active { background: rgba(231,194,44,.14); }
+[data-option="d"] .ob-row__lead {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 8px;
+    background: rgba(231,194,44,.15);
+    color: var(--color-gold-300);
+}
+[data-option="d"] .ob-row__title { color: var(--color-white); }
+[data-option="d"] .ob-row__title mark { background: var(--color-gold-300); color: var(--color-slate); }
+[data-option="d"] .ob-row__sub { color: var(--color-gray-300); }
+[data-option="d"] .ob-row__chevron { color: var(--color-gold-400); }
+[data-option="d"] .ob-row.is-selected { animation: none; }
+[data-option="d"] .ob__footer { background: rgba(0,0,0,.28); border-top-color: rgba(255,255,255,.1); }
+[data-option="d"] .ob__hints span { color: var(--color-gray-300); }
+[data-option="d"] .ob__viewall { color: var(--color-gold-300); }
+[data-option="d"] .ob kbd { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); border-bottom-width: 1px; color: var(--color-gray-200); }
+[data-option="d"] .ob__empty, [data-option="d"] .ob__hero-note { color: var(--color-gray-300); }
+[data-option="d"] .ob__hero-title { color: var(--color-white); }
+[data-option="d"] .try-chip { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); color: var(--color-gray-200); }
+[data-option="d"] .try-chip:hover { background: rgba(231,194,44,.12); border-color: var(--color-gold-500); }
+
+/* ═══ Option E — Museum index (full takeover) ═══ */
+[data-option="e"] .ob {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    background: linear-gradient(180deg, var(--color-white) 70%, var(--color-gold-50) 100%);
+}
+[data-option="e"] .ob__searchrow {
+    background: var(--color-slate);
+    border-bottom: 0;
+    padding: 1.625rem max(2rem, calc(50% - 340px));
+    gap: 1rem;
+}
+[data-option="e"] .ob__searchicon { width: 1.5rem; height: 1.5rem; color: var(--color-gold-400); }
+[data-option="e"] .ob__input { font-size: 1.5rem; color: var(--color-white); }
+[data-option="e"] .ob__input::placeholder { color: var(--color-gray-400); }
+[data-option="e"] .ob__ghost { font-size: 1.5rem; }
+[data-option="e"] .ob__scopes { justify-content: center; padding: 1rem 2rem; border-bottom: 0; }
+[data-option="e"] .ob__results { padding: .5rem max(2rem, calc(50% - 340px)) 3rem; }
+[data-option="e"] .ob-group { padding-block: 1rem; }
+[data-option="e"] .ob-group + .ob-group { border-top: 0; }
+[data-option="e"] .ob-group__head {
+    padding: .25rem 0 .5rem;
+    margin-bottom: .25rem;
+    border-bottom: 1px solid var(--color-gold-300);
+}
+[data-option="e"] .ob-group__title { font-size: 1.0625rem; }
+[data-option="e"] .ob-group__title svg { display: none; }
+[data-option="e"] .ob-group__count { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--color-gray-600); }
+[data-option="e"] .ob-row { padding: .6875rem .625rem; gap: 1rem; border-radius: 8px; }
+[data-option="e"] .ob-row__lead { width: 3rem; height: 3rem; border-radius: 4px; }
+[data-option="e"] .ob-row__title {
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    font-weight: 400;
+    white-space: normal;
+    line-height: 1.25;
+}
+[data-option="e"] .ob-row__sub { margin-top: 2px; white-space: normal; }
+[data-option="e"] .ob-row__chevron { display: none; }
+[data-option="e"] .ob__footer { background: transparent; border-top: 1px solid var(--color-gray-200); justify-content: center; }
+[data-option="e"] .ob__hero-title { font-family: var(--font-display); font-weight: 400; font-size: 1.625rem; }
+
+/* ═══ Notes ═══ */
+.notes { max-width: 60rem; margin: 0 auto; padding: 2rem 1.5rem 4.5rem; }
+.notes__card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem 1.625rem;
+}
+.notes__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .25rem .75rem; margin: 0; }
+.notes__name { font-size: 1.25rem; font-weight: 600; }
+.notes__pitch { font-family: var(--font-display); font-style: italic; font-size: 1.125rem; color: var(--color-gray-600); }
+.notes__body { margin: .75rem 0 0; font-size: 1rem; line-height: 1.6; color: var(--color-gray-700); }
+.notes__tab {
+    margin-top: 1rem;
+    padding: .625rem .875rem;
+    border: 1px solid var(--color-gray-100);
+    border-radius: 8px;
+    background: var(--color-gray-50);
+    font-size: .9375rem;
+    line-height: 1.55;
+    color: var(--color-gray-600);
+}
+.notes__tab strong { color: var(--color-gray-700); }
+
+/* ═══ Responsive squeeze (specimen is a desktop tool; just don't break) ═══ */
+@media (max-width: 900px) {
+    .faux__nav { display: none; }
+    [data-option="c"] .ob__detail { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ob-row.is-selected { animation: none; }
+    .ghost-toggle__knob, .ghost-toggle__track { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ Control bar ═══ -->
+<header class="ctrl">
+    <h1 class="ctrl__title">Omnibox <em>— Design Exploration</em></h1>
+    <nav class="ctrl__opts" id="optBtns" aria-label="Design options"></nav>
+    <button type="button" class="ghost-toggle is-on" id="ghostToggle" aria-pressed="true">
+        Ghost completion
+        <span class="ghost-toggle__track"><span class="ghost-toggle__knob"></span></span>
+    </button>
+    <div class="ctrl__score">
+        <span class="ctrl__score-label">Score</span>
+        <span id="scoreDots" style="display:inline-flex;gap:.375rem;"></span>
+    </div>
+</header>
+
+<main>
+    <!-- ═══ Stage: faux page + open palette ═══ -->
+    <div class="stage" id="stage" data-option="a">
+        <div class="faux" aria-hidden="true">
+            <div class="faux__header">
+                <img class="faux__logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="">
+                <nav class="faux__nav">
+                    <span>Inductees</span><span>Teams</span><span>News</span><span>About</span><span>Donate</span>
+                </nav>
+                <span class="faux__trigger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    Search
+                </span>
+            </div>
+            <div class="faux__hero">
+                <h2>Honoring the players, teams &amp; contributors who <em>shaped ultimate</em></h2>
+                <p>The Ultimate Hall of Fame preserves the history of the sport and the people who built it.</p>
+            </div>
+            <div class="faux__band">
+                <h3>Class of 2022</h3>
+                <div class="faux-cards">
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg" alt="">
+                        <strong>Alex Nord</strong>
+                        <span>Player · Open Division</span>
+                    </div>
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg" alt="">
+                        <strong>Alex Snyder</strong>
+                        <span>Player · Women&rsquo;s Division</span>
+                    </div>
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg" alt="">
+                        <strong>Alicia White</strong>
+                        <span>Player · Women&rsquo;s Division</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="ob" id="ob" role="dialog" aria-label="Search the Hall of Fame"></div>
+    </div>
+
+    <!-- ═══ Notes ═══ -->
+    <section class="notes" id="notes"></section>
+</main>
+
+<script>
+(function () {
+'use strict';
+
+/* ═══ Real content (production data, inlined) ═══ */
+var DATA = {
+    members: [
+        { name: 'Alex "Dutchy" Ghesquiere', photo: 'https://ultimatehall.org/wp-content/uploads/2025/12/0D213FDB-D603-40A5-AEE2-1BEB251EB72C-400x400.jpeg', type: 'Contributor', year: '2025', division: '' },
+        { name: 'Alex Nord', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg', type: 'Player', year: '2022', division: 'Open Division' },
+        { name: 'Alex Snyder', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Alicia White', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Allan "Al Bob" Nichols', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AllanNichols_HallofFame2018.jpg', type: 'Player', year: '2018', division: 'Open Division' },
+        { name: 'Allison Boyd', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AllisonBoydHeadshot.jpg', type: 'Player', year: '2019', division: "Women's Division" },
+        { name: 'Alyson Walker', photo: 'https://ultimatehall.org/wp-content/uploads/2023/08/4333E12D-FF04-4DC7-8CCF-68C60A88ECC0_4_5005_c.jpeg', type: 'Player', year: '2023', division: "Women's Division" },
+        { name: 'Amy Wilbur', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AmyWilbur_headshot.png', type: 'Player', year: '2016', division: "Women's Division" },
+        { name: 'Andrew Lugsdin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AndrewLugsdin_headshot.png', type: 'Player', year: '2016', division: 'Open Division' },
+        { name: 'Andy Borinstein', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AndyBorinstein_1-299x400.jpeg', type: 'Contributor', year: '2009', division: '' },
+        { name: 'Andy Crews', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Andy-Crews-HoF-headshot-400x400.jpg', type: 'Player', year: '2020', division: 'Open Division' },
+        { name: 'Angela Lin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Angela-Lin-HoF_headshot2-400x400.jpg', type: 'Player', year: '2018', division: "Women's Division" },
+        { name: 'Anja Haman', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/D04C364E-9C63-42ED-ACFA-FD70D8C8EE86_1_105_c-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Ann (Cohan) Orders', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AnnOrders_1-400x400.jpeg', type: 'Player', year: '2006', division: "Women's Division" },
+        { name: 'Anna Nazarov', photo: 'https://ultimatehall.org/wp-content/uploads/2024/11/A8F65C7F-BAF1-45DC-A77D-AF117B70653F-400x400.jpeg', type: 'Player', year: '2024', division: "Women's Division" },
+        { name: 'Augie Kreivenas', photo: 'https://ultimatehall.org/wp-content/uploads/2021/11/Augie-323x400.jpeg', type: 'Player', year: '2021', division: 'Open Division' }
+    ],
+    teams: [
+        { name: '10th St. Dealers', city: 'Burlington, VT', division: 'College Men' },
+        { name: '1994 Team USA Juniors', city: 'Colchester, U.K.', division: 'Youth Men' },
+        { name: '2000 Team USA U20 Girls', city: '', division: '' },
+        { name: '2000 Team USA U20 Open', city: '', division: 'Youth Men' },
+        { name: '2001 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+        { name: '2004 U.S. National Team', city: 'Turku, Finland', division: 'Club Women' },
+        { name: '2005 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+        { name: '2008 U. S. National Team', city: 'Vancouver, BC Canada', division: 'Club Women' },
+        { name: '2009 U.S. World Games Team', city: '', division: 'Club Mixed' },
+        { name: '2011 Team USA Beach Mixed', city: '', division: '' }
+    ],
+    classes: [
+        { year: '2025', count: 11 },
+        { year: '2024', count: 25 },
+        { year: '2023', count: 13 },
+        { year: '2022', count: 16 },
+        { year: '2021', count: 9 },
+        { year: '2020', count: 7 }
+    ],
+    news: [
+        { title: 'Twelve Members Welcomed into the Ultimate Hall of Fame Class of 2025', date: 'November 23, 2025' },
+        { title: 'Ultimate Hall of Fame Class of 2025: Call to the Community', date: 'September 30, 2025' },
+        { title: 'Ultimate Hall of Fame Class of 2025 Finalists', date: 'August 8, 2025' },
+        { title: '2025 Hall of Fame Selection Begins', date: 'April 30, 2025' },
+        { title: 'Twenty five Members Welcomed into the Ultimate Hall of Fame Class of 2024', date: 'November 21, 2024' },
+        { title: 'Ultimate Hall of Fame Class of 2024: Call to the Community', date: 'October 3, 2024' },
+        { title: 'Ultimate Hall of Fame Class of 2024 Finalists', date: 'August 13, 2024' },
+        { title: '2024 Hall of Fame Selection Begins', date: 'April 26, 2024' }
+    ],
+    events: [
+        { title: '2023 Induction Ceremony' },
+        { title: '2018 Induction Ceremony' },
+        { title: '2013 Induction Ceremony' }
+    ]
+};
+
+/* Flat, searchable entries derived once from DATA */
+var ENTRIES = {
+    members: DATA.members.map(function (m) {
+        return {
+            type: 'member',
+            title: m.name,
+            sub: 'Class of ' + m.year + ' · ' + m.type + (m.division ? ' · ' + m.division : ''),
+            photo: m.photo,
+            meta: m
+        };
+    }),
+    teams: DATA.teams.map(function (t) {
+        return {
+            type: 'team',
+            title: t.name,
+            sub: [t.city, t.division].filter(Boolean).join(' · ') || 'Hall of Fame team',
+            meta: t
+        };
+    }),
+    classes: DATA.classes.map(function (c) {
+        return {
+            type: 'class',
+            title: 'Class of ' + c.year,
+            sub: c.count + ' inductees',
+            meta: c
+        };
+    }),
+    pages: DATA.news.map(function (n) {
+        return { type: 'page', title: n.title, sub: n.date, meta: n };
+    }).concat(DATA.events.map(function (e) {
+        return { type: 'page', title: e.title, sub: 'Event', meta: e };
+    }))
+};
+
+var GROUPS = [
+    { key: 'members', label: 'Members', icon: 'user' },
+    { key: 'teams',   label: 'Teams',   icon: 'users' },
+    { key: 'classes', label: 'Classes', icon: 'trophy' },
+    { key: 'pages',   label: 'Pages',   icon: 'file-text' }
+];
+var SCOPES = [{ key: 'all', label: 'All' }].concat(GROUPS);
+
+/* Ghost-completion candidate pool: people, teams, classes (in that order) */
+var GHOST_POOL = ENTRIES.members.map(function (e) { return e.title; })
+    .concat(ENTRIES.teams.map(function (e) { return e.title; }))
+    .concat(ENTRIES.classes.map(function (e) { return e.title; }));
+
+/* ═══ The five directions ═══ */
+var TAB_NOTE = 'When ghost text is visible, <strong>Tab accepts the completion</strong>; otherwise Tab keeps its shipped role of cycling scopes. ArrowRight at the end of the input also accepts — so the higher-intent action wins only when a completion is actually showing. The footer hint relabels live so the current meaning of Tab is never ambiguous.';
+
+var OPTIONS = [
+    {
+        key: 'a', letter: 'A', name: 'Current build', pitch: 'the shipped baseline',
+        notes: 'Faithful reproduction of what’s live: white 720px panel at 10vh, gold scope pills, 30px gold icon tiles, gold-50 active tint. It optimizes for familiarity and a quiet reading surface — nothing competes with the result text. Trade-off: every row is the same shape, so scanning is all reading; members don’t feel like people.'
+    },
+    {
+        key: 'b', letter: 'B', name: 'Photo rows', pitch: 'faces make the Hall human',
+        notes: 'Member rows carry real 40px headshots; teams, classes, and pages get tinted initial/icon discs so each row keys its type by color and shape. Densest of the five — more results per viewport and instant recognition of people. Trade-off: headshot quality varies across eras, and rows without faces feel comparatively flat.'
+    },
+    {
+        key: 'c', letter: 'C', name: 'Split pane', pitch: 'preview before you commit',
+        notes: 'Spotlight-style: results on the left (~55%), a live detail card on the right that follows the active row — large photo, display-serif name, class, type, and division. Optimizes for confidence before clicking and gives arrow keys a real payoff. Trade-off: wants ~960px of width; the pane is dead weight on small screens (it collapses below 900px here).'
+    },
+    {
+        key: 'd', letter: 'D', name: 'Dark chrome', pitch: 'the palette belongs to the header',
+        notes: 'Slate/charcoal surface continuous with the site header; gold is reserved for focus, marks, and group icons, and headshots pop against the dark field. Contrast checked for AA: subs and counts use gray-300 (≈6.9:1 on the panel), marks are gold-300 with slate text. Trade-off: reads “app-like” against the museum-white content pages, and dark-on-dark gives less figure–ground separation from the scrim.'
+    },
+    {
+        key: 'e', letter: 'E', name: 'Museum index', pitch: 'search as a page, not a popover',
+        notes: 'Full-screen takeover: the header strip becomes the search field and results sit in a centered 680px reading column — serif titles, hairline gold rules, square member portraits — an exhibition index rather than a dropdown. It argues that a hall of fame’s search deserves a room of its own, and it earns mobile for free (the takeover is the mobile pattern). Trade-off: the heaviest context switch; quick reference lookups lose sight of the page entirely.'
+    }
+];
+/* ═══ Exploration state (persisted) ═══ */
+var LS_KEY = 'uh-omnibox-exploration';
+function loadApp() {
+    try {
+        var parsed = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+    } catch (e) { return {}; }
+}
+var app = Object.assign({ option: 'a', ghost: true, scores: {} }, loadApp());
+if (!OPTIONS.some(function (o) { return o.key === app.option; })) app.option = 'a';
+if (!app.scores || typeof app.scores !== 'object') app.scores = {};
+function saveApp() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(app)); } catch (e) { /* private mode */ }
+}
+
+/* Palette state — survives option switches so directions compare like-for-like */
+var pal = { query: '20', scope: 'all', active: 0, rows: [], ghostRest: '' };
+
+/* ═══ DOM handles ═══ */
+var stage = document.getElementById('stage');
+var obEl = document.getElementById('ob');
+var optBtnsEl = document.getElementById('optBtns');
+var ghostToggleEl = document.getElementById('ghostToggle');
+var scoreDotsEl = document.getElementById('scoreDots');
+var notesEl = document.getElementById('notes');
+/* assigned by buildPalette() on every option switch */
+var input, ghostTypedEl, ghostRestEl, scopesEl, resultsEl, detailEl, viewAllEl, tabHintEl;
+
+/* ═══ Inline icon set ═══ */
+var ICONS = {
+    'search': '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+    'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    'trophy': '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+    'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>'
+};
+function icon(name, cls) {
+    return '<svg' + (cls ? ' class="' + cls + '"' : '') +
+        ' viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"' +
+        ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+        ' aria-hidden="true" focusable="false">' + (ICONS[name] || '') + '</svg>';
+}
+
+/* ═══ Escaping / highlight ═══ */
+function esc(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c];
+    });
+}
+function highlight(text, q) {
+    text = String(text == null ? '' : text);
+    if (!q) return esc(text);
+    var i = text.toLowerCase().indexOf(q.toLowerCase());
+    if (i === -1) return esc(text);
+    return esc(text.slice(0, i)) +
+        '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' +
+        esc(text.slice(i + q.length));
+}
+
+/* ═══ Search (live filter over ENTRIES) ═══ */
+function searchGroups(q) {
+    var low = q.toLowerCase();
+    return GROUPS.map(function (g) {
+        var items = ENTRIES[g.key].filter(function (it) {
+            return it.title.toLowerCase().indexOf(low) !== -1 ||
+                   it.sub.toLowerCase().indexOf(low) !== -1;
+        });
+        return { key: g.key, label: g.label, icon: g.icon, count: items.length, items: items };
+    });
+}
+
+/* ═══ Row lead: per-option treatment ═══ */
+function leadHTML(item) {
+    var opt = app.option;
+    if (item.type === 'member' && opt !== 'a') {
+        return '<span class="ob-row__lead"><img src="' + esc(item.photo) + '" alt="" loading="lazy"></span>';
+    }
+    if (item.type !== 'member' && opt === 'e') return ''; // museum index: text-only rows
+    if (item.type !== 'member' && opt === 'b') {
+        if (item.type === 'team') return '<span class="ob-row__lead ob-row__lead--team">' + esc(item.title.charAt(0)) + '</span>';
+        if (item.type === 'class') return '<span class="ob-row__lead ob-row__lead--class">' + icon('trophy') + '</span>';
+        return '<span class="ob-row__lead ob-row__lead--page">' + icon('file-text') + '</span>';
+    }
+    var ic = item.type === 'member' ? 'user' :
+             item.type === 'team' ? 'users' :
+             item.type === 'class' ? 'trophy' : 'file-text';
+    return '<span class="ob-row__lead">' + icon(ic) + '</span>';
+}
+
+function makeRow(item, q) {
+    var row = document.createElement('a');
+    row.className = 'ob-row';
+    row.href = '#';
+    row.innerHTML = leadHTML(item) +
+        '<span class="ob-row__body">' +
+        '<span class="ob-row__title">' + highlight(item.title, q) + '</span>' +
+        (item.sub ? '<span class="ob-row__sub">' + esc(item.sub) + '</span>' : '') +
+        '</span>' +
+        icon('chevron-right', 'ob-row__chevron');
+    row._item = item;
+    row.addEventListener('mousemove', function () {
+        var i = pal.rows.indexOf(row);
+        if (i !== -1 && i !== pal.active) setActive(i);
+    });
+    row.addEventListener('click', function (e) {
+        e.preventDefault(); // specimen: selection pulses instead of navigating
+        var i = pal.rows.indexOf(row);
+        if (i !== -1) setActive(i);
+        row.classList.remove('is-selected');
+        void row.offsetWidth;
+        row.classList.add('is-selected');
+    });
+    pal.rows.push(row);
+    return row;
+}
+
+function setActive(idx) {
+    pal.active = idx;
+    pal.rows.forEach(function (row, i) { row.classList.toggle('is-active', i === idx); });
+    var row = pal.rows[idx];
+    if (row) row.scrollIntoView({ block: 'nearest' });
+    renderDetail(row ? row._item : null);
+}
+
+/* ═══ Detail pane (Option C only) ═══ */
+function renderDetail(item) {
+    if (!detailEl) return;
+    if (app.option !== 'c') { detailEl.innerHTML = ''; return; }
+    if (!item) {
+        detailEl.innerHTML = '<div class="ob-detail__inner"><p class="ob-detail__hint">A preview of the selected result appears here &mdash; arrow through the list.</p></div>';
+        return;
+    }
+    var html = '<div class="ob-detail__inner">';
+    if (item.type === 'member') {
+        html += '<img class="ob-detail__photo" src="' + esc(item.photo) + '" alt="">' +
+            '<h3 class="ob-detail__name">' + esc(item.title) + '</h3>' +
+            '<span class="ob-detail__badge">Class of ' + esc(item.meta.year) + '</span>' +
+            '<div class="ob-detail__meta"><span>' + esc(item.meta.type) + '</span>' +
+            (item.meta.division ? '<span>' + esc(item.meta.division) + '</span>' : '') + '</div>';
+    } else if (item.type === 'team') {
+        html += '<span class="ob-detail__tile ob-detail__tile--team">' + esc(item.title.charAt(0)) + '</span>' +
+            '<h3 class="ob-detail__name">' + esc(item.title) + '</h3>' +
+            '<span class="ob-detail__badge">Hall of Fame team</span>' +
+            '<div class="ob-detail__meta">' +
+            (item.meta.city ? '<span>' + esc(item.meta.city) + '</span>' : '') +
+            (item.meta.division ? '<span>' + esc(item.meta.division) + '</span>' : '') + '</div>';
+    } else if (item.type === 'class') {
+        html += '<span class="ob-detail__tile">' + icon('trophy') + '</span>' +
+            '<h3 class="ob-detail__name">' + esc(item.title) + '</h3>' +
+            '<span class="ob-detail__badge">' + esc(item.sub) + '</span>';
+    } else {
+        html += '<span class="ob-detail__tile ob-detail__tile--page">' + icon('file-text') + '</span>' +
+            '<h3 class="ob-detail__name">' + esc(item.title) + '</h3>' +
+            '<span class="ob-detail__badge">' + esc(item.sub) + '</span>';
+    }
+    html += '</div>';
+    detailEl.innerHTML = html;
+}
+
+/* ═══ Ghost completion ═══ */
+/* No ghost when: query empty, exact match (no remainder), or the match is
+   mid-word/non-prefix. Matching runs on the raw (untrimmed) input so the
+   overlay always mirrors the real text. */
+function updateGhost() {
+    var raw = input.value;
+    var rest = '';
+    if (app.ghost && raw.length) {
+        var low = raw.toLowerCase();
+        for (var i = 0; i < GHOST_POOL.length; i++) {
+            var candLow = GHOST_POOL[i].toLowerCase();
+            if (candLow.indexOf(low) === 0 && candLow.length > low.length) {
+                rest = GHOST_POOL[i].slice(raw.length);
+                break;
+            }
+        }
+    }
+    pal.ghostRest = rest;
+    ghostTypedEl.textContent = rest ? raw : '';
+    ghostRestEl.textContent = rest;
+    if (tabHintEl) tabHintEl.textContent = rest ? 'Complete' : 'Scope';
+}
+
+function acceptGhost() {
+    if (!pal.ghostRest) return false;
+    input.value = input.value + pal.ghostRest;
+    var end = input.value.length;
+    input.setSelectionRange(end, end);
+    onInput();
+    return true;
+}
+/* ═══ Scopes / results / hero ═══ */
+function renderScopes(groups, q) {
+    scopesEl.innerHTML = '';
+    var counts = null;
+    if (q) {
+        counts = { all: 0 };
+        groups.forEach(function (g) { counts[g.key] = g.count; counts.all += g.count; });
+    }
+    SCOPES.forEach(function (s) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ob-scope' + (s.key === pal.scope ? ' is-active' : '');
+        btn.setAttribute('aria-pressed', s.key === pal.scope ? 'true' : 'false');
+        btn.innerHTML = esc(s.label) +
+            (counts ? ' <span class="ob-scope__count">' + counts[s.key] + '</span>' : '');
+        btn.addEventListener('click', function () { setScope(s.key); });
+        scopesEl.appendChild(btn);
+    });
+}
+
+function renderHero() {
+    resultsEl.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'ob__hero';
+    wrap.innerHTML =
+        '<p class="ob__hero-title">Search the Hall of Fame</p>' +
+        '<p class="ob__hero-note">Find inductees, teams, induction classes, and news. Start typing &mdash; completions appear as ghost text, <kbd>Tab</kbd> accepts them.</p>' +
+        '<span class="ob__hero-tries"></span>';
+    var tries = wrap.querySelector('.ob__hero-tries');
+    ['Anna', 'Team USA', 'Class of 2024', 'Induction'].forEach(function (t) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'try-chip';
+        b.textContent = t;
+        b.addEventListener('click', function () {
+            input.value = t;
+            onInput();
+            input.focus();
+        });
+        tries.appendChild(b);
+    });
+    resultsEl.appendChild(wrap);
+}
+
+var PER_GROUP_ALL = 5;
+function renderResults() {
+    var q = pal.query.trim();
+    pal.rows = [];
+    pal.active = 0;
+    var groups = searchGroups(q);
+    renderScopes(groups, q);
+    if (viewAllEl) viewAllEl.hidden = q.length < 2;
+
+    if (!q) {
+        renderHero();
+        renderDetail(null);
+        return;
+    }
+
+    var visible = groups.filter(function (g) {
+        if (pal.scope !== 'all' && g.key !== pal.scope) return false;
+        return g.items.length > 0;
+    });
+
+    resultsEl.innerHTML = '';
+    resultsEl.scrollTop = 0;
+
+    if (!visible.length) {
+        resultsEl.innerHTML = '<p class="ob__empty">No matches for &ldquo;' + esc(q) +
+            '&rdquo;. Try a different keyword or scope.</p>';
+        renderDetail(null);
+        return;
+    }
+
+    visible.forEach(function (g) {
+        var limit = pal.scope === 'all' ? PER_GROUP_ALL : g.items.length;
+        var section = document.createElement('section');
+        section.className = 'ob-group';
+        section.innerHTML = '<header class="ob-group__head">' +
+            '<span class="ob-group__title">' + icon(g.icon) + esc(g.label) + '</span>' +
+            '<span class="ob-group__count">' + g.count + '</span></header>';
+        g.items.slice(0, limit).forEach(function (item) {
+            section.appendChild(makeRow(item, q));
+        });
+        resultsEl.appendChild(section);
+    });
+    setActive(0);
+}
+
+function onInput() {
+    pal.query = input.value;
+    renderResults();
+    updateGhost();
+}
+
+function setScope(key) {
+    pal.scope = key;
+    renderResults();
+    input.focus();
+}
+
+/* ═══ Keyboard ═══ */
+/* Tab conflict resolution: ghost visible -> Tab accepts the completion;
+   otherwise Tab cycles scope exactly like the shipped build. ArrowRight at
+   the end of the input also accepts. */
+function onKeydown(e) {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        if (!e.shiftKey && pal.ghostRest && acceptGhost()) return;
+        var i = SCOPES.findIndex(function (s) { return s.key === pal.scope; });
+        var next = (i + (e.shiftKey ? SCOPES.length - 1 : 1)) % SCOPES.length;
+        setScope(SCOPES[next].key);
+        return;
+    }
+    if (e.key === 'ArrowRight' && e.target === input && pal.ghostRest &&
+        input.selectionStart === input.value.length &&
+        input.selectionEnd === input.value.length) {
+        e.preventDefault();
+        acceptGhost();
+        return;
+    }
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (pal.rows.length) setActive(Math.min(pal.active + 1, pal.rows.length - 1));
+        return;
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (pal.rows.length) setActive(Math.max(pal.active - 1, 0));
+        return;
+    }
+    if (e.key === 'Enter' && e.target === input) {
+        e.preventDefault();
+        var row = pal.rows[pal.active];
+        if (row) {
+            row.classList.remove('is-selected');
+            void row.offsetWidth;
+            row.classList.add('is-selected');
+        }
+    }
+}
+
+/* ═══ Palette shell (rebuilt on option switch; query persists) ═══ */
+function buildPalette() {
+    obEl.innerHTML =
+        '<div class="ob__searchrow">' + icon('search', 'ob__searchicon') +
+        '<div class="ob__inputwrap">' +
+        '<div class="ob__ghost" aria-hidden="true"><span class="ob__ghost-typed"></span><span class="ob__ghost-rest"></span></div>' +
+        '<input class="ob__input" type="text" placeholder="Search the Hall of Fame&hellip;"' +
+        ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"' +
+        ' aria-label="Search the Hall of Fame">' +
+        '</div></div>' +
+        '<div class="ob__scopes"></div>' +
+        '<div class="ob__main"><div class="ob__results"></div><aside class="ob__detail"></aside></div>' +
+        '<div class="ob__footer">' +
+        '<a class="ob__viewall" href="#" hidden>View all results <kbd>Ctrl</kbd><kbd>&crarr;</kbd></a>' +
+        '<div class="ob__hints">' +
+        '<span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>' +
+        '<span><kbd>&crarr;</kbd> Select</span>' +
+        '<span><kbd>Tab</kbd> <span class="ob__tabhint">Scope</span></span>' +
+        '<span><kbd>Esc</kbd> Close</span>' +
+        '</div></div>';
+
+    input = obEl.querySelector('.ob__input');
+    ghostTypedEl = obEl.querySelector('.ob__ghost-typed');
+    ghostRestEl = obEl.querySelector('.ob__ghost-rest');
+    scopesEl = obEl.querySelector('.ob__scopes');
+    resultsEl = obEl.querySelector('.ob__results');
+    detailEl = obEl.querySelector('.ob__detail');
+    viewAllEl = obEl.querySelector('.ob__viewall');
+    tabHintEl = obEl.querySelector('.ob__tabhint');
+
+    viewAllEl.addEventListener('click', function (e) { e.preventDefault(); });
+    input.value = pal.query;
+    renderResults();
+    updateGhost();
+}
+
+/* ═══ Control bar ═══ */
+function renderOptBtns() {
+    optBtnsEl.innerHTML = '';
+    OPTIONS.forEach(function (o) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-btn' + (o.key === app.option ? ' is-active' : '');
+        btn.setAttribute('aria-pressed', o.key === app.option ? 'true' : 'false');
+        var score = app.scores[o.key];
+        btn.innerHTML = '<span class="opt-btn__letter">' + o.letter + '</span>' + esc(o.name) +
+            (score ? ' <span class="opt-btn__score">&#9733;' + score + '</span>' : '');
+        btn.addEventListener('click', function () { setOption(o.key); });
+        optBtnsEl.appendChild(btn);
+    });
+}
+
+function renderScoreDots() {
+    scoreDotsEl.innerHTML = '';
+    var current = app.scores[app.option] || 0;
+    for (var n = 1; n <= 5; n++) {
+        (function (val) {
+            var dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'score-dot' + (val <= current ? ' is-on' : '');
+            dot.textContent = String(val);
+            dot.setAttribute('aria-label', 'Score option ' + app.option.toUpperCase() + ': ' + val + ' of 5');
+            dot.addEventListener('click', function () {
+                app.scores[app.option] = (app.scores[app.option] === val) ? 0 : val;
+                saveApp();
+                renderScoreDots();
+                renderOptBtns();
+            });
+            scoreDotsEl.appendChild(dot);
+        })(n);
+    }
+}
+
+function renderNotes() {
+    var o = OPTIONS.find(function (x) { return x.key === app.option; });
+    notesEl.innerHTML =
+        '<div class="notes__card">' +
+        '<p class="notes__head"><span class="notes__name">' + o.letter + '. ' + esc(o.name) + '</span>' +
+        '<span class="notes__pitch">&mdash; ' + esc(o.pitch) + '</span></p>' +
+        '<p class="notes__body">' + o.notes + '</p>' +
+        '<div class="notes__tab"><strong>Tab &amp; ghost text:</strong> ' + TAB_NOTE + '</div>' +
+        '</div>';
+}
+
+function setOption(key) {
+    app.option = key;
+    saveApp();
+    stage.dataset.option = key;
+    renderOptBtns();
+    renderScoreDots();
+    renderNotes();
+    buildPalette();
+    input.focus();
+}
+
+/* ═══ Events & init ═══ */
+ghostToggleEl.addEventListener('click', function () {
+    app.ghost = !app.ghost;
+    saveApp();
+    ghostToggleEl.classList.toggle('is-on', app.ghost);
+    ghostToggleEl.setAttribute('aria-pressed', String(app.ghost));
+    updateGhost();
+    input.focus();
+});
+
+/* Listeners live on the persistent .ob wrapper; the shell inside is rebuilt
+   per option switch, and the module-level `input` ref stays current. */
+obEl.addEventListener('keydown', onKeydown);
+obEl.addEventListener('input', function (e) { if (e.target === input) onInput(); });
+
+stage.dataset.option = app.option;
+ghostToggleEl.classList.toggle('is-on', app.ghost);
+ghostToggleEl.setAttribute('aria-pressed', String(app.ghost));
+renderOptBtns();
+renderScoreDots();
+renderNotes();
+buildPalette();
+})();
+</script>
+</body>
+</html>

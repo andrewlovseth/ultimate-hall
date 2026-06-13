@@ -1,0 +1,1347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omnibox — Round 2 · Type &amp; Icons · Ultimate Hall of Fame</title>
+<!--
+    Round-2 refinement specimen for the Ultimate Hall of Fame omnibox.
+    Layout is LOCKED to the round-1 winner, Option B "Photo rows":
+    white 720px panel, 40px circular member headshots, initial/icon discs,
+    gold accents, scope pills, ghost completion (Tab accepts when visible).
+
+    This round explores two independent dimensions on top of that layout:
+      · Type  — 4 treatments (sans / serif-names / serif-frame / editorial)
+      · Icons — 3 Lucide sets (literal / athletic / archival)
+    12 combos total; toggles + per-Type scores persist in localStorage
+    under "uh-omnibox-refine". A sibling specimen (search-results-refine)
+    implements the SAME treatments/sets so one voice can be picked for
+    the whole feature.
+
+    Self-contained: only Google Fonts, the Lucide UMD CDN, and production
+    images load over the network. If Lucide fails (offline), round-1
+    inline SVGs render instead and a notice appears in the control bar.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ Tokens ═══ */
+:root {
+    --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+    --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+    --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+    --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+    --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+    --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+    --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+    --color-blue:#3e80ad;
+    --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+    --shadow-panel:0 24px 64px rgba(35,31,32,.35);
+}
+
+/* ═══ Base ═══ */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-slate);
+    background: var(--color-gray-100);
+    /* Goudy ships 400 only — never let the browser fake-bold it. */
+    font-synthesis: none;
+}
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--color-gold-500);
+    outline-offset: 2px;
+}
+
+/* ═══ Control bar ═══ */
+.ctrl {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .625rem 1.5rem;
+    padding: .8125rem 1.5rem .75rem;
+    background: rgba(255,255,255,.84);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ctrl__title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.ctrl__title em {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-gray-600);
+}
+.ctrl__group { display: flex; align-items: center; gap: .5rem; }
+.ctrl__label { font-size: .875rem; font-weight: 600; color: var(--color-gray-700); }
+.ctrl__opts { display: flex; flex-wrap: wrap; gap: .375rem; }
+.opt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4375rem;
+    padding: .3125rem .8125rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .875rem;
+    font-weight: 500;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.opt-btn:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.opt-btn.is-active { background: var(--color-slate); border-color: var(--color-slate); color: var(--color-white); }
+.opt-btn__icon { display: inline-flex; }
+.opt-btn__icon svg { width: 1rem; height: 1rem; }
+.opt-btn__icon--fine svg { stroke-width: 1.5; }
+.opt-btn__score { font-size: .875rem; font-weight: 600; color: var(--color-gold-600); }
+.opt-btn.is-active .opt-btn__score { color: var(--color-gold-300); }
+
+.ghost-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-left: auto;
+    padding: .25rem;
+    border: 0;
+    background: none;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+}
+.ghost-toggle__track {
+    position: relative;
+    width: 2.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: var(--color-gray-300);
+    transition: background 150ms ease;
+}
+.ghost-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    background: var(--color-white);
+    box-shadow: 0 1px 2px rgba(35,31,32,.3);
+    transition: left 150ms ease;
+}
+.ghost-toggle.is-on .ghost-toggle__track { background: var(--color-gold-500); }
+.ghost-toggle.is-on .ghost-toggle__knob { left: calc(100% - 1.125rem); }
+
+.ctrl__score { display: flex; align-items: center; gap: .375rem; }
+.ctrl__score-label { font-size: .875rem; color: var(--color-gray-600); margin-right: .125rem; }
+.score-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-600);
+    font-size: .875rem;
+    font-weight: 600;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+.score-dot:hover { background: var(--color-gold-50); border-color: var(--color-gold-400); }
+.score-dot.is-on { background: var(--color-gold-400); border-color: var(--color-gold-600); color: var(--color-slate); }
+
+.ctrl__note {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: .875rem;
+    color: var(--color-gray-600);
+}
+.ctrl__note strong { color: var(--color-gray-700); font-weight: 600; }
+.ctrl__warn { color: var(--color-gold-700); font-weight: 600; }
+.ctrl__warn[hidden] { display: none; }
+
+/* ═══ Stage & faux page backdrop ═══ */
+.stage {
+    position: relative;
+    height: 760px;
+    overflow: hidden;
+    background: var(--color-gray-100);
+}
+.faux { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.faux__header {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 1rem 3rem;
+    background: var(--color-slate);
+}
+.faux__logo { height: 56px; width: auto; }
+.faux__nav { display: flex; gap: 1.75rem; margin-left: auto; }
+.faux__nav span { color: rgba(255,255,255,.88); font-size: .9375rem; font-weight: 500; }
+.faux__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .625rem;
+    padding: .4375rem .75rem .4375rem .875rem;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 999px;
+    color: rgba(255,255,255,.85);
+    font-size: .875rem;
+    font-weight: 500;
+}
+.faux__trigger svg { width: 1rem; height: 1rem; }
+.faux__hero {
+    flex: none;
+    padding: 3rem 3rem 2.75rem;
+    background: linear-gradient(180deg, var(--color-slate) 0%, #36302f 100%);
+}
+.faux__hero h2 {
+    margin: 0;
+    max-width: 38rem;
+    font-family: var(--font-display);
+    font-size: 2.625rem;
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--color-white);
+}
+.faux__hero h2 em { color: var(--color-gold-400); font-style: italic; }
+.faux__hero p { margin: .875rem 0 0; max-width: 34rem; font-size: 1.0625rem; color: var(--color-gray-300); }
+.faux__band { flex: 1 1 auto; background: var(--color-white); padding: 2.25rem 3rem; }
+.faux__band h3 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+.faux-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 56rem;
+    margin-top: 1.25rem;
+}
+.faux-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; background: var(--color-gray-100); }
+.faux-card strong { display: block; margin-top: .625rem; font-size: 1rem; font-weight: 600; }
+.faux-card span { font-size: .875rem; color: var(--color-gray-600); }
+.scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(35,31,32,.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* ═══ Palette — LOCKED round-1 Option B "Photo rows" layout ═══ */
+.ob {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 64px; /* ~10vh of the live viewport */
+    width: 720px;
+    max-width: 92%;
+    height: min(580px, calc(100% - 112px));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-panel);
+}
+.ob__searchrow {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex: none;
+    padding: .875rem 1.25rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ob__searchicon { width: 1.25rem; height: 1.25rem; color: var(--color-gray-500); flex: none; }
+.ob__inputwrap { position: relative; flex: 1; min-width: 0; }
+.ob__input {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: var(--font-sans); /* sans in ALL treatments — see notes */
+    font-size: 1.125rem;
+    color: var(--color-slate);
+}
+.ob__input::placeholder { color: var(--color-gray-400); }
+/* Ghost completion twin: sits under the transparent-padding input, repeats the
+   typed text invisibly, then paints the completion remainder in muted gray.
+   Its font MUST mirror the input glyph-for-glyph, which is why the input stays
+   Work Sans in every type treatment. */
+.ob__ghost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: pre;
+    pointer-events: none;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: transparent;
+}
+.ob__ghost-rest { color: var(--color-gray-400); }
+.ob__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: none;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-gray-500);
+}
+.ob__clear:hover { background: var(--color-gray-100); color: var(--color-charcoal); }
+.ob__clear svg { width: 1.125rem; height: 1.125rem; }
+.ob__clear[hidden] { display: none; }
+.ob__scopes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    flex: none;
+    padding: .625rem 1.25rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+.ob__main { flex: 1 1 auto; min-height: 0; display: flex; }
+.ob__results { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: .25rem 0; }
+.ob__empty { padding: 2.5rem 1.5rem; text-align: center; }
+.ob__empty-title { margin: 0; font-size: 1.0625rem; font-weight: 600; color: var(--color-slate); }
+.ob__empty-note { margin: .375rem 0 0; font-size: .9375rem; color: var(--color-gray-600); }
+.ob__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .625rem;
+    padding: 1.75rem 2rem 2.25rem;
+    text-align: center;
+}
+.ob__hero-title { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--color-slate); }
+.ob__hero-note { margin: 0; max-width: 26rem; font-size: .875rem; line-height: 1.55; color: var(--color-gray-600); }
+.ob__hero-tries { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .375rem; }
+.try-chip {
+    padding: .25rem .75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .875rem;
+    font-weight: 500;
+}
+.try-chip:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.ob__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: none;
+    padding: .625rem 1.25rem;
+    border-top: 1px solid var(--color-gray-200);
+    background: var(--color-gray-50);
+}
+.ob__viewall {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    color: var(--color-gold-700);
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.ob__viewall svg { width: 1rem; height: 1rem; }
+.ob__viewall:hover { text-decoration: underline; }
+.ob__viewall[hidden] { display: none; }
+.ob__hints { display: flex; gap: 1rem; }
+.ob__hints span {
+    display: inline-flex;
+    align-items: center;
+    gap: .3125rem;
+    font-size: .875rem;
+    color: var(--color-gray-500);
+}
+.ob kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 .3125rem;
+    font-family: var(--font-sans); /* kbd stays sans in every treatment */
+    font-size: .75rem; /* 12px reserved for kbd glyphs only */
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-gray-700);
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+}
+
+/* Scope pills — Work Sans in ALL treatments; active mirrors the gold CTA */
+.ob-scope {
+    display: inline-flex;
+    align-items: center;
+    gap: .3125rem;
+    padding: .1875rem .5625rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: .8125rem;
+    font-weight: 500;
+    transition: background 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+.ob-scope:hover { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+.ob-scope.is-active { background: var(--color-gold-400); border-color: var(--color-gold-600); color: var(--color-slate); }
+.ob-scope__count { font-weight: 400; opacity: .7; }
+
+/* Result groups */
+.ob-group { padding-block: .25rem; }
+.ob-group + .ob-group { border-top: 1px solid var(--color-gray-100); }
+.ob-group__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem 1.25rem .25rem;
+}
+.ob-group__title {
+    display: inline-flex;
+    align-items: center;
+    gap: .4375rem;
+    font-size: 1rem; /* normal case, 16px, semibold — never a micro-label */
+    font-weight: 600;
+    color: var(--color-slate);
+}
+.ob-group__title svg { width: 1rem; height: 1rem; color: var(--color-gray-500); }
+.ob-group__count { font-size: .875rem; color: var(--color-gray-500); }
+.ob-group__count-word { display: none; } /* surfaced by the editorial treatment */
+
+/* Result rows — active state is a background tint, never a left border */
+.ob-row {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    padding: .375rem 1.25rem;
+    color: var(--color-slate);
+    text-decoration: none;
+    cursor: pointer;
+}
+.ob-row:hover, .ob-row.is-active { background: var(--color-gold-50); }
+.ob-row:hover .ob-row__chevron, .ob-row.is-active .ob-row__chevron { opacity: 1; }
+.ob-row__lead {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;  /* 40px disc — locked */
+    height: 2.5rem;
+    flex: none;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-gold-100);
+    color: var(--color-gold-700);
+    font-size: 1rem;
+    font-weight: 600;
+}
+.ob-row__lead svg { width: 1.125rem; height: 1.125rem; }
+.ob-row__lead img { width: 100%; height: 100%; object-fit: cover; }
+.ob-row__lead--team { background: color-mix(in srgb, var(--color-blue) 14%, var(--color-white)); color: var(--color-blue); }
+.ob-row__lead--class { background: var(--color-gold-100); color: var(--color-gold-700); }
+.ob-row__lead--page { background: var(--color-gray-100); color: var(--color-gray-600); }
+.ob-row__body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ob-row__title {
+    font-size: 1rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ob-row__title mark { background: var(--color-gold-200); color: inherit; border-radius: 2px; padding: 0 1px; }
+.ob-row__sub {
+    margin-top: 1px;
+    font-size: .75rem; /* 12px — Andrew's pick; subs are genuine meta */
+    color: var(--color-gray-600);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ob-row__chevron { width: 1.125rem; height: 1.125rem; flex: none; color: var(--color-gold-600); opacity: 0; transition: opacity 100ms ease; }
+.ob-row.is-selected { animation: rowPulse 350ms ease; }
+@keyframes rowPulse {
+    0% { background: var(--color-gold-200); }
+    100% { background: var(--color-gold-50); }
+}
+
+/* ═══ Type treatments (data-type on .stage) ═══════════════════════════════
+   Goudy is a 400-weight face that runs small at equal px — every serif use
+   below gains emphasis through SIZE, never weight (font-synthesis: none
+   guards against fake bold). Subs, pills, input, kbd, buttons stay sans. */
+
+/* serif-names + editorial: result titles in Goudy at 1rem (Andrew's pick —
+   denser; the serif voice carries without the size-up) */
+[data-type="serif-names"] .ob-row__title,
+[data-type="editorial"] .ob-row__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+/* serif-frame + editorial: group headers in Goudy ~18px */
+[data-type="serif-frame"] .ob-group__title,
+[data-type="editorial"] .ob-group__title {
+    font-family: var(--font-display);
+    font-size: 1.125rem; /* 18px */
+    font-weight: 400;
+}
+
+/* editorial extras: italic Goudy for counts + empty/hero titles */
+[data-type="editorial"] .ob-group__count {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--color-gray-600);
+}
+[data-type="editorial"] .ob-group__count-word { display: inline; }
+[data-type="editorial"] .ob__hero-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+[data-type="editorial"] .ob__empty-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.3125rem;
+}
+
+/* ═══ Icon sets (data-icons on .stage) ═══
+   literal & athletic ride Lucide's default stroke-width 2; archival thins
+   every panel icon to 1.5 for a finer, engraved feel. (CSS beats the SVG's
+   stroke-width presentation attribute.) */
+[data-icons="archival"] .ob svg { stroke-width: 1.5; }
+
+/* ═══ Notes ═══ */
+.notes { max-width: 60rem; margin: 0 auto; padding: 2rem 1.5rem 4.5rem; }
+.notes__card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem 1.625rem;
+}
+.notes__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .25rem .625rem; margin: 0; }
+.notes__head--rule { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--color-gray-100); }
+.notes__kicker { font-size: 1rem; font-weight: 600; color: var(--color-gray-600); }
+.notes__name { font-size: 1.25rem; font-weight: 600; }
+.notes__pitch { font-family: var(--font-display); font-style: italic; font-size: 1.125rem; color: var(--color-gray-600); }
+.notes__body { margin: .75rem 0 0; font-size: 1rem; line-height: 1.6; color: var(--color-gray-700); }
+.notes__tab {
+    margin-top: 1rem;
+    padding: .625rem .875rem;
+    border: 1px solid var(--color-gray-100);
+    border-radius: 8px;
+    background: var(--color-gray-50);
+    font-size: .9375rem;
+    line-height: 1.55;
+    color: var(--color-gray-600);
+}
+.notes__tab strong { color: var(--color-gray-700); }
+
+/* ═══ Responsive squeeze (specimen is a desktop tool; just don't break) ═══ */
+@media (max-width: 900px) {
+    .faux__nav { display: none; }
+    .ghost-toggle { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ob-row.is-selected { animation: none; }
+    .ghost-toggle__knob, .ghost-toggle__track { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ Control bar ═══ -->
+<header class="ctrl">
+    <h1 class="ctrl__title">Omnibox <em>— Round 2 · Type &amp; Icons</em></h1>
+    <div class="ctrl__group">
+        <span class="ctrl__label">Type</span>
+        <nav class="ctrl__opts" id="typeBtns" aria-label="Type treatments"></nav>
+    </div>
+    <div class="ctrl__group">
+        <span class="ctrl__label">Icons</span>
+        <nav class="ctrl__opts" id="iconBtns" aria-label="Icon sets"></nav>
+    </div>
+    <button type="button" class="ghost-toggle is-on" id="ghostToggle" aria-pressed="true">
+        Ghost completion
+        <span class="ghost-toggle__track"><span class="ghost-toggle__knob"></span></span>
+    </button>
+    <div class="ctrl__score">
+        <span class="ctrl__score-label">Score this type</span>
+        <span id="scoreDots" style="display:inline-flex;gap:.375rem;"></span>
+    </div>
+    <p class="ctrl__note">
+        <strong>Layout locked:</strong> round-1 &ldquo;Photo rows&rdquo; (Option B).
+        This round explores typographic voice and icon voice only &mdash; 12 combos, selections persist locally.
+        <span class="ctrl__warn" id="lucideWarn" hidden>Lucide CDN unavailable &mdash; showing round-1 fallback icons.</span>
+    </p>
+</header>
+
+<main>
+    <!-- ═══ Stage: faux page + open palette ═══ -->
+    <div class="stage" id="stage" data-type="sans" data-icons="literal">
+        <div class="faux" aria-hidden="true">
+            <div class="faux__header">
+                <img class="faux__logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="">
+                <nav class="faux__nav">
+                    <span>Inductees</span><span>Teams</span><span>News</span><span>About</span><span>Donate</span>
+                </nav>
+                <span class="faux__trigger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    Search
+                </span>
+            </div>
+            <div class="faux__hero">
+                <h2>Honoring the players, teams &amp; contributors who <em>shaped ultimate</em></h2>
+                <p>The Ultimate Hall of Fame preserves the history of the sport and the people who built it.</p>
+            </div>
+            <div class="faux__band">
+                <h3>Class of 2022</h3>
+                <div class="faux-cards">
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg" alt="">
+                        <strong>Alex Nord</strong>
+                        <span>Player · Open Division</span>
+                    </div>
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg" alt="">
+                        <strong>Alex Snyder</strong>
+                        <span>Player · Women&rsquo;s Division</span>
+                    </div>
+                    <div class="faux-card">
+                        <img src="https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg" alt="">
+                        <strong>Alicia White</strong>
+                        <span>Player · Women&rsquo;s Division</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="ob" id="ob" role="dialog" aria-label="Search the Hall of Fame"></div>
+    </div>
+
+    <!-- ═══ Notes ═══ -->
+    <section class="notes" id="notes"></section>
+</main>
+
+<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"
+    integrity="sha384-hK2uiaqTSh/v1VqRxmuMQL4xmt5n0DdyBCOItx2fAs7Wv+WC8Tu0yDW1j12JooyM"
+    crossorigin="anonymous"></script>
+<script>
+(function () {
+'use strict';
+
+/* Loaded synchronously above; if the CDN failed we fall back to inline SVGs. */
+var HAS_LUCIDE = !!(window.lucide && typeof window.lucide.createIcons === 'function');
+
+/* ═══ Real content (production data, inlined — carried from round 1) ═══ */
+var DATA = {
+    members: [
+        { name: 'Alex "Dutchy" Ghesquiere', photo: 'https://ultimatehall.org/wp-content/uploads/2025/12/0D213FDB-D603-40A5-AEE2-1BEB251EB72C-400x400.jpeg', type: 'Contributor', year: '2025', division: '' },
+        { name: 'Alex Nord', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg', type: 'Player', year: '2022', division: 'Open Division' },
+        { name: 'Alex Snyder', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Alicia White', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Allan "Al Bob" Nichols', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AllanNichols_HallofFame2018.jpg', type: 'Player', year: '2018', division: 'Open Division' },
+        { name: 'Allison Boyd', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AllisonBoydHeadshot.jpg', type: 'Player', year: '2019', division: "Women's Division" },
+        { name: 'Alyson Walker', photo: 'https://ultimatehall.org/wp-content/uploads/2023/08/4333E12D-FF04-4DC7-8CCF-68C60A88ECC0_4_5005_c.jpeg', type: 'Player', year: '2023', division: "Women's Division" },
+        { name: 'Amy Wilbur', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AmyWilbur_headshot.png', type: 'Player', year: '2016', division: "Women's Division" },
+        { name: 'Andrew Lugsdin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AndrewLugsdin_headshot.png', type: 'Player', year: '2016', division: 'Open Division' },
+        { name: 'Andy Borinstein', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AndyBorinstein_1-299x400.jpeg', type: 'Contributor', year: '2009', division: '' },
+        { name: 'Andy Crews', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Andy-Crews-HoF-headshot-400x400.jpg', type: 'Player', year: '2020', division: 'Open Division' },
+        { name: 'Angela Lin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Angela-Lin-HoF_headshot2-400x400.jpg', type: 'Player', year: '2018', division: "Women's Division" },
+        { name: 'Anja Haman', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/D04C364E-9C63-42ED-ACFA-FD70D8C8EE86_1_105_c-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+        { name: 'Ann (Cohan) Orders', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AnnOrders_1-400x400.jpeg', type: 'Player', year: '2006', division: "Women's Division" },
+        { name: 'Anna Nazarov', photo: 'https://ultimatehall.org/wp-content/uploads/2024/11/A8F65C7F-BAF1-45DC-A77D-AF117B70653F-400x400.jpeg', type: 'Player', year: '2024', division: "Women's Division" },
+        { name: 'Augie Kreivenas', photo: 'https://ultimatehall.org/wp-content/uploads/2021/11/Augie-323x400.jpeg', type: 'Player', year: '2021', division: 'Open Division' }
+    ],
+    teams: [
+        { name: '10th St. Dealers', city: 'Burlington, VT', division: 'College Men' },
+        { name: '1994 Team USA Juniors', city: 'Colchester, U.K.', division: 'Youth Men' },
+        { name: '2000 Team USA U20 Girls', city: '', division: '' },
+        { name: '2000 Team USA U20 Open', city: '', division: 'Youth Men' },
+        { name: '2001 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+        { name: '2004 U.S. National Team', city: 'Turku, Finland', division: 'Club Women' },
+        { name: '2005 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+        { name: '2008 U. S. National Team', city: 'Vancouver, BC Canada', division: 'Club Women' },
+        { name: '2009 U.S. World Games Team', city: '', division: 'Club Mixed' },
+        { name: '2011 Team USA Beach Mixed', city: '', division: '' }
+    ],
+    classes: [
+        { year: '2025', count: 11 },
+        { year: '2024', count: 25 },
+        { year: '2023', count: 13 },
+        { year: '2022', count: 16 },
+        { year: '2021', count: 9 },
+        { year: '2020', count: 7 }
+    ],
+    news: [
+        { title: 'Twelve Members Welcomed into the Ultimate Hall of Fame Class of 2025', date: 'November 23, 2025' },
+        { title: 'Ultimate Hall of Fame Class of 2025: Call to the Community', date: 'September 30, 2025' },
+        { title: 'Ultimate Hall of Fame Class of 2025 Finalists', date: 'August 8, 2025' },
+        { title: '2025 Hall of Fame Selection Begins', date: 'April 30, 2025' },
+        { title: 'Twenty five Members Welcomed into the Ultimate Hall of Fame Class of 2024', date: 'November 21, 2024' },
+        { title: 'Ultimate Hall of Fame Class of 2024: Call to the Community', date: 'October 3, 2024' },
+        { title: 'Ultimate Hall of Fame Class of 2024 Finalists', date: 'August 13, 2024' },
+        { title: '2024 Hall of Fame Selection Begins', date: 'April 26, 2024' }
+    ],
+    events: [
+        { title: '2023 Induction Ceremony' },
+        { title: '2018 Induction Ceremony' },
+        { title: '2013 Induction Ceremony' }
+    ]
+};
+
+/* Flat, searchable entries derived once from DATA */
+var ENTRIES = {
+    members: DATA.members.map(function (m) {
+        return {
+            type: 'member',
+            title: m.name,
+            sub: 'Class of ' + m.year + ' · ' + m.type + (m.division ? ' · ' + m.division : ''),
+            photo: m.photo,
+            meta: m
+        };
+    }),
+    teams: DATA.teams.map(function (t) {
+        return {
+            type: 'team',
+            title: t.name,
+            sub: [t.city, t.division].filter(Boolean).join(' · ') || 'Hall of Fame team',
+            meta: t
+        };
+    }),
+    classes: DATA.classes.map(function (c) {
+        return {
+            type: 'class',
+            title: 'Class of ' + c.year,
+            sub: c.count + ' inductees',
+            meta: c
+        };
+    }),
+    pages: DATA.news.map(function (n) {
+        return { type: 'page', kind: 'news', title: n.title, sub: n.date, meta: n };
+    }).concat(DATA.events.map(function (e) {
+        return { type: 'page', kind: 'event', title: e.title, sub: 'Event', meta: e };
+    }))
+};
+
+var GROUPS = [
+    { key: 'members', label: 'Members', iconKey: 'member' },
+    { key: 'teams',   label: 'Teams',   iconKey: 'team' },
+    { key: 'classes', label: 'Classes', iconKey: 'classes' },
+    { key: 'pages',   label: 'Pages',   iconKey: 'pages' }
+];
+var SCOPES = [{ key: 'all', label: 'All' }].concat(GROUPS);
+
+/* Ghost-completion candidate pool: people, teams, classes (in that order) */
+var GHOST_POOL = ENTRIES.members.map(function (e) { return e.title; })
+    .concat(ENTRIES.teams.map(function (e) { return e.title; }))
+    .concat(ENTRIES.classes.map(function (e) { return e.title; }));
+
+/* ═══ SHARED SPEC — same keys/names as the results-page specimen ═══ */
+var TYPE_OPTIONS = [
+    {
+        key: 'sans', name: 'All sans (current)', pitch: 'the round-1 baseline',
+        notes: 'Work Sans everywhere — quiet, dense, utilitarian. The list reads as one continuous texture and nothing competes with the headshots. Trade-off: nothing about the type says “Hall of Fame”; the panel could belong to any app.'
+    },
+    {
+        key: 'serif-names', name: 'Serif names', pitch: 'names read like plaques',
+        notes: 'Every result title set in Sorts Mill Goudy at 19px — Goudy runs small and only ships a 400 weight, so emphasis comes from size, never weight. People and teams read like museum placards while subs, pills, input, and chrome stay Work Sans for fast scanning. The strongest “Hall” feel per pixel changed.'
+    },
+    {
+        key: 'serif-frame', name: 'Serif frame', pitch: 'the serif frames, content stays fast',
+        notes: 'Group headers (Members, Teams, Classes, Pages, Recent) in Goudy at 18px; row titles stay Work Sans 500. The serif labels the collection like gallery wall text rather than being the content — baseline scanning speed with a museum voice in the chrome. Subtlest of the serif options.'
+    },
+    {
+        key: 'editorial', name: 'Full editorial', pitch: 'fully committed exhibition voice',
+        notes: 'Goudy titles AND headers, with italic Goudy for the result counts (“12 results”) and the empty-state title; Work Sans holds strictly to subs, meta, input, buttons, and kbd. The richest, most distinctive read — and the heaviest: more typeface switching per row means slightly slower pure scanning.'
+    }
+];
+
+var ICON_OPTIONS = [
+    {
+        key: 'literal', name: 'Literal', pitch: 'says exactly what each thing is',
+        notes: 'Lucide defaults at stroke 2: user / users / graduation-cap / file-text, with news rows getting newspaper and event rows calendar-days. Zero learning curve and the most conventional — also the least personality of the three.'
+    },
+    {
+        key: 'athletic', name: 'Athletic', pitch: 'competition hardware',
+        notes: 'Sport iconography at stroke 2: circle-user / shield / trophy / newspaper, clock for recents. The shield and trophy carry real “athletics” energy and pair well with the gold accents — the most badge-like set.'
+    },
+    {
+        key: 'archival', name: 'Archival', pitch: 'engraved, finer line',
+        notes: 'A finer 1.5 stroke across the panel for an engraved feel: user-round / flag / medal / scroll-text, history for recents. The thin line weight reads archival rather than app-like and pairs naturally with the Goudy treatments.'
+    }
+];
+
+/* Icon name per role, per set. Member ROWS keep photos; the member icon
+   appears on the Members group header. */
+var ICON_SETS = {
+    literal:  { member: 'user',        team: 'users',  classes: 'graduation-cap', pages: 'file-text',   news: 'newspaper',   event: 'calendar-days', search: 'search', recent: 'history', preview: 'graduation-cap' },
+    athletic: { member: 'circle-user', team: 'shield', classes: 'trophy',         pages: 'newspaper',   news: 'newspaper',   event: 'newspaper',     search: 'search', recent: 'clock',   preview: 'trophy' },
+    archival: { member: 'user-round',  team: 'flag',   classes: 'medal',          pages: 'scroll-text', news: 'scroll-text', event: 'scroll-text',   search: 'search', recent: 'history', preview: 'medal' }
+};
+
+var TAB_NOTE = 'When ghost text is visible, <strong>Tab accepts the completion</strong>; otherwise Tab keeps its shipped role of cycling scopes. ArrowRight at the end of the input also accepts — so the higher-intent action wins only when a completion is actually showing. The footer hint relabels live so the current meaning of Tab is never ambiguous.';
+var INPUT_NOTE = 'The search input and its ghost-completion twin stay Work Sans in all four treatments. The ghost overlay must mirror the input&rsquo;s font metrics glyph-for-glyph to stay aligned, and Goudy&rsquo;s small x-height hurts legibility for typed queries at input size. The serif voice lives in the results, not the field.';
+
+/* ═══ Exploration state (persisted under uh-omnibox-refine) ═══ */
+var LS_KEY = 'uh-omnibox-refine';
+function loadApp() {
+    try {
+        var parsed = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+    } catch (e) { return {}; }
+}
+var app = Object.assign({
+    type: 'serif-names',
+    icons: 'archival',
+    ghost: true,
+    scores: {}, /* 1–5 per TYPE treatment */
+    recents: ['Alex Snyder', 'Class of 2024', '2001 U.S. World Games Team']
+}, loadApp());
+if (!TYPE_OPTIONS.some(function (o) { return o.key === app.type; })) app.type = 'sans';
+if (!ICON_OPTIONS.some(function (o) { return o.key === app.icons; })) app.icons = 'literal';
+if (!app.scores || typeof app.scores !== 'object') app.scores = {};
+if (!Array.isArray(app.recents)) app.recents = [];
+app.recents = app.recents.filter(function (t) { return typeof t === 'string'; }).slice(0, 5);
+function saveApp() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(app)); } catch (e) { /* private mode */ }
+}
+
+/* Palette state — survives toggle switches so combos compare like-for-like */
+var pal = { query: '20', scope: 'all', active: 0, rows: [], ghostRest: '' };
+
+/* ═══ DOM handles ═══ */
+var stage = document.getElementById('stage');
+var obEl = document.getElementById('ob');
+var typeBtnsEl = document.getElementById('typeBtns');
+var iconBtnsEl = document.getElementById('iconBtns');
+var ghostToggleEl = document.getElementById('ghostToggle');
+var scoreDotsEl = document.getElementById('scoreDots');
+var notesEl = document.getElementById('notes');
+var lucideWarnEl = document.getElementById('lucideWarn');
+/* assigned by buildPalette() on every icon-set switch */
+var input, ghostTypedEl, ghostRestEl, clearEl, scopesEl, resultsEl, viewAllEl, tabHintEl;
+
+/* ═══ Icons ═══
+   With Lucide loaded: emit <i data-lucide="…">, then lucide.createIcons()
+   replaces them with SVGs (it merges the class attribute onto the svg).
+   createIcons must re-run after EVERY innerHTML render — refreshIcons() is
+   called at the end of each render path. Without Lucide (offline): inline
+   round-1 SVG paths, with unknown names aliased to the nearest path. */
+var FALLBACK_PATHS = {
+    'search': '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+    'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    'trophy': '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+    'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+    'history': '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+    'clock': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'
+};
+var FALLBACK_ALIAS = {
+    'circle-user': 'user', 'user-round': 'user',
+    'shield': 'users', 'flag': 'users',
+    'graduation-cap': 'trophy', 'medal': 'trophy',
+    'newspaper': 'file-text', 'calendar-days': 'file-text', 'scroll-text': 'file-text'
+};
+function icon(name, cls) {
+    if (HAS_LUCIDE) {
+        return '<i data-lucide="' + name + '"' + (cls ? ' class="' + cls + '"' : '') + ' aria-hidden="true"></i>';
+    }
+    var key = FALLBACK_PATHS[name] ? name : (FALLBACK_ALIAS[name] || 'file-text');
+    return '<svg' + (cls ? ' class="' + cls + '"' : '') +
+        ' viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"' +
+        ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+        ' aria-hidden="true" focusable="false">' + FALLBACK_PATHS[key] + '</svg>';
+}
+function refreshIcons() {
+    if (HAS_LUCIDE) window.lucide.createIcons();
+}
+
+/* ═══ Escaping / highlight ═══ */
+function esc(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c];
+    });
+}
+function highlight(text, q) {
+    text = String(text == null ? '' : text);
+    if (!q) return esc(text);
+    var i = text.toLowerCase().indexOf(q.toLowerCase());
+    if (i === -1) return esc(text);
+    return esc(text.slice(0, i)) +
+        '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' +
+        esc(text.slice(i + q.length));
+}
+
+/* ═══ Search (live filter over ENTRIES) ═══ */
+function searchGroups(q) {
+    var low = q.toLowerCase();
+    return GROUPS.map(function (g) {
+        var items = ENTRIES[g.key].filter(function (it) {
+            return it.title.toLowerCase().indexOf(low) !== -1 ||
+                   it.sub.toLowerCase().indexOf(low) !== -1;
+        });
+        return { key: g.key, label: g.label, iconKey: g.iconKey, count: items.length, items: items };
+    });
+}
+
+/* ═══ Recents ═══ */
+function findEntryByTitle(title) {
+    var keys = ['members', 'teams', 'classes', 'pages'];
+    for (var i = 0; i < keys.length; i++) {
+        var hit = ENTRIES[keys[i]].find(function (e) { return e.title === title; });
+        if (hit) return hit;
+    }
+    return null;
+}
+function getRecentEntries() {
+    return app.recents.map(findEntryByTitle).filter(Boolean).slice(0, 5);
+}
+function addRecent(item) {
+    app.recents = [item.title].concat(app.recents.filter(function (t) { return t !== item.title; })).slice(0, 5);
+    saveApp(); /* no immediate re-render — recents refresh next time the query empties */
+}
+
+/* ═══ Row lead — LOCKED Option B treatment ═══
+   Members: 40px circular headshot. Teams: tinted initial disc (locked layout).
+   Classes/Pages: icon discs drawn from the active icon set; in the Literal
+   set, news rows get `newspaper` and event rows `calendar-days`. */
+function leadHTML(item) {
+    var set = ICON_SETS[app.icons];
+    if (item.type === 'member') {
+        return '<span class="ob-row__lead"><img src="' + esc(item.photo) + '" alt="" loading="lazy"></span>';
+    }
+    if (item.type === 'team') {
+        return '<span class="ob-row__lead ob-row__lead--team">' + esc(item.title.charAt(0)) + '</span>';
+    }
+    if (item.type === 'class') {
+        return '<span class="ob-row__lead ob-row__lead--class">' + icon(set.classes) + '</span>';
+    }
+    return '<span class="ob-row__lead ob-row__lead--page">' +
+        icon(item.kind === 'event' ? set.event : set.news) + '</span>';
+}
+
+function makeRow(item, q) {
+    var row = document.createElement('a');
+    row.className = 'ob-row';
+    row.href = '#';
+    row.innerHTML = leadHTML(item) +
+        '<span class="ob-row__body">' +
+        '<span class="ob-row__title">' + highlight(item.title, q) + '</span>' +
+        (item.sub ? '<span class="ob-row__sub">' + esc(item.sub) + '</span>' : '') +
+        '</span>' +
+        icon('chevron-right', 'ob-row__chevron');
+    row._item = item;
+    row.addEventListener('mousemove', function () {
+        var i = pal.rows.indexOf(row);
+        if (i !== -1 && i !== pal.active) setActive(i);
+    });
+    row.addEventListener('click', function (e) {
+        e.preventDefault(); // specimen: selection pulses instead of navigating
+        var i = pal.rows.indexOf(row);
+        if (i !== -1) setActive(i);
+        addRecent(item);
+        row.classList.remove('is-selected');
+        void row.offsetWidth;
+        row.classList.add('is-selected');
+    });
+    pal.rows.push(row);
+    return row;
+}
+
+function setActive(idx) {
+    pal.active = idx;
+    pal.rows.forEach(function (row, i) { row.classList.toggle('is-active', i === idx); });
+    var row = pal.rows[idx];
+    if (row) row.scrollIntoView({ block: 'nearest' });
+}
+
+/* ═══ Ghost completion ═══
+   No ghost when: query empty, exact match (no remainder), or the match is
+   mid-word/non-prefix. Matching runs on the raw (untrimmed) input so the
+   overlay always mirrors the real text. */
+function updateGhost() {
+    var raw = input.value;
+    var rest = '';
+    if (app.ghost && raw.length) {
+        var low = raw.toLowerCase();
+        for (var i = 0; i < GHOST_POOL.length; i++) {
+            var candLow = GHOST_POOL[i].toLowerCase();
+            if (candLow.indexOf(low) === 0 && candLow.length > low.length) {
+                rest = GHOST_POOL[i].slice(raw.length);
+                break;
+            }
+        }
+    }
+    pal.ghostRest = rest;
+    ghostTypedEl.textContent = rest ? raw : '';
+    ghostRestEl.textContent = rest;
+    if (tabHintEl) tabHintEl.textContent = rest ? 'Complete' : 'Scope';
+}
+
+function acceptGhost() {
+    if (!pal.ghostRest) return false;
+    input.value = input.value + pal.ghostRest;
+    var end = input.value.length;
+    input.setSelectionRange(end, end);
+    onInput();
+    return true;
+}
+
+/* ═══ Scopes / results / home ═══ */
+function renderScopes(groups, q) {
+    scopesEl.innerHTML = '';
+    var counts = null;
+    if (q) {
+        counts = { all: 0 };
+        groups.forEach(function (g) { counts[g.key] = g.count; counts.all += g.count; });
+    }
+    SCOPES.forEach(function (s) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ob-scope' + (s.key === pal.scope ? ' is-active' : '');
+        btn.setAttribute('aria-pressed', s.key === pal.scope ? 'true' : 'false');
+        btn.innerHTML = esc(s.label) +
+            (counts ? ' <span class="ob-scope__count">' + counts[s.key] + '</span>' : '');
+        btn.addEventListener('click', function () { setScope(s.key); });
+        scopesEl.appendChild(btn);
+    });
+}
+
+/* Empty-query home: Recent group (keyboard-navigable) + hero with try chips */
+function renderHome() {
+    var rec = getRecentEntries();
+    if (rec.length) {
+        var section = document.createElement('section');
+        section.className = 'ob-group';
+        section.innerHTML = '<header class="ob-group__head">' +
+            '<span class="ob-group__title">' + icon(ICON_SETS[app.icons].recent) + 'Recent</span></header>';
+        rec.forEach(function (item) { section.appendChild(makeRow(item, '')); });
+        resultsEl.appendChild(section);
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'ob__hero';
+    wrap.innerHTML =
+        '<p class="ob__hero-title">Search the Hall of Fame</p>' +
+        '<p class="ob__hero-note">Find inductees, teams, induction classes, and news. Start typing &mdash; completions appear as ghost text, <kbd>Tab</kbd> accepts them.</p>' +
+        '<span class="ob__hero-tries"></span>';
+    var tries = wrap.querySelector('.ob__hero-tries');
+    ['Anna', 'Team USA', 'Class of 2024', 'Induction'].forEach(function (t) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'try-chip';
+        b.textContent = t;
+        b.addEventListener('click', function () {
+            input.value = t;
+            onInput();
+            input.focus();
+        });
+        tries.appendChild(b);
+    });
+    resultsEl.appendChild(wrap);
+    if (pal.rows.length) setActive(0);
+}
+
+var PER_GROUP_ALL = 5;
+function renderResults() {
+    var q = pal.query.trim();
+    pal.rows = [];
+    pal.active = 0;
+    var groups = searchGroups(q);
+    renderScopes(groups, q);
+    if (viewAllEl) viewAllEl.hidden = q.length < 2;
+    if (clearEl) clearEl.hidden = !input.value.length;
+
+    resultsEl.innerHTML = '';
+    resultsEl.scrollTop = 0;
+
+    if (!q) {
+        renderHome();
+        refreshIcons();
+        return;
+    }
+
+    var visible = groups.filter(function (g) {
+        if (pal.scope !== 'all' && g.key !== pal.scope) return false;
+        return g.items.length > 0;
+    });
+
+    if (!visible.length) {
+        resultsEl.innerHTML = '<div class="ob__empty">' +
+            '<p class="ob__empty-title">No matches for &ldquo;' + esc(q) + '&rdquo;</p>' +
+            '<p class="ob__empty-note">Try a different keyword or scope.</p></div>';
+        refreshIcons();
+        return;
+    }
+
+    visible.forEach(function (g) {
+        var limit = pal.scope === 'all' ? PER_GROUP_ALL : g.items.length;
+        var section = document.createElement('section');
+        section.className = 'ob-group';
+        /* count word renders always, displayed only by the editorial treatment */
+        section.innerHTML = '<header class="ob-group__head">' +
+            '<span class="ob-group__title">' + icon(ICON_SETS[app.icons][g.iconKey]) + esc(g.label) + '</span>' +
+            '<span class="ob-group__count">' + g.count +
+            '<span class="ob-group__count-word"> ' + (g.count === 1 ? 'result' : 'results') + '</span></span></header>';
+        g.items.slice(0, limit).forEach(function (item) {
+            section.appendChild(makeRow(item, q));
+        });
+        resultsEl.appendChild(section);
+    });
+    setActive(0);
+    refreshIcons(); /* CRITICAL: re-run after every keystroke re-render */
+}
+
+function onInput() {
+    pal.query = input.value;
+    renderResults();
+    updateGhost();
+}
+
+function setScope(key) {
+    pal.scope = key;
+    renderResults();
+    input.focus();
+}
+
+/* ═══ Keyboard ═══
+   Tab conflict resolution: ghost visible -> Tab accepts the completion;
+   otherwise Tab cycles scope exactly like the shipped build. ArrowRight at
+   the end of the input also accepts. */
+function onKeydown(e) {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        if (!e.shiftKey && pal.ghostRest && acceptGhost()) return;
+        var i = SCOPES.findIndex(function (s) { return s.key === pal.scope; });
+        var next = (i + (e.shiftKey ? SCOPES.length - 1 : 1)) % SCOPES.length;
+        setScope(SCOPES[next].key);
+        return;
+    }
+    if (e.key === 'ArrowRight' && e.target === input && pal.ghostRest &&
+        input.selectionStart === input.value.length &&
+        input.selectionEnd === input.value.length) {
+        e.preventDefault();
+        acceptGhost();
+        return;
+    }
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (pal.rows.length) setActive(Math.min(pal.active + 1, pal.rows.length - 1));
+        return;
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (pal.rows.length) setActive(Math.max(pal.active - 1, 0));
+        return;
+    }
+    if (e.key === 'Enter' && e.target === input) {
+        e.preventDefault();
+        var row = pal.rows[pal.active];
+        if (row) {
+            addRecent(row._item);
+            row.classList.remove('is-selected');
+            void row.offsetWidth;
+            row.classList.add('is-selected');
+        }
+    }
+}
+
+/* ═══ Palette shell (rebuilt on icon-set switch; query persists) ═══ */
+function buildPalette() {
+    var set = ICON_SETS[app.icons];
+    obEl.innerHTML =
+        '<div class="ob__searchrow">' + icon(set.search, 'ob__searchicon') +
+        '<div class="ob__inputwrap">' +
+        '<div class="ob__ghost" aria-hidden="true"><span class="ob__ghost-typed"></span><span class="ob__ghost-rest"></span></div>' +
+        '<input class="ob__input" type="text" placeholder="Search the Hall of Fame&hellip;"' +
+        ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"' +
+        ' aria-label="Search the Hall of Fame">' +
+        '</div>' +
+        '<button type="button" class="ob__clear" aria-label="Clear search" hidden>' + icon('x') + '</button>' +
+        '</div>' +
+        '<div class="ob__scopes"></div>' +
+        '<div class="ob__main"><div class="ob__results"></div></div>' +
+        '<div class="ob__footer">' +
+        '<a class="ob__viewall" href="#" hidden>View all results ' + icon('arrow-right') + '</a>' +
+        '<div class="ob__hints">' +
+        '<span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>' +
+        '<span><kbd>&crarr;</kbd> Select</span>' +
+        '<span><kbd>Tab</kbd> <span class="ob__tabhint">Scope</span></span>' +
+        '<span><kbd>Esc</kbd> Close</span>' +
+        '</div></div>';
+
+    input = obEl.querySelector('.ob__input');
+    ghostTypedEl = obEl.querySelector('.ob__ghost-typed');
+    ghostRestEl = obEl.querySelector('.ob__ghost-rest');
+    clearEl = obEl.querySelector('.ob__clear');
+    scopesEl = obEl.querySelector('.ob__scopes');
+    resultsEl = obEl.querySelector('.ob__results');
+    viewAllEl = obEl.querySelector('.ob__viewall');
+    tabHintEl = obEl.querySelector('.ob__tabhint');
+
+    viewAllEl.addEventListener('click', function (e) { e.preventDefault(); });
+    clearEl.addEventListener('click', function () {
+        input.value = '';
+        onInput();
+        input.focus();
+    });
+    input.value = pal.query;
+    renderResults(); /* ends in refreshIcons() */
+    updateGhost();
+    refreshIcons(); /* covers searchrow/footer icons on first paint too */
+}
+
+/* ═══ Control bar ═══ */
+function renderTypeBtns() {
+    typeBtnsEl.innerHTML = '';
+    TYPE_OPTIONS.forEach(function (o) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-btn' + (o.key === app.type ? ' is-active' : '');
+        btn.setAttribute('aria-pressed', o.key === app.type ? 'true' : 'false');
+        var score = app.scores[o.key];
+        btn.innerHTML = esc(o.name) +
+            (score ? ' <span class="opt-btn__score">&#9733;' + score + '</span>' : '');
+        btn.addEventListener('click', function () { setType(o.key); });
+        typeBtnsEl.appendChild(btn);
+    });
+}
+
+function renderIconBtns() {
+    iconBtnsEl.innerHTML = '';
+    ICON_OPTIONS.forEach(function (o) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-btn' + (o.key === app.icons ? ' is-active' : '');
+        btn.setAttribute('aria-pressed', o.key === app.icons ? 'true' : 'false');
+        btn.innerHTML = '<span class="opt-btn__icon' + (o.key === 'archival' ? ' opt-btn__icon--fine' : '') + '">' +
+            icon(ICON_SETS[o.key].preview) + '</span>' + esc(o.name);
+        btn.addEventListener('click', function () { setIcons(o.key); });
+        iconBtnsEl.appendChild(btn);
+    });
+    refreshIcons();
+}
+
+function renderScoreDots() {
+    scoreDotsEl.innerHTML = '';
+    var current = app.scores[app.type] || 0;
+    var typeName = TYPE_OPTIONS.find(function (o) { return o.key === app.type; }).name;
+    for (var n = 1; n <= 5; n++) {
+        (function (val) {
+            var dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'score-dot' + (val <= current ? ' is-on' : '');
+            dot.textContent = String(val);
+            dot.setAttribute('aria-label', 'Score type "' + typeName + '": ' + val + ' of 5');
+            dot.addEventListener('click', function () {
+                app.scores[app.type] = (app.scores[app.type] === val) ? 0 : val;
+                saveApp();
+                renderScoreDots();
+                renderTypeBtns();
+            });
+            scoreDotsEl.appendChild(dot);
+        })(n);
+    }
+}
+
+function renderNotes() {
+    var t = TYPE_OPTIONS.find(function (x) { return x.key === app.type; });
+    var ic = ICON_OPTIONS.find(function (x) { return x.key === app.icons; });
+    notesEl.innerHTML =
+        '<div class="notes__card">' +
+        '<p class="notes__head"><span class="notes__kicker">Type</span>' +
+        '<span class="notes__name">' + esc(t.name) + '</span>' +
+        '<span class="notes__pitch">&mdash; ' + esc(t.pitch) + '</span></p>' +
+        '<p class="notes__body">' + t.notes + '</p>' +
+        '<p class="notes__head notes__head--rule"><span class="notes__kicker">Icons</span>' +
+        '<span class="notes__name">' + esc(ic.name) + '</span>' +
+        '<span class="notes__pitch">&mdash; ' + esc(ic.pitch) + '</span></p>' +
+        '<p class="notes__body">' + ic.notes + '</p>' +
+        '<div class="notes__tab"><strong>Tab &amp; ghost text:</strong> ' + TAB_NOTE + '</div>' +
+        '<div class="notes__tab"><strong>Why the input stays sans:</strong> ' + INPUT_NOTE + '</div>' +
+        '</div>';
+}
+
+/* Type switch is pure CSS (data-type) — no rebuild, focus and query stay put. */
+function setType(key) {
+    app.type = key;
+    saveApp();
+    stage.dataset.type = key;
+    renderTypeBtns();
+    renderScoreDots();
+    renderNotes();
+    input.focus();
+}
+
+/* Icon-set switch re-renders all icon markup, so the palette rebuilds. */
+function setIcons(key) {
+    app.icons = key;
+    saveApp();
+    stage.dataset.icons = key;
+    renderIconBtns();
+    renderNotes();
+    buildPalette();
+    input.focus();
+}
+
+/* ═══ Events & init ═══ */
+ghostToggleEl.addEventListener('click', function () {
+    app.ghost = !app.ghost;
+    saveApp();
+    ghostToggleEl.classList.toggle('is-on', app.ghost);
+    ghostToggleEl.setAttribute('aria-pressed', String(app.ghost));
+    updateGhost();
+    input.focus();
+});
+
+/* Listeners live on the persistent .ob wrapper; the shell inside is rebuilt
+   per icon-set switch, and the module-level `input` ref stays current. */
+obEl.addEventListener('keydown', onKeydown);
+obEl.addEventListener('input', function (e) { if (e.target === input) onInput(); });
+
+stage.dataset.type = app.type;
+stage.dataset.icons = app.icons;
+ghostToggleEl.classList.toggle('is-on', app.ghost);
+ghostToggleEl.setAttribute('aria-pressed', String(app.ghost));
+lucideWarnEl.hidden = HAS_LUCIDE;
+renderTypeBtns();
+renderIconBtns();
+renderScoreDots();
+renderNotes();
+buildPalette();
+})();
+</script>
+</body>
+</html>

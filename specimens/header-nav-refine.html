@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ultimate Hall of Fame — Header &amp; Nav, Round 2 Refinement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Sorts+Mill+Goudy:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+/* ==========================================================================
+   0. TOKENS + BASE — identical palette to round 1 / prod SCSS.
+   ========================================================================== */
+:root {
+  --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+  --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+  --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+  --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+  --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+  --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+  --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+  --color-blue:#3e80ad;
+  --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+
+  --tint-w10: rgba(255,255,255,0.10);
+  --tint-w16: rgba(255,255,255,0.16);
+  --tint-w22: rgba(255,255,255,0.22);
+  --tint-w40: rgba(255,255,255,0.40);
+  --tint-w85: rgba(255,255,255,0.85);
+  --scrim: color-mix(in srgb, var(--color-slate) 58%, transparent);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-slate);
+  background: var(--color-gray-100);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+svg { display: block; }
+input { font: inherit; }
+ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p, dl, dd, dt { margin: 0; }
+
+:focus-visible { outline: 2px solid var(--color-gold-500); outline-offset: 2px; }
+
+/* Lucide placeholders render as empty <i> until createIcons() swaps them */
+i[data-lucide] { display: block; font-style: normal; }
+
+/* kbd chips — 12px is reserved for single key glyphs only (matches prod
+   .omni kbd and round 1); all running text in this specimen is >= 14px. */
+kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.25rem; height: 1.25rem; padding: 0 0.3125rem;
+  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 500; line-height: 1;
+  color: var(--color-gray-700); background: var(--color-white);
+  border: 1px solid var(--color-gray-200); border-bottom-width: 2px; border-radius: 4px;
+}
+.kbd-dark {
+  color: var(--tint-w85); background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.30); border-bottom-width: 1px;
+}
+
+/* ==========================================================================
+   1. CONTROL BAR — sticky, frosted
+   ========================================================================== */
+.ctrl {
+  position: sticky; top: 0; z-index: 500;
+  background: color-mix(in srgb, var(--color-white) 84%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+.ctrl__inner {
+  max-width: 1380px; margin-inline: auto;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.375rem;
+  padding: 0.75rem 1.5rem;
+}
+.ctrl__title {
+  font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em;
+  margin-right: auto; white-space: nowrap;
+}
+.ctrl__title em { font-family: var(--font-display); font-style: italic; font-weight: 400; color: var(--color-gold-700); }
+.ctrl__group { display: inline-flex; align-items: center; gap: 0.5rem; }
+.ctrl__lbl { font-size: 0.875rem; font-weight: 600; color: var(--color-gray-600); }
+
+.seg {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--color-gray-100); border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+}
+.seg button {
+  padding: 0.3rem 0.7rem; border-radius: 7px;
+  font-size: 0.875rem; font-weight: 500; color: var(--color-gray-600);
+  white-space: nowrap; transition: background 100ms ease, color 100ms ease;
+}
+.seg button:hover { color: var(--color-slate); }
+.seg button[aria-pressed="true"] {
+  background: var(--color-white); color: var(--color-slate); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.seg button span.w { color: var(--color-gray-500); font-weight: 400; margin-left: 0.3em; font-size: 0.875rem; }
+
+.score { display: inline-flex; align-items: center; gap: 0.5rem; }
+.score__label { font-size: 0.875rem; font-weight: 600; color: var(--color-gray-600); }
+.score__dots { display: inline-flex; gap: 0.3rem; }
+.score__dots button {
+  width: 1.375rem; height: 1.375rem; border-radius: 50%;
+  border: 1.5px solid var(--color-gray-300); background: var(--color-white);
+  padding: 0; transition: background 100ms ease, border-color 100ms ease, transform 100ms ease;
+}
+.score__dots button:hover { border-color: var(--color-gold-500); transform: scale(1.12); }
+.score__dots button.is-on { background: var(--color-gold-400); border-color: var(--color-gold-600); }
+.score__readout { font-size: 0.875rem; color: var(--color-gray-600); min-width: 2.2em; font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   2. STAGE + VIEWPORT FRAME — container-class simulation carried from
+   round 1. Responsive rules key off .vp-desktop / .vp-tablet / .vp-mobile
+   (+ .vp-compact added by JS for tablet+mobile shared behavior), and the
+   density rules key off .den-comfortable / .den-dense / .den-compact.
+   ========================================================================== */
+.stage { padding: 2.25rem 1.5rem 1rem; overflow-x: auto; }
+.frame {
+  position: relative; margin-inline: auto; overflow: hidden;
+  background: var(--color-slate);
+  border: 1px solid var(--color-gray-200); border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.07);
+}
+.frame.vp-desktop { width: 1280px; }
+.frame.vp-tablet  { width: 768px; }
+.frame.vp-mobile  { width: 390px; }
+.frame.vp-tablet, .frame.vp-mobile {
+  border: 1px solid var(--color-gray-300);
+  border-radius: 26px;
+  box-shadow: 0 0 0 6px var(--color-white), 0 0 0 7px var(--color-gray-200), 0 18px 48px rgba(0,0,0,0.10);
+}
+.stage__meta {
+  max-width: 1380px; margin: 0.875rem auto 0; text-align: center;
+  font-size: 0.875rem; color: var(--color-gray-500);
+}
+
+/* ==========================================================================
+   3. HEADER CHROME — the locked round-1 Option B structure.
+   Dark utility tray (News · Contact / search trigger / Donate) above the
+   calmer brand bar (crest + three primary links, 15px uppercase Goudy —
+   accepted in round 1).
+   ========================================================================== */
+.chrome { position: relative; z-index: 2; }
+
+/* --- utility tray --- */
+.tray {
+  display: grid; grid-template-columns: 1fr minmax(280px, 440px) 1fr;
+  align-items: center; gap: 1.5rem;
+  padding: 0.5rem 2.5rem;
+  background: linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.34)), var(--color-slate);
+  border-bottom: 1px solid var(--tint-w10);
+}
+.tray__sec { display: flex; gap: 1.75rem; }
+.tray__sec a { color: var(--color-gray-200); font-size: 0.875rem; font-weight: 500; }
+.tray__sec a:hover { color: var(--color-gold-300); }
+.tray .donate { justify-self: end; }
+
+/* --- search trigger: one pill, three densities ------------------------
+   Density only restyles THIS element (and the tray height it implies).
+   The drawer field below is deliberately untouched by density.
+   Hit target: the visual pill drops to 32px (dense) / 28px (compact), but
+   an invisible ::after band stays 44px tall, centered on the pill, so the
+   touch target never shrinks — the pseudo-element is part of the button,
+   so clicks on it register as clicks on the trigger.
+   ----------------------------------------------------------------------- */
+.t-search {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 0.625rem;
+  width: 100%;
+  padding: 0.4375rem 0.75rem 0.4375rem 0.875rem;  /* comfortable = round-1 size (~37px) */
+  background: var(--tint-w10); border: 1px solid var(--tint-w22);
+  border-radius: 999px; color: var(--tint-w85);
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: background 120ms ease, border-color 120ms ease, padding 120ms ease;
+}
+.t-search::after {
+  content: ""; position: absolute; left: 0; right: 0;
+  top: 50%; height: 44px; transform: translateY(-50%);
+}
+.t-search:hover, .t-search:focus-visible { background: var(--tint-w16); border-color: var(--tint-w40); }
+.t-search i, .t-search svg { width: 1rem; height: 1rem; flex: none; }
+.t-search__label {
+  flex: 1; text-align: left; min-width: 0;
+  font-size: 0.875rem; font-weight: 400; color: rgba(255,255,255,0.7);
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* dense — the round-2 default: 32px visual height, tighter padding */
+.den-dense .t-search { height: 2rem; padding: 0 0.625rem 0 0.75rem; }
+
+/* compact — 28px, icon + text only, no kbd chip; icon steps down a notch */
+.den-compact .t-search { height: 1.75rem; padding: 0 0.875rem 0 0.75rem; gap: 0.5rem; }
+.den-compact .t-search kbd { display: none; }
+.den-compact .t-search i, .den-compact .t-search svg { width: 0.875rem; height: 0.875rem; }
+
+/* --- brand bar --- */
+.bar {
+  display: flex; align-items: center; gap: 2rem;
+  padding: 1.375rem 2.5rem;
+  background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700);
+}
+.logo { position: relative; width: 150px; height: 2.25rem; flex: none; }
+.logo img { position: absolute; top: -1.125rem; left: 0; width: 100%; }
+.nav { display: flex; align-items: center; gap: 2.25rem; margin-left: auto; }
+.nav a {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.9375rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+}
+.nav a:hover { color: var(--color-gold-300); }
+
+/* --- gold Donate --- */
+.donate {
+  display: inline-flex; align-items: center;
+  padding: 0.5rem 1.05rem; border-radius: 4px;
+  background: var(--color-gold-400); border: 1px solid var(--color-gold-600);
+  color: var(--color-slate); font-size: 0.875rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+  transition: background 120ms ease;
+}
+.donate:hover { background: var(--color-gold-300); }
+.donate--compact { padding: 0.3rem 0.8rem; }
+
+/* --- hamburger --- */
+.burger {
+  display: none; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 8px; color: var(--color-white);
+  margin-left: auto;
+  transition: background 120ms ease;
+}
+.burger:hover { background: var(--tint-w10); }
+.burger i, .burger svg { width: 1.5rem; height: 1.5rem; }
+
+/* --- tablet (768): tray keeps a compact persistent trigger; the three
+   primary links fold into the drawer. Rationale in the notes card. --- */
+.vp-compact .tray { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 1.5rem; }
+.vp-compact .tray__sec { display: none; }
+.vp-compact .t-search { flex: 1; max-width: 460px; }
+.vp-compact .bar { padding: 1.125rem 1.5rem; }
+.vp-compact .nav { display: none; }
+.vp-compact .burger { display: inline-flex; }
+
+/* --- mobile (390): NO tray at all — search rides the drawer instead.
+   With the tray gone the bar sits directly on the hero, so the hanging
+   crest signature returns at mobile (round 1 had to contain it). --- */
+.vp-mobile .tray { display: none; }
+.vp-mobile .bar { padding: 1.25rem 1.25rem; gap: 1rem; }
+.vp-mobile .logo { width: 104px; height: 1.75rem; }
+.vp-mobile .logo img { top: -0.875rem; }
+
+/* ==========================================================================
+   4. DRAWER — slide-in nav. Round 2: search field pinned at the top
+   (autofocus at mobile), chevroned rows, Donate pinned to the foot.
+   Density classes never touch anything in here.
+   ========================================================================== */
+.drawer { display: none; position: absolute; inset: 0; z-index: 50; }
+.drawer.is-open { display: block; }
+.drawer__scrim { position: absolute; inset: 0; background: var(--scrim); animation: fadeIn 180ms ease; }
+.drawer__panel {
+  position: absolute; inset-block: 0; left: 0;
+  width: min(340px, 86%);
+  display: flex; flex-direction: column;
+  background: var(--color-slate); border-right: 1px solid var(--color-gray-700);
+  box-shadow: 0 0 24px rgba(0,0,0,0.3);
+  padding: 3.5rem 1.75rem 1.75rem;
+  overflow-y: auto;
+  animation: slideIn 220ms ease;
+}
+.drawer__close {
+  position: absolute; top: 0.875rem; right: 0.875rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.25rem; height: 2.25rem; border-radius: 50%; color: var(--tint-w85);
+}
+.drawer__close:hover { background: var(--tint-w10); }
+.drawer__close i, .drawer__close svg { width: 1.125rem; height: 1.125rem; }
+
+/* search field — full width minus drawer padding, icon inside the field,
+   16px input text (prevents iOS focus zoom) */
+.drawer__search {
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.6875rem 0.875rem;
+  background: var(--tint-w10); border: 1px solid var(--tint-w22); border-radius: 10px;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.drawer__search:focus-within { background: var(--tint-w16); border-color: var(--color-gold-400); }
+.drawer__search i, .drawer__search svg { width: 1.125rem; height: 1.125rem; color: var(--tint-w85); flex: none; }
+.drawer__search input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  appearance: none; -webkit-appearance: none;
+  font-size: 1rem; color: var(--color-white);
+}
+.drawer__search input::placeholder { color: rgba(255,255,255,0.55); }
+.drawer__search input::-webkit-search-cancel-button,
+.drawer__search input::-webkit-search-decoration { -webkit-appearance: none; }
+
+/* chevroned nav rows — hairline bottom rules, never left borders */
+.drawer__links { display: flex; flex-direction: column; }
+.drawer__links--primary { margin-top: 1.75rem; }
+.drawer__links--sec { margin-top: 1.25rem; margin-bottom: 2rem; }
+.drawer__links a {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.8125rem 0.125rem;
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--tint-w10);
+}
+.drawer__links--primary a { font-size: 1.125rem; }
+.drawer__links a i, .drawer__links a svg {
+  width: 1rem; height: 1rem; flex: none; color: rgba(255,255,255,0.45);
+  transition: color 120ms ease, transform 120ms ease;
+}
+.drawer__links a:hover { color: var(--color-gold-300); }
+.drawer__links a:hover svg { color: var(--color-gold-300); transform: translateX(2px); }
+
+/* Donate pinned at the drawer foot */
+.drawer__panel .donate { margin-top: auto; justify-content: center; padding-block: 0.625rem; }
+
+/* ==========================================================================
+   5. SEARCH STUB — placeholder palette; the real omnibox is being refined
+   in specimens/omnibox-refine.html.
+   ========================================================================== */
+.stub { position: absolute; inset: 0; z-index: 60; }
+.stub[hidden] { display: none; }
+.stub__scrim { position: absolute; inset: 0; background: var(--scrim); backdrop-filter: blur(2px); animation: fadeIn 160ms ease; }
+.stub__panel {
+  position: relative; z-index: 1;
+  width: min(560px, calc(100% - 2rem));
+  margin: 3rem auto 0;
+  background: var(--color-white); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  animation: popIn 180ms ease;
+}
+.stub__row {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--color-gray-200);
+}
+.stub__row > i, .stub__row > svg { width: 1.25rem; height: 1.25rem; color: var(--color-gray-500); flex: none; }
+.stub__input { flex: 1; min-width: 0; border: 0; outline: 0; font-size: 1.125rem; color: var(--color-slate); }
+.stub__input::placeholder { color: var(--color-gray-400); }
+.stub__close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.75rem; height: 1.75rem; flex: none; border-radius: 50%;
+  background: var(--color-gray-100); color: var(--color-gray-700);
+}
+.stub__close:hover { background: var(--color-gray-200); }
+.stub__close i, .stub__close svg { width: 0.9375rem; height: 0.9375rem; }
+.stub__note { padding: 1.5rem 1.25rem 1.625rem; font-size: 0.875rem; color: var(--color-gray-600); text-align: center; }
+
+/* ==========================================================================
+   6. HERO STUB — stadium dusk, so the chrome reads in context
+   ========================================================================== */
+.hero {
+  position: relative; text-align: center;
+  padding: 6.5rem 2.5rem 7.5rem;
+  background:
+    radial-gradient(120% 70% at 50% 112%, color-mix(in srgb, var(--color-gold-500) 30%, transparent), transparent 62%),
+    radial-gradient(70% 42% at 50% 118%, color-mix(in srgb, var(--color-gold-700) 50%, transparent), transparent 72%),
+    linear-gradient(180deg, var(--color-charcoal) 0%, var(--color-slate) 52%, color-mix(in srgb, var(--color-slate) 60%, var(--color-gold-950)) 100%);
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.06; mix-blend-mode: overlay;
+}
+.hero__rule { width: 64px; height: 2px; background: var(--color-gold-400); margin: 0 auto 1.5rem; }
+.hero__title {
+  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  font-size: 3.25rem; line-height: 1.12; color: var(--color-white);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+}
+.vp-tablet .hero { padding: 5.5rem 2rem 6.25rem; }
+.vp-tablet .hero__title { font-size: 2.625rem; }
+.vp-mobile .hero { padding: 4.5rem 1.5rem 5rem; }
+.vp-mobile .hero__title { font-size: 1.9375rem; }
+
+/* ==========================================================================
+   7. NOTES
+   ========================================================================== */
+.notes { max-width: 960px; margin: 0 auto; padding: 1.75rem 1.5rem 4rem; }
+.note {
+  background: var(--color-white); border: 1px solid var(--color-gray-200);
+  border-radius: 12px; padding: 2rem 2.25rem 2.25rem;
+}
+.note h2 { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.01em; }
+.note h2 b { color: var(--color-gold-700); font-weight: 700; }
+.note__pitch {
+  margin-top: 0.625rem; font-size: 1.0625rem; line-height: 1.55; color: var(--color-gray-900);
+}
+.note__pitch em { font-family: var(--font-display); font-style: italic; }
+.note dl {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.375rem 2rem; margin-top: 1.75rem; padding-top: 1.625rem;
+  border-top: 1px solid var(--color-gray-200);
+}
+.note dt { font-size: 0.875rem; font-weight: 600; color: var(--color-charcoal); }
+.note dd { margin-top: 0.375rem; font-size: 1rem; line-height: 1.55; color: var(--color-gray-700); }
+.notes__foot { margin-top: 1.25rem; text-align: center; font-size: 0.875rem; color: var(--color-gray-500); }
+
+/* ==========================================================================
+   8. ANIMATION
+   ========================================================================== */
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes slideIn { from { transform: translateX(-100%); } }
+@keyframes popIn { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     CONTROL BAR
+     ====================================================================== -->
+<header class="ctrl">
+  <div class="ctrl__inner">
+    <h1 class="ctrl__title">Header &amp; Nav — <em>Round 2 Refine</em></h1>
+
+    <div class="ctrl__group">
+      <span class="ctrl__lbl">Trigger</span>
+      <div class="seg" role="group" aria-label="Search trigger density">
+        <button type="button" data-set-density="comfortable">Comfortable<span class="w">37</span></button>
+        <button type="button" data-set-density="dense">Dense<span class="w">32</span></button>
+        <button type="button" data-set-density="compact">Compact<span class="w">28</span></button>
+      </div>
+    </div>
+
+    <div class="ctrl__group">
+      <span class="ctrl__lbl">Placeholder</span>
+      <div class="seg" role="group" aria-label="Placeholder copy">
+        <button type="button" data-set-placeholder="hall">Search the Hall</button>
+        <button type="button" data-set-placeholder="short">Search</button>
+      </div>
+    </div>
+
+    <div class="seg" role="group" aria-label="Viewport">
+      <button type="button" data-set-viewport="desktop">Desktop<span class="w">1280</span></button>
+      <button type="button" data-set-viewport="tablet">Tablet<span class="w">768</span></button>
+      <button type="button" data-set-viewport="mobile">Mobile<span class="w">390</span></button>
+    </div>
+
+    <div class="score">
+      <span class="score__label">Rate</span>
+      <span class="score__dots" id="scoreDots">
+        <button type="button" data-score="1" aria-label="Rate 1 of 5"></button>
+        <button type="button" data-score="2" aria-label="Rate 2 of 5"></button>
+        <button type="button" data-score="3" aria-label="Rate 3 of 5"></button>
+        <button type="button" data-score="4" aria-label="Rate 4 of 5"></button>
+        <button type="button" data-score="5" aria-label="Rate 5 of 5"></button>
+      </span>
+      <span class="score__readout" id="scoreReadout">—</span>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================================
+     STAGE — the simulated viewport frame
+     ====================================================================== -->
+<div class="stage">
+  <div class="frame vp-desktop den-dense" id="frame">
+    <section class="hdr">
+
+      <div class="chrome">
+        <div class="tray">
+          <ul class="tray__sec">
+            <li><a href="#">News</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <button type="button" class="t-search" id="trayTrigger" data-open-search aria-label="Search the Hall">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <span class="t-search__label" id="triggerLabel">Search the Hall</span>
+            <kbd class="kbd-dark" aria-hidden="true">/</kbd>
+          </button>
+          <a class="donate donate--compact" href="#">Donate</a>
+        </div>
+        <div class="bar">
+          <div class="logo">
+            <a href="#"><img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame" /></a>
+          </div>
+          <nav class="nav">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+          </nav>
+          <button type="button" class="burger" data-open-drawer aria-label="Open menu">
+            <i data-lucide="menu" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Ultimate Hall of Fame</h2>
+      </div>
+
+      <!-- drawer: search pinned top, chevroned rows, Donate at the foot -->
+      <div class="drawer" id="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+          <div class="drawer__search">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input type="search" id="drawerSearch" placeholder="Search the Hall" aria-label="Search the Hall of Fame" />
+          </div>
+          <nav class="drawer__links drawer__links--primary" aria-label="Primary">
+            <a href="#"><span>Hall of Famers</span><i data-lucide="chevron-right" aria-hidden="true"></i></a>
+            <a href="#"><span>Selection Process</span><i data-lucide="chevron-right" aria-hidden="true"></i></a>
+            <a href="#"><span>About the Hall</span><i data-lucide="chevron-right" aria-hidden="true"></i></a>
+          </nav>
+          <nav class="drawer__links drawer__links--sec" aria-label="Secondary">
+            <a href="#"><span>News</span><i data-lucide="chevron-right" aria-hidden="true"></i></a>
+            <a href="#"><span>Contact</span><i data-lucide="chevron-right" aria-hidden="true"></i></a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+
+      <!-- search stub palette -->
+      <div class="stub" id="stub" hidden>
+        <div class="stub__scrim" data-close></div>
+        <div class="stub__panel" role="dialog" aria-modal="true" aria-label="Search">
+          <div class="stub__row">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input type="text" class="stub__input" placeholder="Search the Hall of Fame&hellip;" aria-label="Search" />
+            <button type="button" class="stub__close" data-close aria-label="Close search">
+              <i data-lucide="x" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="stub__note">Stub only — the live omnibox is being refined in <strong>specimens/omnibox-refine.html</strong>. This specimen settles trigger density, placeholder copy, and mobile placement.</p>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <p class="stage__meta" id="stageMeta">Viewport 1280px — utility tray with the centered trigger; click it to open the search stub.</p>
+</div>
+
+<!-- ======================================================================
+     NOTES
+     ====================================================================== -->
+<div class="notes">
+  <article class="note">
+    <h2>Round 2 — <b>Two-Tier Split</b>, refined</h2>
+    <p class="note__pitch">Structure is locked from round 1: dark utility tray (News &middot; Contact, search center, Donate right) over a calmer brand bar carrying the crest and the three primary destinations at 15px. Round 2 tunes exactly three things — trigger density, placeholder copy, and where search lives on mobile. <em>Andrew&rsquo;s pick (locked): Dense + &ldquo;Search&rdquo;.</em></p>
+    <dl>
+      <dt>Trigger density</dt>
+      <dd>Three calibration steps. <strong>Comfortable</strong> is the round-1 control (~37px). <strong>Dense</strong> (default) fixes the pill at 32px with flatter padding and 14px copy — the whole tray drops to ~48px. <strong>Compact</strong> runs 28px, drops the <kbd style="vertical-align:middle">/</kbd> chip, and steps the icon down to keep proportion. All three keep a 44px hit target: an invisible <code>::after</code> band stays 44px tall, centered on the pill, so the visual gets denser but the touch target never shrinks.</dd>
+      <dt>Placeholder copy</dt>
+      <dd>&ldquo;Search the Hall&rdquo; (default) keeps the institutional voice without round 1&rsquo;s laundry list; &ldquo;Search&rdquo; is the floor. The scope hint — players, teams, classes — belongs inside the omnibox panel where there&rsquo;s room to teach, not crammed into the trigger.</dd>
+      <dt>Mobile: search rides the drawer</dt>
+      <dd>The tray doesn&rsquo;t render at 390 — no persistent search bar. The hamburger drawer opens with a full-width search field pinned at its top (16px input text, so iOS won&rsquo;t zoom; icon inside the field) and autofocuses it; the three primary rows follow, then News/Contact, with Donate pinned at the foot. Bonus: dropping the mobile bar returns ~50px of chrome and the hanging-crest signature comes back at 390.</dd>
+      <dt>Tablet call</dt>
+      <dd>Kept a compact persistent trigger in the tray at 768. The tray exists anyway (Donate lives there), there&rsquo;s ample horizontal room, and permanent search discoverability is the entire point of Two-Tier — folding it into the drawer would leave a vestigial one-button tray. The drawer still carries the search field at tablet (without autofocus), so both routes work.</dd>
+      <dt>Flag for device QA</dt>
+      <dd>Autofocus pops the software keyboard every time the mobile drawer opens — wired in as requested, but worth a feel-check on hardware. If it gets annoying, drop the autofocus and keep the pinned field; nothing else changes.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>Unchanged from round 1: tray only. The slim strip with search and Donate follows the visitor; the brand bar scrolls away with the page. Dense density makes that sticky strip noticeably lighter.</dd>
+    </dl>
+  </article>
+
+  <p class="notes__foot">State persists locally (<code>uh-header-refine</code>). Esc closes the drawer and stub; <kbd>/</kbd> opens search. Icons are Lucide from CDN with inline SVG fallbacks when offline.</p>
+</div>
+
+<!-- ======================================================================
+     SCRIPT
+     ====================================================================== -->
+<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js" integrity="sha384-hK2uiaqTSh/v1VqRxmuMQL4xmt5n0DdyBCOItx2fAs7Wv+WC8Tu0yDW1j12JooyM" crossorigin="anonymous"></script>
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "uh-header-refine";
+  var DENSITIES = ["comfortable", "dense", "compact"];
+  var PLACEHOLDERS = { hall: "Search the Hall", short: "Search" };
+  var VIEWPORTS = { desktop: 1280, tablet: 768, mobile: 390 };
+  var META = {
+    desktop: "Viewport 1280px — utility tray with the centered trigger; click it to open the search stub.",
+    tablet: "Viewport 768px — the tray keeps a compact persistent trigger; primary nav folds into the drawer.",
+    mobile: "Viewport 390px — no tray search. Open the hamburger: the drawer search field autofocuses."
+  };
+
+  /* ---------- state ---------- */
+  var state = { density: "dense", placeholder: "short", viewport: "desktop", score: 0 };
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    if (DENSITIES.indexOf(saved.density) !== -1) state.density = saved.density;
+    if (PLACEHOLDERS[saved.placeholder]) state.placeholder = saved.placeholder;
+    if (VIEWPORTS[saved.viewport]) state.viewport = saved.viewport;
+    if (typeof saved.score === "number" && saved.score >= 0 && saved.score <= 5) state.score = saved.score;
+  } catch (e) { /* fresh start */ }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private mode */ }
+  }
+
+  /* ---------- icons: Lucide with inline fallback ----------
+     lucide.createIcons() replaces <i data-lucide> with <svg>, so it must be
+     re-run after anything that could (re)introduce <i> placeholders. Our
+     toggles are class/hidden-based (no innerHTML re-renders), so repeat
+     calls are belt-and-braces — and harmless, createIcons is idempotent.
+     If the CDN is unreachable, window.lucide is undefined and we swap in
+     the round-1 inline SVGs ourselves. */
+  var INLINE = {
+    "search": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>',
+    "menu": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+    "x": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>',
+    "chevron-right": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
+  };
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+      return;
+    }
+    document.querySelectorAll("i[data-lucide]").forEach(function (el) {
+      var name = el.getAttribute("data-lucide");
+      if (!INLINE[name]) return;
+      var tpl = document.createElement("template");
+      tpl.innerHTML = INLINE[name];
+      var svg = tpl.content.firstElementChild;
+      if (el.className) svg.setAttribute("class", el.className);
+      el.replaceWith(svg);
+    });
+  }
+
+  /* ---------- elements ---------- */
+  var frame = document.getElementById("frame");
+  var stub = document.getElementById("stub");
+  var stubInput = stub.querySelector(".stub__input");
+  var stageMeta = document.getElementById("stageMeta");
+  var scoreDots = Array.prototype.slice.call(document.querySelectorAll("#scoreDots button"));
+  var scoreReadout = document.getElementById("scoreReadout");
+  var trigger = document.getElementById("trayTrigger");
+  var triggerLabel = document.getElementById("triggerLabel");
+  var drawer = document.getElementById("drawer");
+  var drawerInput = document.getElementById("drawerSearch");
+
+  /* ---------- overlays ---------- */
+  function closeOverlays() {
+    drawer.classList.remove("is-open");
+    stub.hidden = true;
+  }
+  function openStub() {
+    closeOverlays();
+    stub.hidden = false;
+    stubInput.value = "";
+    stubInput.focus();
+  }
+  function openDrawer() {
+    stub.hidden = true;
+    drawer.classList.add("is-open");
+    refreshIcons();
+    if (state.viewport === "mobile") {
+      // Andrew's note: the drawer opens WITH search focused at mobile.
+      // Tablet keeps the tray trigger, so the drawer doesn't steal focus there.
+      window.setTimeout(function () { drawerInput.focus(); }, 40);
+    }
+  }
+
+  /* ---------- render ---------- */
+  function renderScore() {
+    scoreDots.forEach(function (dot, i) { dot.classList.toggle("is-on", i < state.score); });
+    scoreReadout.textContent = state.score ? state.score + "/5" : "—";
+  }
+
+  function pressGroup(attr, value) {
+    document.querySelectorAll("[" + attr + "]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute(attr) === value));
+    });
+  }
+
+  function apply() {
+    frame.className = "frame vp-" + state.viewport +
+      (state.viewport !== "desktop" ? " vp-compact" : "") +
+      " den-" + state.density;
+
+    var text = PLACEHOLDERS[state.placeholder];
+    triggerLabel.textContent = text;
+    trigger.setAttribute("aria-label", text);
+    drawerInput.setAttribute("placeholder", text);
+
+    pressGroup("data-set-density", state.density);
+    pressGroup("data-set-placeholder", state.placeholder);
+    pressGroup("data-set-viewport", state.viewport);
+
+    stageMeta.textContent = META[state.viewport];
+    renderScore();
+    refreshIcons();
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest(
+      "[data-set-density],[data-set-placeholder],[data-set-viewport],[data-score],[data-open-drawer],[data-open-search],[data-close]"
+    );
+    if (!t) return;
+
+    if (t.dataset.setDensity) {
+      state.density = t.dataset.setDensity;
+      save(); apply(); // overlays stay put — density never touches the drawer
+    } else if (t.dataset.setPlaceholder) {
+      state.placeholder = t.dataset.setPlaceholder;
+      save(); apply();
+    } else if (t.dataset.setViewport) {
+      state.viewport = t.dataset.setViewport;
+      closeOverlays();
+      save(); apply();
+    } else if (t.dataset.score) {
+      var v = parseInt(t.dataset.score, 10);
+      state.score = (state.score === v) ? 0 : v;
+      save(); renderScore();
+    } else if (t.hasAttribute("data-open-drawer")) {
+      openDrawer();
+    } else if (t.hasAttribute("data-open-search")) {
+      openStub();
+    } else if (t.hasAttribute("data-close")) {
+      if (t.closest(".drawer")) drawer.classList.remove("is-open");
+      if (t.closest(".stub")) stub.hidden = true;
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeOverlays(); return; }
+    if (e.key === "/" && !e.target.closest("input,textarea")) {
+      e.preventDefault();
+      openStub();
+    }
+  });
+
+  /* ---------- logo fallback (specimen works offline) ---------- */
+  var FALLBACK = "data:image/svg+xml;utf8," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 144">' +
+    '<path d="M60 4 112 24v50c0 36-26 54-52 64C34 128 8 110 8 74V24Z" fill="#e7c22c" stroke="#946014" stroke-width="5"/>' +
+    '<path d="M60 16 102 32v42c0 29-21 44-42 52-21-8-42-23-42-52V32Z" fill="none" stroke="#946014" stroke-width="2"/>' +
+    '<text x="60" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="bold" fill="#231f20">HALL OF</text>' +
+    '<text x="60" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="bold" fill="#231f20">FAME</text>' +
+    "</svg>"
+  );
+  document.querySelectorAll("img.uh-logo").forEach(function (img) {
+    img.addEventListener("error", function () { img.src = FALLBACK; }, { once: true });
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

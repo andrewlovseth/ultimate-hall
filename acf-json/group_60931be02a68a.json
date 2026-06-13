@@ -65,6 +65,32 @@
                     "parent_repeater": "field_60931c75d8f9a"
                 },
                 {
+                    "key": "field_684b1e7a2f9c3",
+                    "label": "Menu",
+                    "name": "menu",
+                    "aria-label": "",
+                    "type": "radio",
+                    "instructions": "Primary renders in the brand bar; Secondary renders in the utility tray. Ignored when Button is on.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "primary": "Primary",
+                        "secondary": "Secondary"
+                    },
+                    "default_value": "primary",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "save_other_choice": 0,
+                    "layout": "horizontal",
+                    "parent_repeater": "field_60931c75d8f9a"
+                },
+                {
                     "key": "field_6651286e68715",
                     "label": "Button",
                     "name": "button",
@@ -107,5 +133,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1716594807
+    "modified": 1781284933
 }

@@ -1,7 +1,125 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 
+/*
+    Header chrome — two tiers (locked in specimens/header-nav-refine.html):
+
+    1. .header-tray  — sticky utility strip: secondary links / omnibox
+       trigger / Donate. Lives OUTSIDE .site-header in the markup because
+       position: sticky is constrained to its parent's box — inside the
+       ~110px header it would stop sticking almost immediately.
+    2. .site-header  — the brand bar (hanging crest + primary nav). Scrolls
+       away with the page; only the tray follows the visitor.
+
+    z-index map:
+      .site-header  10    brand bar + nav drawer (drawer z lives inside this
+                          stacking context, so the drawer slides UNDER the
+                          tray on tablet — intentional, the tray is
+                          persistent chrome)
+      .header-tray  1100  sticky strip; also the stacking context the omni
+                          palette (z 1200, rendered inside the tray by the
+                          search partial) is promoted through — 1100 beats
+                          everything else on the page, so the palette still
+                          overlays all.
+*/
+
+.header-tray {
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    background: linear-gradient(rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.34)), $slate;
+
+    @include tablet-small {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    a {
+        color: $white;
+    }
+}
+
+// Standard WP admin bar offsets (46px below 783px, 32px at 783px+)
+body.admin-bar .header-tray {
+    top: 46px;
+
+    @media screen and (min-width: 783px) {
+        top: 32px;
+    }
+}
+
+.header-tray__row {
+    // Mobile (< tablet-small): the tray renders nothing visually — each cell
+    // hides and the padding collapses to zero height. The row itself (and
+    // .header-tray__search) must never be display: none, because the search
+    // partial also renders the fixed-position palette (.omni) inside it.
+    display: grid;
+    align-items: center;
+
+    @include tablet-small {
+        grid-template-columns: minmax(0, 460px) 1fr;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    @include desktop-small {
+        grid-template-columns: 1fr minmax(280px, 440px) 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.header-tray__links {
+    display: none;
+
+    @include desktop-small {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+    }
+
+    a {
+        color: $gray-200;
+        font-family: $work-sans;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+
+        &:hover {
+            color: $gold-300;
+        }
+    }
+}
+
+.header-tray__search {
+    min-width: 0;
+
+    // Mobile: hide only the trigger, never this wrapper — the palette
+    // (.omni) is rendered here too and must stay displayable. The trigger
+    // button is the search partial's root element (no wrapper div).
+    > .omni-trigger {
+        display: none;
+
+        @include tablet-small {
+            display: flex;
+        }
+    }
+}
+
+.header-tray__actions {
+    display: none;
+
+    @include tablet-small {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+}
+
 .site-header {
+    // position: relative anchors the hanging crest (.logo a, top: -1.5rem)
+    // to the brand bar now that the tray sits above it — without this the
+    // crest would resolve against the page top and poke through the tray.
+    position: relative;
     padding: 2rem 0;
     background: $slate;
     color: $white;
@@ -17,14 +135,16 @@
         color: $white;
     }
 
-    // Logo (inlined from _logo.scss)
+    // Logo — the hanging crest signature: absolutely positioned against the
+    // brand bar so it overlaps down into the hero. left stays auto, which
+    // keeps the link at its static (grid cell) horizontal position.
     .logo {
+        grid-row: 1;
         max-width: 128px;
         grid-column: 2 / span 2;
 
         @include tablet-small {
             grid-column: 2 / span 3;
-
         }
 
         @include desktop-medium {
@@ -42,8 +162,12 @@
         }
     }
 
-    // Hamburger menu (inlined from _hamburger.scss)
+    // Hamburger — pinned to the last two content columns, row 1
     .hamburger {
+        grid-row: 1;
+        grid-column: -4 / -2;
+        align-self: center;
+
         @include desktop-small {
             display: none;
         }

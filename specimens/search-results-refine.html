@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search Results — Round 2: Type &amp; Icons · Ultimate Hall of Fame</title>
+
+<!-- ======================================================================
+     Ultimate Hall of Fame — Search Results Page: Round 2 Refinement
+     ----------------------------------------------------------------------
+     Layout is LOCKED to round-1 Option B "Sidebar filters" (persistent
+     left rail with type filters + counts + grayed future-facets sketch,
+     results column right, serif "Search results for ..." headline).
+
+     Round 2 explores what sits ON TOP of that layout:
+       · 4 type treatments  (sans / serif-names / serif-frame / editorial)
+       · 3 Lucide icon sets (literal / athletic / archival)
+     = 12 combinations x 2 query scenarios x 2 viewports.
+
+     Same treatment keys/names/fonts as the omnibox refinement specimen so
+     one voice can be picked for the whole search feature.
+
+     Real production content inlined (16 members, 10 teams, 6 classes,
+     8 news posts, 3 events). All counts derived at render time.
+
+     Persistence: localStorage key "uh-results-refine"
+                  { type, icons, scenario, viewport, scores:{sans..editorial} }
+     ====================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js" integrity="sha384-hK2uiaqTSh/v1VqRxmuMQL4xmt5n0DdyBCOItx2fAs7Wv+WC8Tu0yDW1j12JooyM" crossorigin="anonymous"></script>
+
+<style>
+/* ========================================================================
+   1. Tokens & base
+   ===================================================================== */
+:root {
+  --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+  --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+  --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+  --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+  --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+  --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+  --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+  --color-blue:#3e80ad;
+  --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+  --shadow-frame:0 18px 48px rgba(35,31,32,0.14), 0 2px 8px rgba(35,31,32,0.08);
+}
+
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body {
+  margin:0;
+  font-family:var(--font-sans);
+  font-size:16px;
+  line-height:1.5;
+  color:var(--color-slate);
+  background:var(--color-gray-100);
+}
+button { font:inherit; cursor:pointer; }
+img { display:block; max-width:100%; }
+mark { background:var(--color-gold-200); color:inherit; border-radius:2px; padding:0 1px; }
+svg { display:inline-block; vertical-align:middle; }
+
+@keyframes rise {
+  from { opacity:0; transform:translateY(7px); }
+  to   { opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+
+/* ========================================================================
+   2. Control bar (sticky, frosted)
+   ===================================================================== */
+.bar {
+  position:sticky; top:0; z-index:50;
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0.875rem 2rem;
+  padding:0.875rem 1.5rem;
+  background:rgba(255,255,255,0.84);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--color-gray-200);
+}
+.bar__brand { display:flex; align-items:center; gap:0.75rem; }
+.bar__medal {
+  width:2.375rem; height:2.375rem; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:var(--color-gold-100); color:var(--color-gold-700);
+}
+.bar__medal svg { width:1.25rem; height:1.25rem; }
+.bar__brand h1 { margin:0; font-size:1.0625rem; font-weight:600; line-height:1.2; }
+.bar__brand p { margin:2px 0 0; font-size:0.875rem; color:var(--color-gray-600); line-height:1.2; }
+.bar__groups {
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0.625rem 1.375rem;
+  margin-left:auto;
+}
+.ctl { display:flex; align-items:center; gap:0.5rem; }
+.ctl__label { font-size:0.875rem; font-weight:500; color:var(--color-gray-600); }
+
+.seg {
+  display:flex; gap:2px; padding:3px;
+  background:var(--color-white);
+  border:1px solid var(--color-gray-200);
+  border-radius:999px;
+}
+.seg__btn {
+  display:inline-flex; align-items:center; gap:0.375rem;
+  padding:0.3125rem 0.75rem;
+  border:0; border-radius:999px;
+  background:transparent; color:var(--color-gray-700);
+  font-size:0.875rem; font-weight:500; white-space:nowrap;
+  transition:background 120ms ease, color 120ms ease;
+}
+.seg__btn:hover { background:var(--color-gray-100); }
+.seg__btn.is-active { background:var(--color-slate); color:var(--color-white); }
+.seg__btn svg { width:1rem; height:1rem; }
+.seg__score {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:1.25rem; height:1.25rem; padding:0 0.25rem;
+  border-radius:999px;
+  background:var(--color-gold-400); color:var(--color-slate);
+  font-size:0.875rem; font-weight:600; line-height:1;
+}
+
+.dots { display:flex; gap:0.375rem; }
+.dot {
+  width:1.625rem; height:1.625rem;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--color-gray-300); border-radius:50%;
+  background:var(--color-white); color:var(--color-gray-500);
+  font-size:0.875rem; line-height:1; padding:0;
+  transition:background 120ms ease, border-color 120ms ease;
+}
+.dot:hover { border-color:var(--color-gold-400); background:var(--color-gold-50); }
+.dot.is-on {
+  background:var(--color-gold-400); border-color:var(--color-gold-600);
+  color:var(--color-slate); font-weight:600;
+}
+
+.bar__notice {
+  display:none;
+  flex-basis:100%;
+  margin:0; padding:0.375rem 0.75rem;
+  border:1px solid var(--color-gold-300); border-radius:8px;
+  background:var(--color-gold-50);
+  font-size:0.875rem; color:var(--color-gold-950);
+}
+.bar__notice.is-visible { display:block; }
+
+/* ========================================================================
+   3. Preview canvas, viewport frame, site-header stub
+   ===================================================================== */
+.canvas { padding:2rem 1.5rem 0.5rem; overflow-x:auto; }
+.frame {
+  margin:0 auto;
+  background:var(--color-white);
+  border-radius:14px;
+  box-shadow:var(--shadow-frame);
+  overflow:hidden;
+}
+.frame.vp-desktop { width:1280px; }
+.frame.vp-mobile  { width:390px; border-radius:26px; }
+
+.stub {
+  display:flex; align-items:center; gap:1.5rem;
+  height:64px; padding:0 2rem;
+  background:var(--color-slate);
+}
+.stub__logo img { height:38px; width:auto; }
+.stub__nav { display:flex; gap:1.75rem; margin-left:auto; }
+.stub__nav span { color:rgba(255,255,255,0.85); font-size:0.9375rem; font-weight:500; }
+.stub__tools { display:flex; align-items:center; gap:0.875rem; }
+.stub__search {
+  width:2.25rem; height:2.25rem;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.22);
+  color:rgba(255,255,255,0.85);
+}
+.stub__search svg { width:1rem; height:1rem; }
+.stub__burger { display:none; color:var(--color-white); }
+.stub__burger svg { width:1.375rem; height:1.375rem; }
+
+.vp-mobile .stub { height:56px; padding:0 1.125rem; gap:1rem; }
+.vp-mobile .stub__logo img { height:32px; }
+.vp-mobile .stub__nav { display:none; }
+.vp-mobile .stub__tools { margin-left:auto; }
+.vp-mobile .stub__burger { display:flex; }
+
+/* ========================================================================
+   4. Page primitives (Option B layout, locked from round 1)
+   ===================================================================== */
+.page { padding:1.25rem 3rem 5rem; animation:rise 280ms ease both; }
+.vp-mobile .page { padding:0.75rem 1.25rem 3.5rem; }
+
+.container-b { max-width:72rem; margin-inline:auto; }
+
+.phead { padding:1.75rem 0 0.25rem; }
+.phead__title {
+  margin:0;
+  font-family:var(--font-display); font-weight:400;
+  font-size:2.625rem; line-height:1.15;
+  color:var(--color-slate);
+}
+.phead__title em { font-style:italic; }
+.phead__sub { margin:0.5rem 0 0; font-size:1.0625rem; color:var(--color-gray-600); }
+.vp-mobile .phead__title { font-size:1.875rem; }
+
+.rform { margin:1.375rem 0 0; }
+.rform__wrap { position:relative; }
+.rform__icon {
+  position:absolute; left:1rem; top:50%; transform:translateY(-50%);
+  display:flex; color:var(--color-gray-400); pointer-events:none;
+}
+.rform__icon svg { width:1.25rem; height:1.25rem; }
+.rform__input {
+  width:100%;
+  padding:0.875rem 1.25rem 0.875rem 2.875rem;
+  font-family:var(--font-sans); font-size:1.25rem;
+  color:var(--color-slate);
+  background:var(--color-white);
+  border:1px solid var(--color-gray-300); border-radius:8px;
+  outline:none; appearance:none;
+}
+.rform__input:focus { border-color:var(--color-gold-400); box-shadow:0 0 0 3px var(--color-gold-100); }
+.rform__input::placeholder { color:var(--color-gray-400); }
+
+.chips { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; }
+.chip {
+  display:inline-flex; align-items:center; gap:0.3125rem;
+  padding:0.25rem 0.625rem;
+  border:1px solid var(--color-gray-200); border-radius:999px;
+  background:var(--color-white); color:var(--color-gray-700);
+  font-size:0.8125rem; font-weight:500;
+  transition:background 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+.chip:hover { background:var(--color-gold-50); border-color:var(--color-gold-300); }
+.chip.is-active { background:var(--color-gold-400); border-color:var(--color-gold-600); color:var(--color-slate); }
+.chip.is-disabled { opacity:0.45; cursor:default; pointer-events:none; }
+.chip__count { font-size:0.875rem; font-weight:400; opacity:0.7; }
+
+.groups { display:flex; flex-direction:column; gap:2rem; margin-top:2rem; }
+.ghead {
+  display:flex; align-items:center; gap:0.625rem;
+  margin-bottom:0.5rem; padding-bottom:0.75rem;
+  border-bottom:1px solid var(--color-gray-200);
+}
+.ghead__icon { display:flex; flex:none; color:var(--color-gold-600); }
+.ghead__icon svg { width:1.25rem; height:1.25rem; }
+.ghead h2 { margin:0; font-family:var(--font-sans); font-size:1.25rem; font-weight:600; color:var(--color-slate); }
+.gcount { font-size:0.875rem; color:var(--color-gray-500); }
+
+.rrow {
+  display:flex; align-items:center; gap:0.875rem;
+  padding:0.5rem 0.75rem; border-radius:8px;
+  color:var(--color-slate); text-decoration:none;
+}
+.rrow:hover { background:var(--color-gold-50); }
+.rrow__body { display:flex; flex-direction:column; flex:1; min-width:0; }
+.rrow__title { font-size:1rem; font-weight:500; color:var(--color-slate); }
+.rrow__sub { margin-top:2px; font-size:0.75rem; color:var(--color-gray-600); }
+
+.more {
+  display:inline-flex; align-items:center; gap:0.375rem;
+  margin-top:0.75rem; padding:0.25rem 0.75rem;
+  border:0; background:none;
+  color:var(--color-gold-700);
+  font-size:0.9375rem; font-weight:600;
+}
+.more:hover { text-decoration:underline; }
+.more svg { width:1rem; height:1rem; }
+
+.rempty { margin:3rem 0 0; text-align:center; font-size:1.125rem; line-height:1.5; color:var(--color-gray-600); }
+
+/* 40px circular member headshots + icon lead tiles for everything else */
+.avatar {
+  position:relative; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; overflow:hidden;
+  background:var(--color-gray-200);
+}
+.avatar__init { font-size:0.875rem; font-weight:600; color:var(--color-gray-600); }
+.avatar img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.avatar--row { width:2.5rem; height:2.5rem; }
+.lead {
+  width:2.5rem; height:2.5rem; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px;
+  background:var(--color-gold-100); color:var(--color-gold-700);
+}
+.lead svg { width:1.125rem; height:1.125rem; }
+
+/* ------------------------------------------------------------------------
+   Sidebar rail (Option B) — active state is a background tint, never a
+   colored left border.
+   --------------------------------------------------------------------- */
+.b-layout { display:grid; grid-template-columns:15rem minmax(0,1fr); gap:3rem; margin-top:1.75rem; }
+.b-rail__title { margin:0 0 0.75rem; font-size:1rem; font-weight:600; color:var(--color-slate); }
+.rail-list { display:flex; flex-direction:column; gap:2px; }
+.rail-item {
+  display:flex; align-items:center; justify-content:space-between; gap:0.75rem;
+  width:100%; padding:0.375rem 0.75rem;
+  border:0; border-radius:8px;
+  background:none; color:var(--color-gray-700);
+  font-size:0.875rem; font-weight:500; text-align:left;
+  transition:background 100ms ease;
+}
+.rail-item:hover { background:var(--color-gold-50); }
+.rail-item.is-active { background:var(--color-gold-100); color:var(--color-slate); font-weight:600; }
+.rail-item.is-disabled { opacity:0.45; cursor:default; pointer-events:none; }
+.rail-item__label { display:flex; align-items:center; gap:0.5625rem; min-width:0; }
+.rail-item__icon { display:flex; flex:none; color:var(--color-gray-500); }
+.rail-item__icon svg { width:1.0625rem; height:1.0625rem; }
+.rail-item.is-active .rail-item__icon { color:var(--color-gold-700); }
+.rail-count { font-size:0.875rem; font-weight:400; color:var(--color-gray-500); }
+.rail-item.is-active .rail-count { color:var(--color-gold-700); font-weight:500; }
+
+.rail-facets {
+  margin-top:2rem; padding-top:1.5rem;
+  border-top:1px solid var(--color-gray-200);
+  opacity:0.6; pointer-events:none;
+}
+.rail-facets__note { margin:0 0 1rem; font-size:0.875rem; font-style:italic; color:var(--color-gray-500); }
+.facet { margin-bottom:1.5rem; }
+.facet h3 { margin:0 0 0.375rem; font-size:1rem; font-weight:600; color:var(--color-gray-700); }
+.facet-row { display:flex; align-items:center; gap:0.5rem; padding:0.1875rem 0; font-size:0.875rem; color:var(--color-gray-600); }
+.facet-box { width:1rem; height:1rem; flex:none; border:1.5px dashed var(--color-gray-300); border-radius:4px; }
+
+.b-results .rform { margin-top:0; }
+.b-results .groups { margin-top:2rem; }
+.b-chips { display:none; }
+
+.vp-mobile .b-layout { display:block; margin-top:1rem; }
+.vp-mobile .b-rail { display:none; }
+.vp-mobile .b-results .rform { margin-top:1.375rem; }
+.vp-mobile .b-chips { display:flex; }
+
+/* ========================================================================
+   5. TYPE TREATMENTS — classes applied to .page
+   The Goudy page headline (.phead__title) is site convention and stays
+   serif in ALL treatments. Goudy is 400-only: emphasis through size,
+   never fake-bold.
+   ===================================================================== */
+
+/* --- serif-names + editorial: result titles in Goudy ------------------
+   1.0625rem per Andrew's density pass (one notch above the omnibox's 1rem
+   to hold up at page scale) */
+.t-serif-names .rrow__title,
+.t-editorial .rrow__title {
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.0625rem;
+  line-height:1.3;
+}
+/* <mark> must not clip Goudy's descenders — slight vertical padding */
+.t-serif-names .rrow__title mark,
+.t-editorial .rrow__title mark {
+  padding:2px 2px 3px;
+  border-radius:3px;
+  -webkit-box-decoration-break:clone;
+  box-decoration-break:clone;
+}
+
+/* --- serif-frame + editorial: group headers + rail heading in Goudy ---- */
+.t-serif-frame .ghead h2,
+.t-editorial .ghead h2 {
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.625rem;
+}
+.t-serif-frame .b-rail__title,
+.t-editorial .b-rail__title {
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.1875rem;
+}
+
+/* --- editorial only: italic Goudy accents for counts + facet note ------ */
+.t-editorial .phead__sub {
+  font-family:var(--font-display); font-style:italic;
+  font-size:1.1875rem;
+}
+.t-editorial .gcount {
+  font-family:var(--font-display); font-style:italic;
+  font-size:1.0625rem;
+}
+.t-editorial .rail-facets__note {
+  font-family:var(--font-display);
+  font-size:0.9375rem;
+}
+
+/* ========================================================================
+   6. ICON SETS — stroke weight per set (CSS overrides the SVG attribute)
+   ===================================================================== */
+.i-literal svg, .i-athletic svg { stroke-width:2; }
+.i-archival svg { stroke-width:1.5; }   /* finer, engraved feel */
+
+/* ========================================================================
+   7. Notes panel & footer
+   ===================================================================== */
+.notes { max-width:64rem; margin:1.75rem auto 0; padding:0 1.5rem; }
+.notes-card {
+  background:var(--color-white);
+  border:1px solid var(--color-gray-200); border-radius:12px;
+  padding:1.75rem 2rem;
+}
+.notes-card h2 { margin:0; font-size:1.125rem; font-weight:600; color:var(--color-slate); }
+.notes-card .pitch {
+  margin:0.375rem 0 1.25rem;
+  font-family:var(--font-display); font-style:italic;
+  font-size:1.1875rem; line-height:1.4;
+  color:var(--color-gray-700);
+}
+.notes-dl { display:grid; grid-template-columns:minmax(8rem, 10rem) 1fr; gap:0.625rem 1.5rem; margin:0; }
+.notes-dl dt { font-size:1rem; font-weight:600; color:var(--color-slate); }
+.notes-dl dd { margin:0; font-size:1rem; line-height:1.55; color:var(--color-gray-700); }
+
+.foot {
+  max-width:64rem; margin:1rem auto 0;
+  padding:0 1.5rem 3rem;
+  font-size:0.875rem; color:var(--color-gray-500);
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     Control bar
+     ====================================================================== -->
+<header class="bar">
+  <div class="bar__brand">
+    <span class="bar__medal" id="bar-medal" aria-hidden="true"></span>
+    <div>
+      <h1>Search Results — Round 2: Type &amp; Icons</h1>
+      <p>Ultimate Hall of Fame &middot; Layout locked: Option B sidebar &middot; 4 type &times; 3 icon sets</p>
+    </div>
+  </div>
+  <div class="bar__groups">
+    <div class="ctl"><span class="ctl__label">Type</span><div class="seg" id="type-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Icons</span><div class="seg" id="icon-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Scenario</span><div class="seg" id="scen-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Viewport</span><div class="seg" id="vp-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Score</span><div class="dots" id="score-dots"></div></div>
+  </div>
+  <p class="bar__notice" id="lucide-notice">
+    Lucide CDN unavailable — showing fallback inline icons. The three icon sets
+    will look approximate; reload with a network connection to compare them properly.
+  </p>
+</header>
+
+<!-- ======================================================================
+     Preview area
+     ====================================================================== -->
+<div class="canvas">
+  <div class="frame vp-desktop" id="frame">
+    <div id="page-root"></div>
+  </div>
+</div>
+
+<!-- ======================================================================
+     Notes for the active combination
+     ====================================================================== -->
+<div class="notes" id="notes-root"></div>
+
+<p class="foot">
+  Round-2 specimen — no production code touched. Layout is locked to round-1
+  Option B (sidebar filters). Content is live production data:
+  16 members &middot; 10 teams &middot; 6 classes &middot; 8 news posts &middot; 3 events.
+  Counts in the rail, chips, and group headers are derived from the filtered data
+  at render time. The search input inside the preview is live — type to re-query.
+  Score each Type treatment 1–5; choices persist in this browser.
+</p>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     1. Data — real production content (carried over from round 1)
+     =================================================================== */
+  var DATA = {
+    members: [
+      { name: 'Alex "Dutchy" Ghesquiere', photo: 'https://ultimatehall.org/wp-content/uploads/2025/12/0D213FDB-D603-40A5-AEE2-1BEB251EB72C-400x400.jpeg', type: 'Contributor', year: '2025', division: '' },
+      { name: 'Alex Nord', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg', type: 'Player', year: '2022', division: 'Open Division' },
+      { name: 'Alex Snyder', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Alicia White', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Allan "Al Bob" Nichols', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AllanNichols_HallofFame2018.jpg', type: 'Player', year: '2018', division: 'Open Division' },
+      { name: 'Allison Boyd', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AllisonBoydHeadshot.jpg', type: 'Player', year: '2019', division: "Women's Division" },
+      { name: 'Alyson Walker', photo: 'https://ultimatehall.org/wp-content/uploads/2023/08/4333E12D-FF04-4DC7-8CCF-68C60A88ECC0_4_5005_c.jpeg', type: 'Player', year: '2023', division: "Women's Division" },
+      { name: 'Amy Wilbur', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AmyWilbur_headshot.png', type: 'Player', year: '2016', division: "Women's Division" },
+      { name: 'Andrew Lugsdin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AndrewLugsdin_headshot.png', type: 'Player', year: '2016', division: 'Open Division' },
+      { name: 'Andy Borinstein', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AndyBorinstein_1-299x400.jpeg', type: 'Contributor', year: '2009', division: '' },
+      { name: 'Andy Crews', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Andy-Crews-HoF-headshot-400x400.jpg', type: 'Player', year: '2020', division: 'Open Division' },
+      { name: 'Angela Lin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Angela-Lin-HoF_headshot2-400x400.jpg', type: 'Player', year: '2018', division: "Women's Division" },
+      { name: 'Anja Haman', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/D04C364E-9C63-42ED-ACFA-FD70D8C8EE86_1_105_c-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Ann (Cohan) Orders', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AnnOrders_1-400x400.jpeg', type: 'Player', year: '2006', division: "Women's Division" },
+      { name: 'Anna Nazarov', photo: 'https://ultimatehall.org/wp-content/uploads/2024/11/A8F65C7F-BAF1-45DC-A77D-AF117B70653F-400x400.jpeg', type: 'Player', year: '2024', division: "Women's Division" },
+      { name: 'Augie Kreivenas', photo: 'https://ultimatehall.org/wp-content/uploads/2021/11/Augie-323x400.jpeg', type: 'Player', year: '2021', division: 'Open Division' }
+    ],
+    teams: [
+      { name: '10th St. Dealers', city: 'Burlington, VT', division: 'College Men' },
+      { name: '1994 Team USA Juniors', city: 'Colchester, U.K.', division: 'Youth Men' },
+      { name: '2000 Team USA U20 Girls', city: '', division: '' },
+      { name: '2000 Team USA U20 Open', city: '', division: 'Youth Men' },
+      { name: '2001 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+      { name: '2004 U.S. National Team', city: 'Turku, Finland', division: 'Club Women' },
+      { name: '2005 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+      { name: '2008 U. S. National Team', city: 'Vancouver, BC Canada', division: 'Club Women' },
+      { name: '2009 U.S. World Games Team', city: '', division: 'Club Mixed' },
+      { name: '2011 Team USA Beach Mixed', city: '', division: '' }
+    ],
+    classes: [
+      { year: '2025', count: 11 },
+      { year: '2024', count: 25 },
+      { year: '2023', count: 13 },
+      { year: '2022', count: 16 },
+      { year: '2021', count: 9 },
+      { year: '2020', count: 7 }
+    ],
+    news: [
+      { title: 'Twelve Members Welcomed into the Ultimate Hall of Fame Class of 2025', date: 'November 23, 2025' },
+      { title: 'Ultimate Hall of Fame Class of 2025: Call to the Community', date: 'September 30, 2025' },
+      { title: 'Ultimate Hall of Fame Class of 2025 Finalists', date: 'August 8, 2025' },
+      { title: '2025 Hall of Fame Selection Begins', date: 'April 30, 2025' },
+      { title: 'Twenty five Members Welcomed into the Ultimate Hall of Fame Class of 2024', date: 'November 21, 2024' },
+      { title: 'Ultimate Hall of Fame Class of 2024: Call to the Community', date: 'October 3, 2024' },
+      { title: 'Ultimate Hall of Fame Class of 2024 Finalists', date: 'August 13, 2024' },
+      { title: '2024 Hall of Fame Selection Begins', date: 'April 26, 2024' }
+    ],
+    events: [
+      { title: '2023 Induction Ceremony' },
+      { title: '2018 Induction Ceremony' },
+      { title: '2013 Induction Ceremony' }
+    ]
+  };
+
+  var GROUPS = [
+    ['members', 'Members'],
+    ['teams', 'Teams'],
+    ['classes', 'Classes'],
+    ['pages', 'Pages']
+  ];
+
+  var SCENARIOS = {
+    al: { q: 'al', label: '“al” · name' },
+    y2024: { q: '2024', label: '“2024” · year' }
+  };
+
+  /* Normalized search pools. Members match on name + sub (sub carries
+     "Class of YYYY", so year queries find inductees by class). */
+  var POOLS = (function () {
+    var members = DATA.members.map(function (m) {
+      return {
+        group: 'members', title: m.name, photo: m.photo,
+        sub: [m.type, m.division, 'Class of ' + m.year].filter(Boolean).join(' · ')
+      };
+    });
+    var teams = DATA.teams.map(function (t) {
+      return { group: 'teams', title: t.name, sub: [t.city, t.division].filter(Boolean).join(' · ') };
+    });
+    var classes = DATA.classes.map(function (c) {
+      return { group: 'classes', title: 'Class of ' + c.year, sub: c.count + ' inductees' };
+    });
+    var pages = DATA.news.map(function (n) {
+      return { group: 'pages', title: n.title, sub: 'News · ' + n.date, kind: 'News' };
+    }).concat(DATA.events.map(function (e) {
+      return { group: 'pages', title: e.title, sub: 'Event', kind: 'Event' };
+    }));
+    return { members: members, teams: teams, classes: classes, pages: pages };
+  })();
+
+  /* ======================================================================
+     2. Type treatments & icon sets (SHARED SPEC with the omnibox specimen)
+     =================================================================== */
+  var TYPES = {
+    'sans': {
+      short: 'Sans', name: 'All sans (current)',
+      pitch: 'The control: Work Sans everywhere, Goudy only in the page headline.',
+      desc: 'Ship-parity baseline. Every row, header, and rail label is Work Sans; the serif "Search results for…" headline is the lone display moment (site convention, kept in all four treatments).',
+      watch: 'Nothing new — this is the bar the serif treatments have to clear. If neither beats it on both character and scan-speed, ship this.'
+    },
+    'serif-names': {
+      short: 'Serif names', name: 'Serif names',
+      pitch: 'The inductees get the serif — every name reads like a plaque.',
+      desc: 'Result titles (member, team, class, and page titles) in Sorts Mill Goudy at 1.25rem. Goudy is 400-weight only, so emphasis comes from size, never fake-bold. Subs, rail, and chips stay Work Sans.',
+      watch: 'Long names wrapping at mobile width, and the gold <mark> sitting on Goudy descenders (it has extra vertical padding here — check it clears g/y/q in names like Ghesquiere and Boyd).'
+    },
+    'serif-frame': {
+      short: 'Serif frame', name: 'Serif frame',
+      pitch: 'The furniture gets the serif; the content stays utilitarian.',
+      desc: 'Group headers (Members / Teams / Classes / Pages) and the rail’s "Filter results" heading in Goudy at 400; row titles stay Work Sans 500. Editorial structure around fast-scanning sans rows.',
+      watch: 'Whether the change is visible enough to matter — rows are identical to the current build, so the serif has to earn its place from the headers alone.'
+    },
+    'editorial': {
+      short: 'Editorial', name: 'Full editorial',
+      pitch: 'The printed-program voice — Goudy names, Goudy headers, italic counts.',
+      desc: 'Goudy titles AND group headers, plus italic Goudy accents for the result counts ("18 results") and the future-facets sketch heading. Work Sans is held strictly for subs, meta, inputs, and buttons.',
+      watch: 'The most voice and the most risk: italic counts can tip from editorial into decorative, and an all-serif column may scan slower on dense queries like "al".'
+    }
+  };
+  var TYPE_KEYS = ['sans', 'serif-names', 'serif-frame', 'editorial'];
+
+  var ICON_SETS = {
+    literal: {
+      label: 'Literal', strokeNote: 'stroke 2',
+      members: 'user', teams: 'users', classes: 'graduation-cap',
+      pages: 'file-text', news: 'newspaper', events: 'calendar-days',
+      search: 'search',
+      desc: 'Says exactly what each thing is: user / users / graduation-cap / file-text, with news as newspaper and events as calendar-days in the rows. Stroke-width 2.'
+    },
+    athletic: {
+      label: 'Athletic', strokeNote: 'stroke 2',
+      members: 'circle-user', teams: 'shield', classes: 'trophy',
+      pages: 'newspaper', news: 'newspaper', events: 'newspaper',
+      search: 'search',
+      desc: 'Sports-hall vocabulary: circle-user / shield / trophy / newspaper. Reads like a stadium wayfinding system. Stroke-width 2.'
+    },
+    archival: {
+      label: 'Archival', strokeNote: 'stroke 1.5',
+      members: 'user-round', teams: 'flag', classes: 'medal',
+      pages: 'scroll-text', news: 'scroll-text', events: 'scroll-text',
+      search: 'search',
+      desc: 'Commemorative and engraved: user-round / flag / medal / scroll-text at a finer 1.5 stroke. The quietest set — pairs naturally with the serif treatments.'
+    }
+  };
+  var ICON_KEYS = ['literal', 'athletic', 'archival'];
+
+  /* ======================================================================
+     3. Utilities
+     =================================================================== */
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /* Highlight every occurrence of q (case-insensitive) with <mark>. */
+  function hi(text, q) {
+    if (!q) { return esc(text); }
+    var lower = String(text).toLowerCase();
+    var lq = q.toLowerCase();
+    var out = '';
+    var i = 0;
+    for (;;) {
+      var idx = lower.indexOf(lq, i);
+      if (idx === -1) { out += esc(text.slice(i)); break; }
+      out += esc(text.slice(i, idx)) + '<mark>' + esc(text.slice(idx, idx + q.length)) + '</mark>';
+      i = idx + q.length;
+    }
+    return out;
+  }
+
+  function getInitials(name) {
+    var words = String(name).split(/\s+/).map(function (w) {
+      return w.replace(/^[^A-Za-z0-9]+/, '');
+    }).filter(function (w) { return w.length > 0; });
+    if (!words.length) { return '?'; }
+    var first = words[0].charAt(0);
+    var last = words.length > 1 ? words[words.length - 1].charAt(0) : '';
+    return (first + last).toUpperCase();
+  }
+
+  /* Inline SVGs: used for specimen chrome (control bar, header stub,
+     "show all" chevron) and as the graceful fallback when the Lucide CDN
+     is unreachable. */
+  function svgIcon(paths) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
+  }
+  var I = {
+    search: svgIcon('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/>'),
+    user: svgIcon('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+    users: svgIcon('<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+    medal: svgIcon('<path d="M7.2 10 4.5 3h5L12 7l2.5-4h5L16.8 10"/><circle cx="12" cy="15" r="5"/>'),
+    doc: svgIcon('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>'),
+    cal: svgIcon('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>'),
+    chev: svgIcon('<path d="m9 6 6 6-6 6"/>'),
+    desk: svgIcon('<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'),
+    phone: svgIcon('<rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/>'),
+    burger: svgIcon('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    trophy: svgIcon('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5M17 6h3a3 3 0 0 1-3 5"/>')
+  };
+
+  /* Fallback map: every Lucide name used above -> nearest inline SVG. */
+  var FALLBACK = {
+    'search': I.search,
+    'user': I.user, 'circle-user': I.user, 'user-round': I.user,
+    'users': I.users, 'shield': I.users, 'flag': I.users,
+    'graduation-cap': I.medal, 'trophy': I.trophy, 'medal': I.medal,
+    'file-text': I.doc, 'newspaper': I.doc, 'scroll-text': I.doc,
+    'calendar-days': I.cal
+  };
+
+  function hasLucide() {
+    return !!(window.lucide && typeof window.lucide.createIcons === 'function');
+  }
+
+  /* Emit an icon placeholder. With Lucide available it becomes a real
+     <svg> when lucide.createIcons() runs after the render; without it we
+     fall back to the inline set immediately. */
+  function icon(name) {
+    if (hasLucide()) { return '<i data-lucide="' + name + '"></i>'; }
+    return FALLBACK[name] || I.doc;
+  }
+
+  function curSet() { return ICON_SETS[state.icons]; }
+
+  function leadIconName(item) {
+    var set = curSet();
+    if (item.group === 'teams') { return set.teams; }
+    if (item.group === 'classes') { return set.classes; }
+    if (item.group === 'pages') { return item.kind === 'Event' ? set.events : set.news; }
+    return set.members;
+  }
+
+  /* ======================================================================
+     4. Filtering — counts are always derived, never hardcoded
+     =================================================================== */
+  function filterData(q) {
+    var lq = q.trim().toLowerCase();
+    var groups = {};
+    var counts = {};
+    var total = 0;
+    GROUPS.forEach(function (def) {
+      var key = def[0];
+      var items = lq.length >= 2
+        ? POOLS[key].filter(function (it) {
+            return (it.title + ' ' + (it.sub || '')).toLowerCase().indexOf(lq) !== -1;
+          })
+        : [];
+      groups[key] = items;
+      counts[key] = items.length;
+      total += items.length;
+    });
+    return { groups: groups, counts: counts, total: total };
+  }
+
+  /* ======================================================================
+     5. Page fragments (Option B, locked)
+     =================================================================== */
+  function pageHead(q, total) {
+    if (!q) {
+      return '<header class="phead"><h1 class="phead__title">Search</h1></header>';
+    }
+    return '<header class="phead">' +
+      '<h1 class="phead__title">Search results for “<em>' + esc(q) + '</em>”</h1>' +
+      '<p class="phead__sub">' + total + ' ' + (total === 1 ? 'result' : 'results') + '</p>' +
+      '</header>';
+  }
+
+  function formHtml(q) {
+    return '<form class="rform" data-role="form" role="search"><div class="rform__wrap">' +
+      '<span class="rform__icon" aria-hidden="true">' + icon(curSet().search) + '</span>' +
+      '<input type="search" class="rform__input" data-role="q" value="' + esc(q) + '" ' +
+      'placeholder="Search members, teams, classes, pages…" aria-label="Search">' +
+      '</div></form>';
+  }
+
+  function chipsHtml(g, extraClass) {
+    var html = '<nav class="chips' + (extraClass ? ' ' + extraClass : '') + '">';
+    html += chipBtn('all', 'All', g.total);
+    GROUPS.forEach(function (def) {
+      html += chipBtn(def[0], def[1], g.counts[def[0]]);
+    });
+    return html + '</nav>';
+  }
+  function chipBtn(key, label, count) {
+    var active = state.filter === key;
+    var disabled = count === 0 && key !== 'all';
+    return '<button type="button" class="chip' + (active ? ' is-active' : '') + (disabled ? ' is-disabled' : '') + '"' +
+      ' data-filter="' + key + '"' + (disabled ? ' disabled' : '') + '>' +
+      label + ' <span class="chip__count">' + count + '</span></button>';
+  }
+
+  function gheadHtml(key, label, count) {
+    return '<header class="ghead">' +
+      '<span class="ghead__icon" aria-hidden="true">' + icon(curSet()[key]) + '</span>' +
+      '<h2>' + label + '</h2><span class="gcount">' + count + '</span></header>';
+  }
+
+  function avatarHtml(item) {
+    var img = item.photo
+      ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.title) + '" loading="lazy" onerror="this.remove()">'
+      : '';
+    return '<span class="avatar avatar--row">' +
+      '<span class="avatar__init">' + esc(getInitials(item.title)) + '</span>' + img + '</span>';
+  }
+
+  /* Photo-rich everywhere: members lead with a 40px circular headshot,
+     everything else with an icon tile from the active set. */
+  function rowHtml(item, q) {
+    var lead = item.group === 'members'
+      ? avatarHtml(item)
+      : '<span class="lead" aria-hidden="true">' + icon(leadIconName(item)) + '</span>';
+    var sub = item.sub
+      ? '<span class="rrow__sub">' + hi(item.sub, q) + '</span>'
+      : '';
+    return '<a class="rrow" href="#">' + lead +
+      '<span class="rrow__body"><span class="rrow__title">' + hi(item.title, q) + '</span>' + sub + '</span>' +
+      '</a>';
+  }
+
+  /* Grouped section. Caps rows only in the "all" view; the "Show all N x"
+     link mirrors search.php's more-link behavior. */
+  function sectionHtml(key, label, items, q, cap) {
+    if (!items.length) { return ''; }
+    var limit = (state.filter === 'all' && cap) ? cap : items.length;
+    var rows = items.slice(0, limit).map(function (it) { return rowHtml(it, q); }).join('');
+    var more = '';
+    if (items.length > limit) {
+      more = '<button type="button" class="more" data-filter="' + key + '">Show all ' +
+        items.length + ' ' + label.toLowerCase() + ' ' + I.chev + '</button>';
+    }
+    return '<section class="group">' + gheadHtml(key, label, items.length) +
+      '<div class="grows">' + rows + '</div>' + more + '</section>';
+  }
+
+  function railBtn(key, label, count, iconName) {
+    var active = state.filter === key;
+    var disabled = count === 0 && key !== 'all';
+    return '<button type="button" class="rail-item' + (active ? ' is-active' : '') + (disabled ? ' is-disabled' : '') + '"' +
+      ' data-filter="' + key + '"' + (disabled ? ' disabled' : '') + '>' +
+      '<span class="rail-item__label"><span class="rail-item__icon" aria-hidden="true">' + icon(iconName) + '</span>' +
+      '<span>' + label + '</span></span>' +
+      '<span class="rail-count">' + count + '</span></button>';
+  }
+  function facetRow(label) {
+    return '<span class="facet-row"><span class="facet-box"></span>' + esc(label) + '</span>';
+  }
+
+  function visibleGroupDefs() {
+    if (state.filter === 'all') { return GROUPS; }
+    return GROUPS.filter(function (def) { return def[0] === state.filter; });
+  }
+
+  /* "No query yet" / "no matches" states (parity with search.php). */
+  function baseStates(g, q) {
+    if (q.trim().length < 2) {
+      return '<div class="container-b">' + pageHead('', 0) + formHtml(q) +
+        '<p class="rempty">Start typing to search members, teams, classes, and pages.</p></div>';
+    }
+    if (g.total === 0) {
+      return '<div class="container-b">' + pageHead(q, 0) + formHtml(q) +
+        '<p class="rempty">No matches for “' + esc(q) + '”.</p></div>';
+    }
+    return null;
+  }
+
+  /* ======================================================================
+     6. Page renderer — Option B "Sidebar filters" (locked from round 1)
+     =================================================================== */
+  function renderPage(g, q) {
+    var pre = baseStates(g, q);
+    if (pre) { return pre; }
+
+    var set = curSet();
+    var railItems = railBtn('all', 'All', g.total, set.search);
+    GROUPS.forEach(function (def) {
+      railItems += railBtn(def[0], def[1], g.counts[def[0]], set[def[0]]);
+    });
+    var facets =
+      '<div class="rail-facets" aria-hidden="true">' +
+        '<p class="rail-facets__note">Future facets (sketch)</p>' +
+        '<div class="facet"><h3>Division</h3>' +
+          facetRow('Open') + facetRow("Women's") + facetRow('Mixed') +
+        '</div>' +
+        '<div class="facet"><h3>Era</h3>' +
+          facetRow('1980s–90s') + facetRow('2000s') + facetRow('2010s') + facetRow('2020s') +
+        '</div>' +
+      '</div>';
+    var rail = '<aside class="b-rail"><h2 class="b-rail__title">Filter results</h2>' +
+      '<div class="rail-list">' + railItems + '</div>' + facets + '</aside>';
+
+    var sections = visibleGroupDefs().map(function (def) {
+      return sectionHtml(def[0], def[1], g.groups[def[0]], q, 5);
+    }).join('');
+
+    return '<div class="container-b">' + pageHead(q, g.total) +
+      '<div class="b-layout">' + rail +
+      '<main class="b-results">' + formHtml(q) + chipsHtml(g, 'b-chips') +
+      '<div class="groups">' + sections + '</div></main></div></div>';
+  }
+
+  /* ======================================================================
+     7. State, persistence, control bar
+     =================================================================== */
+  var STORE_KEY = 'uh-results-refine';
+  var state = {
+    type: 'serif-names', icons: 'archival',
+    scenario: 'al', viewport: 'desktop',
+    filter: 'all', q: SCENARIOS.al.q,
+    scores: {}
+  };
+
+  (function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      if (saved.type && TYPES[saved.type]) { state.type = saved.type; }
+      if (saved.icons && ICON_SETS[saved.icons]) { state.icons = saved.icons; }
+      if (saved.scenario && SCENARIOS[saved.scenario]) { state.scenario = saved.scenario; }
+      if (saved.viewport === 'mobile' || saved.viewport === 'desktop') { state.viewport = saved.viewport; }
+      if (saved.scores && typeof saved.scores === 'object') { state.scores = saved.scores; }
+      state.q = SCENARIOS[state.scenario].q;
+    } catch (e) { /* private mode etc. — run without persistence */ }
+  })();
+
+  function persist() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        type: state.type, icons: state.icons,
+        scenario: state.scenario, viewport: state.viewport,
+        scores: state.scores
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  var frame = document.getElementById('frame');
+  var pageRoot = document.getElementById('page-root');
+  var notesRoot = document.getElementById('notes-root');
+  var typeSeg = document.getElementById('type-seg');
+  var iconSeg = document.getElementById('icon-seg');
+  var scenSeg = document.getElementById('scen-seg');
+  var vpSeg = document.getElementById('vp-seg');
+  var scoreDots = document.getElementById('score-dots');
+  var lucideNotice = document.getElementById('lucide-notice');
+  document.getElementById('bar-medal').innerHTML = I.trophy;
+
+  function renderControls() {
+    typeSeg.innerHTML = TYPE_KEYS.map(function (k) {
+      var sc = state.scores[k];
+      return '<button type="button" class="seg__btn' + (state.type === k ? ' is-active' : '') + '"' +
+        ' data-type="' + k + '" aria-pressed="' + (state.type === k) + '">' +
+        TYPES[k].short +
+        (sc ? '<span class="seg__score">' + sc + '</span>' : '') + '</button>';
+    }).join('');
+
+    iconSeg.innerHTML = ICON_KEYS.map(function (k) {
+      return '<button type="button" class="seg__btn' + (state.icons === k ? ' is-active' : '') + '"' +
+        ' data-icons="' + k + '" aria-pressed="' + (state.icons === k) + '">' +
+        ICON_SETS[k].label + '</button>';
+    }).join('');
+
+    scenSeg.innerHTML = Object.keys(SCENARIOS).map(function (k) {
+      var active = state.scenario === k;
+      return '<button type="button" class="seg__btn' + (active ? ' is-active' : '') + '"' +
+        ' data-scenario="' + k + '" aria-pressed="' + active + '">' + SCENARIOS[k].label + '</button>';
+    }).join('');
+
+    vpSeg.innerHTML =
+      '<button type="button" class="seg__btn' + (state.viewport === 'desktop' ? ' is-active' : '') + '"' +
+      ' data-viewport="desktop" aria-pressed="' + (state.viewport === 'desktop') + '">' + I.desk + 'Desktop 1280</button>' +
+      '<button type="button" class="seg__btn' + (state.viewport === 'mobile' ? ' is-active' : '') + '"' +
+      ' data-viewport="mobile" aria-pressed="' + (state.viewport === 'mobile') + '">' + I.phone + 'Mobile 390</button>';
+
+    var current = state.scores[state.type] || 0;
+    var dots = '';
+    for (var v = 1; v <= 5; v++) {
+      dots += '<button type="button" class="dot' + (v <= current ? ' is-on' : '') + '"' +
+        ' data-score="' + v + '" aria-pressed="' + (v <= current) + '"' +
+        ' aria-label="Score type treatment ' + esc(TYPES[state.type].name) + ': ' + v + ' of 5">' + v + '</button>';
+    }
+    scoreDots.innerHTML = dots;
+  }
+
+  function headerStub() {
+    return '<div class="stub" aria-hidden="true">' +
+      '<span class="stub__logo"><img src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame"></span>' +
+      '<nav class="stub__nav"><span>Members</span><span>Teams</span><span>News</span><span>About</span></nav>' +
+      '<span class="stub__tools"><span class="stub__search">' + I.search + '</span>' +
+      '<span class="stub__burger">' + I.burger + '</span></span></div>';
+  }
+
+  function notesHtml() {
+    var t = TYPES[state.type];
+    var s = curSet();
+    return '<div class="notes-card">' +
+      '<h2>Type: ' + esc(t.name) + ' · Icons: ' + esc(s.label) + ' (' + s.strokeNote + ')</h2>' +
+      '<p class="pitch">' + t.pitch + '</p>' +
+      '<dl class="notes-dl">' +
+      '<dt>Type treatment</dt><dd>' + t.desc + '</dd>' +
+      '<dt>Watch for</dt><dd>' + t.watch + '</dd>' +
+      '<dt>Icon set</dt><dd>' + s.desc + '</dd>' +
+      '<dt>Layout</dt><dd>Locked to round-1 Option B — sidebar rail with type filters + counts and the grayed future-facets sketch, results column right, serif results headline. Member rows lead with 40px headshots; other rows with icon tiles from the active set.</dd>' +
+      '</dl></div>';
+  }
+
+  /* ======================================================================
+     8. Render orchestration
+     Lucide's createIcons() REPLACES each <i data-lucide> with an <svg>,
+     so it must re-run after every innerHTML render — control changes and
+     live-search keystrokes alike. All paths funnel through render().
+     =================================================================== */
+  var refocusInput = false;
+
+  function refreshIcons() {
+    var ok = hasLucide();
+    lucideNotice.className = 'bar__notice' + (ok ? '' : ' is-visible');
+    if (ok) { window.lucide.createIcons(); }
+  }
+
+  function render() {
+    var g = filterData(state.q);
+    /* Invalid filter for this query (e.g. group emptied by typing) → all,
+       mirroring search.php's whitelist fallback. */
+    if (state.filter !== 'all' && g.counts[state.filter] === 0) { state.filter = 'all'; }
+
+    frame.className = 'frame vp-' + state.viewport;
+    pageRoot.innerHTML = headerStub() +
+      '<div class="page t-' + state.type + ' i-' + state.icons + '">' +
+      renderPage(g, state.q.trim()) + '</div>';
+    notesRoot.innerHTML = notesHtml();
+    renderControls();
+    refreshIcons();
+
+    if (refocusInput) {
+      refocusInput = false;
+      var input = pageRoot.querySelector('[data-role="q"]');
+      if (input) {
+        input.focus();
+        var len = input.value.length;
+        try { input.setSelectionRange(len, len); } catch (e) { /* search inputs in some engines */ }
+      }
+    }
+  }
+
+  /* ======================================================================
+     9. Events
+     =================================================================== */
+  document.querySelector('.bar').addEventListener('click', function (e) {
+    var el;
+    if ((el = e.target.closest('[data-type]'))) {
+      state.type = el.getAttribute('data-type');
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-icons]'))) {
+      state.icons = el.getAttribute('data-icons');
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-scenario]'))) {
+      state.scenario = el.getAttribute('data-scenario');
+      state.q = SCENARIOS[state.scenario].q;
+      state.filter = 'all';
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-viewport]'))) {
+      state.viewport = el.getAttribute('data-viewport');
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-score]'))) {
+      var v = parseInt(el.getAttribute('data-score'), 10);
+      if (state.scores[state.type] === v) { delete state.scores[state.type]; }
+      else { state.scores[state.type] = v; }
+      persist(); renderControls(); return;
+    }
+  });
+
+  pageRoot.addEventListener('click', function (e) {
+    var f = e.target.closest('[data-filter]');
+    if (f && !f.disabled) {
+      state.filter = f.getAttribute('data-filter');
+      render();
+      return;
+    }
+    var a = e.target.closest('a[href="#"]');
+    if (a) { e.preventDefault(); } // specimen rows do not navigate
+  });
+
+  pageRoot.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  var typeTimer = null;
+  pageRoot.addEventListener('input', function (e) {
+    var input = e.target.closest('[data-role="q"]');
+    if (!input) { return; }
+    var value = input.value;
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(function () {
+      state.q = value;
+      state.filter = 'all';
+      refocusInput = true;
+      render();
+    }, 140);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

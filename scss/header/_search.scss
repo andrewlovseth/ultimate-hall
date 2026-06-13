@@ -1,0 +1,839 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+// ============================================================================
+// Omnibox Search
+// ============================================================================
+// 1. Header trigger        (.omni-trigger — lives in the header tray cell)
+// 2. Command palette       (.omni, .omni-scope, .omni-group, .omni-result)
+// 3. Search results page   (.search-results — server-rendered by search.php)
+//
+// Icons are inline Lucide ("archival" set) at stroke-width 1.5 — no CDN.
+// Result titles are Sorts Mill Goudy (400-only face: emphasis comes from
+// size, never weight — font-synthesis: none guards against fake bold).
+// Active rows/filters use a background tint — never a colored left border.
+//
+// The palette overlays everything, including the mobile nav overlay
+// (.site-nav, z-index: 1000), hence z-index: 1200 on .omni.
+
+// ----------------------------------------------------------------------------
+// 1. Header trigger
+// ----------------------------------------------------------------------------
+// Placement belongs to the header tray (.header-tray__search, sibling-owned);
+// the trigger just fills whatever cell it is given. Dense field-shaped bar:
+// ~32px tall, translucent white on the dark header, radius 8px (reads "field"
+// at tray width where a 999px pill would read "button"). On mobile the tray
+// is gone — the nav drawer has its own trigger, not this one.
+
+.omni-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.4375rem 0.625rem; // 16px icon + 2 × 7px + borders ≈ 32px tall
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: $work-sans;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+
+    &:hover,
+    &:focus-visible {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+        flex: none;
+    }
+
+    &__label {
+        font-size: 0.875rem; // 14px
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    &__kbd {
+        display: none;
+        margin-left: auto;
+
+        @include desktop-small {
+            display: inline-flex;
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// 2. Command palette
+// ----------------------------------------------------------------------------
+
+body.omni-open {
+    overflow: hidden; // lock page scroll while the palette is open
+}
+
+.omni {
+    position: fixed;
+    inset: 0;
+    z-index: 1200; // above the mobile nav overlay (.site-nav, z-index: 1000)
+    font-family: $work-sans;
+    font-synthesis: none; // Goudy ships 400 only — never fake-bold it
+
+    &[hidden] {
+        display: none;
+    }
+
+    // The palette lives inside .site-header, whose `a { color: $white }`
+    // would otherwise paint every link white on the white panel.
+    a {
+        color: inherit;
+    }
+
+    &__scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(35, 31, 32, 0.55); // --color-slate at ~55%
+        backdrop-filter: blur(2px);
+    }
+
+    // Mobile-first: full-width top-anchored sheet with small inset margins.
+    // From tablet-small up: centered fixed-height panel (height never jumps
+    // as results change — the results region absorbs all variation).
+    &__panel {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        margin: 0.75rem;
+        height: calc(100% - 1.5rem);
+        background: $white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(35, 31, 32, 0.35);
+
+        @include tablet-small {
+            width: 720px;
+            max-width: 92vw;
+            height: min(640px, 85vh);
+            margin: 10vh auto 0;
+        }
+    }
+
+    &__searchrow {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: none;
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid $gray-200;
+    }
+
+    &__searchicon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: $gray-500;
+        flex: none;
+    }
+
+    &__inputwrap {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+
+    // The input keeps a transparent background so the ghost twin underneath
+    // shows through. Input and ghost MUST share metrics glyph-for-glyph —
+    // same font, size, zero padding — and BOTH stay Work Sans in every
+    // treatment (the serif voice lives in result titles, not the field).
+    &__input {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font-family: $work-sans;
+        font-size: 1.125rem; // 18px — above the 16px iOS zoom floor
+        color: $gray-950;
+
+        &::placeholder {
+            color: $gray-400;
+        }
+    }
+
+    // Ghost completion twin: invisible copy of the typed text + visible gray
+    // completion remainder, painted behind the transparent input.
+    &__ghost {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        white-space: pre;
+        pointer-events: none;
+        font-family: $work-sans;
+        font-size: 1.125rem;
+        color: transparent;
+    }
+
+    &__ghost-rest {
+        color: $gray-400;
+    }
+
+    &__clear,
+    &__close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        flex: none;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: $gray-100;
+        color: $gray-700;
+        cursor: pointer;
+
+        &:hover {
+            background: $gray-200;
+        }
+
+        svg {
+            width: 0.9375rem;
+            height: 0.9375rem;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    // Explicit close affordance for touch (no Esc key, scrim barely visible
+    // behind the near-full-screen sheet). Desktop closes via Esc/scrim.
+    &__close {
+        @include tablet-small {
+            display: none;
+        }
+    }
+
+    // Touch shows a single X — the close. The clear chip is desktop-only,
+    // otherwise the two identical X buttons sit side by side.
+    &__clear {
+        display: none;
+
+        @include tablet-small {
+            display: inline-flex;
+
+            // Keep the chip in flow while empty — it's taller than the input's
+            // line box, so toggling display would shift the whole search row.
+            &[hidden] {
+                display: inline-flex;
+                visibility: hidden;
+            }
+        }
+    }
+
+    &__scopes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        flex: none;
+        padding: 0.625rem 1.25rem;
+        border-bottom: 1px solid $gray-200;
+    }
+
+    // The only flexible region — absorbs all height variation.
+    &__results {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0.25rem 0;
+    }
+
+    // Shared no-results / network-error message
+    &__empty {
+        margin: 0;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        color: $gray-600;
+        font-size: 0.9375rem; // 15px
+        line-height: 1.5;
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex: none;
+        padding: 0.625rem 1.25rem;
+        border-top: 1px solid $gray-200;
+        background: $gray-50;
+    }
+
+    // Nested (not &__) so the selector carries .omni and outranks
+    // .site-header a's white link color.
+    .omni__viewall {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: $gold-700;
+        font-size: 0.875rem; // 14px
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+
+        // Ctrl+Enter is meaningless on touch — kbd chips are desktop-only.
+        kbd {
+            display: none;
+
+            @include tablet-small {
+                display: inline-flex;
+            }
+        }
+    }
+
+    &__hints {
+        display: none;
+
+        @include tablet-small {
+            display: flex;
+            gap: 1rem;
+        }
+
+        span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3125rem;
+            font-size: 0.875rem; // 14px
+            color: $gray-500;
+        }
+    }
+}
+
+// kbd chips (12px is reserved for these key glyphs only). Only the chip look
+// is shared — display stays with each context, so the trigger and the footer
+// view-all can hide their kbds on touch without being out-specificity'd here.
+.omni kbd,
+.omni-trigger kbd {
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3125rem;
+    font-family: $work-sans;
+    font-size: 0.75rem; // 12px
+    font-weight: 500;
+    line-height: 1;
+    color: $gray-700;
+    background: $white;
+    border: 1px solid $gray-200;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+}
+
+.omni kbd {
+    display: inline-flex;
+}
+
+.omni-trigger kbd {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    border-bottom-width: 1px;
+}
+
+// Scope pills — active state mirrors the theme's gold CTA (.btn): gold-400
+// fill with the darker gold border, slate text for contrast.
+.omni-scope {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    padding: 0.1875rem 0.5625rem;
+    border: 1px solid $gray-200;
+    border-radius: 999px;
+    background: $white;
+    color: $gray-700;
+    font-family: $work-sans;
+    font-size: 0.8125rem; // 13px
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 100ms ease, border-color 100ms ease, color 100ms ease;
+
+    &:hover {
+        background: $gold-50;
+        border-color: $gold-300;
+    }
+
+    &.is-active {
+        background: $gold-400;
+        border-color: $gold-400-dark;
+        color: $slate;
+    }
+
+    &__count {
+        font-weight: 400;
+        opacity: 0.7;
+    }
+}
+
+// Result groups
+.omni-group {
+    padding-block: 0.25rem;
+
+    & + .omni-group {
+        border-top: 1px solid $gray-100;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1.25rem 0.25rem;
+    }
+
+    // Group titles stay Work Sans, normal case, 16px, semibold — the serif
+    // treatment is titles-only ("serif names"), and never a micro-label.
+    &__title {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4375rem;
+        font-size: 1rem; // 16px
+        font-weight: 600;
+        color: $gray-950;
+
+        svg {
+            width: 1rem;
+            height: 1rem;
+            color: $gray-500;
+        }
+    }
+
+    &__count {
+        font-size: 0.875rem; // 14px
+        color: $gray-500;
+    }
+}
+
+// Result rows — real anchors so middle-click/cmd-click work. Locked "Photo
+// rows" treatment: 40px circular lead (member headshot, initials disc, or
+// icon disc), Goudy serif title, 12px sans sub.
+.omni-result {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.375rem 1.25rem;
+    color: $gray-950;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover,
+    &.is-active {
+        background: $gold-50; // tint only — never a left-border status indicator
+        text-decoration: none;
+    }
+
+    &:hover .omni-result__chevron,
+    &.is-active .omni-result__chevron {
+        opacity: 1;
+    }
+
+    // 40px disc: <img> headshot for members with photos; initials for members
+    // without and for teams; icon disc for classes and pages.
+    &__lead {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem; // 40px — locked
+        height: 2.5rem;
+        flex: none;
+        overflow: hidden;
+        border-radius: 999px;
+        background: $gold-100;
+        color: $gold-700;
+        font-size: 1rem;
+        font-weight: 600;
+
+        svg {
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &--team {
+            background: color-mix(in srgb, var(--color-blue) 14%, var(--color-white));
+            color: $blue;
+        }
+
+        &--class {
+            background: $gold-100;
+            color: $gold-700;
+        }
+
+        &--page {
+            background: $gray-100;
+            color: $gray-600;
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+
+    // Names read like plaques: Sorts Mill Goudy at 16px. Goudy is a 400-only
+    // face — font-synthesis: none stops the browser from fake-bolding it.
+    &__title {
+        font-family: $sorts-mill-goudy;
+        font-size: 1rem; // 16px
+        font-weight: 400;
+        line-height: 1.3;
+        font-synthesis: none;
+        color: $gray-950;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        // Vertical padding keeps Goudy's descenders clear of the highlight;
+        // box-decoration-break keeps wrapped highlights consistent on the
+        // results page (palette rows never wrap).
+        mark {
+            background: $gold-200;
+            color: inherit;
+            border-radius: 3px;
+            padding: 2px 2px 3px;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+        }
+    }
+
+    &__sub {
+        margin-top: 1px;
+        font-size: 0.75rem; // 12px — genuine meta, Andrew's locked value
+        color: $gray-600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__chevron {
+        width: 1.125rem;
+        height: 1.125rem;
+        flex: none;
+        color: $gold-600;
+        opacity: 0;
+        transition: opacity 100ms ease;
+    }
+}
+
+// Default empty state (open, no query): Recent rows on top, centered note
+// filling the rest of the fixed-height panel.
+.omni-empty {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+
+    &__hero {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.625rem;
+        padding: 1.5rem 2rem 2.5rem;
+        text-align: center;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 1.25rem; // 20px
+        font-weight: 600;
+        color: $slate;
+    }
+
+    &__note {
+        margin: 0;
+        max-width: 26rem;
+        font-size: 0.875rem; // 14px
+        line-height: 1.55;
+        color: $gray-600;
+
+        kbd {
+            vertical-align: 1px;
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// 3. Search results page (markup server-rendered by search.php)
+// ----------------------------------------------------------------------------
+// Sidebar layout: 15rem filter rail + fluid main from tablet-small up.
+// Mobile-first single column — the rail renders as a horizontal scrollable
+// chip row above the form. Rows reuse the palette's .omni-result contract,
+// one notch roomier at page scale.
+
+.search-results {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-block: 1rem 4rem;
+    font-family: $work-sans;
+    font-synthesis: none;
+
+    &__layout {
+        @include tablet-small {
+            display: grid;
+            grid-template-columns: 15rem minmax(0, 1fr);
+            gap: 3rem;
+        }
+    }
+
+    &__rail {
+        margin-bottom: 1.25rem;
+
+        @include tablet-small {
+            margin-bottom: 0;
+        }
+    }
+
+    &__rail-title {
+        display: none; // the mobile chip row explains itself
+
+        @include tablet-small {
+            display: block;
+            margin: 0 0 0.75rem;
+            font-size: 1rem; // 16px
+            font-weight: 600;
+            color: $slate;
+        }
+    }
+
+    &__filters {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.25rem; // breathing room for the scrollbar
+
+        @include tablet-small {
+            flex-direction: column;
+            gap: 2px;
+            overflow: visible;
+            padding-bottom: 0;
+        }
+    }
+
+    // Mobile: pill chip with the count inline. Desktop: borderless rail row,
+    // count pushed right. Active = gold tint — never a colored left border.
+    &__filter {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.3125rem 0.75rem;
+        border: 1px solid $gray-200;
+        border-radius: 999px;
+        background: $white;
+        color: $gray-700;
+        font-size: 0.875rem; // 14px
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 100ms ease, border-color 100ms ease;
+
+        &:hover {
+            background: $gold-50;
+            border-color: $gold-300;
+            text-decoration: none;
+        }
+
+        &.is-active {
+            background: $gold-100;
+            border-color: $gold-300;
+            color: $slate;
+            font-weight: 600;
+
+            .search-results__filter-label svg {
+                color: $gold-700;
+            }
+
+            .search-results__filter-count {
+                color: $gold-700;
+                font-weight: 500;
+            }
+        }
+
+        &.is-disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        @include tablet-small {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border: 0;
+            border-radius: 8px;
+            background: none;
+
+            &:hover {
+                background: $gold-50;
+            }
+
+            &.is-active {
+                background: $gold-100;
+            }
+        }
+    }
+
+    &__filter-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5625rem;
+        min-width: 0;
+
+        svg {
+            width: 1.0625rem;
+            height: 1.0625rem;
+            flex: none;
+            color: $gray-500;
+        }
+    }
+
+    &__filter-count {
+        font-size: 0.8125rem; // 13px
+        font-weight: 400;
+        color: $gray-500;
+    }
+
+    &__form {
+        margin: 0;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        font-family: $work-sans;
+        font-size: 1.25rem; // 20px — roomier than the palette input
+        color: $gray-950;
+        background: $white;
+        border: 1px solid $gray-300;
+        border-radius: 8px;
+        outline: none;
+        appearance: none;
+
+        &:focus {
+            border-color: $gold-400;
+            box-shadow: 0 0 0 3px $gold-100;
+        }
+
+        &::placeholder {
+            color: $gray-400;
+        }
+    }
+
+    &__groups {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    &__group-head {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid $gray-200; // hairline under each group head
+
+        svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex: none;
+            color: $gold-600;
+        }
+
+        h2 {
+            margin: 0;
+            font-family: $work-sans;
+            font-size: 1.25rem; // 20px
+            font-weight: 600;
+            color: $gray-950;
+        }
+    }
+
+    &__group-count {
+        font-size: 0.875rem; // 14px
+        color: $gray-500;
+    }
+
+    // Palette rows at page scale: titles one notch up (17px), rounded rows,
+    // and long titles can wrap — no fixed-height panel to protect here.
+    .omni-result {
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+
+        &:hover {
+            background: $gold-50;
+        }
+
+        &__title {
+            font-size: 1.0625rem; // 17px
+            white-space: normal;
+        }
+
+        &__sub {
+            white-space: normal;
+        }
+    }
+
+    &__more {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        margin-top: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        color: $gold-700;
+        font-size: 0.9375rem; // 15px
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        svg {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    &__empty {
+        margin: 3rem 0 0;
+        text-align: center;
+        font-size: 1.125rem; // 18px
+        line-height: 1.5;
+        color: $gray-600;
+    }
+}

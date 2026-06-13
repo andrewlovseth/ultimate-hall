@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search Results — Design Exploration · Ultimate Hall of Fame</title>
+
+<!-- ======================================================================
+     Ultimate Hall of Fame — Search Results Page: Design Exploration
+     ----------------------------------------------------------------------
+     Self-contained specimen. 5 layout directions (A–E) x 2 query scenarios
+     x 2 viewports. Real production content inlined below (16 members,
+     10 teams, 6 classes, 8 news posts, 3 events). All counts are derived
+     from the filtered data at render time — nothing is hardcoded.
+
+     Persistence: localStorage key "uh-results-exploration"
+                  { option, scenario, viewport, scores:{A..E} }
+     ====================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ========================================================================
+   1. Tokens & base
+   ===================================================================== */
+:root {
+  --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+  --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+  --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+  --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+  --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+  --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+  --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+  --color-blue:#3e80ad;
+  --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+  --shadow-frame:0 18px 48px rgba(35,31,32,0.14), 0 2px 8px rgba(35,31,32,0.08);
+}
+
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body {
+  margin:0;
+  font-family:var(--font-sans);
+  font-size:16px;
+  line-height:1.5;
+  color:var(--color-slate);
+  background:var(--color-gray-100);
+}
+button { font:inherit; cursor:pointer; }
+img { display:block; max-width:100%; }
+mark { background:var(--color-gold-200); color:inherit; border-radius:2px; padding:0 1px; }
+svg { display:inline-block; vertical-align:middle; }
+
+@keyframes rise {
+  from { opacity:0; transform:translateY(7px); }
+  to   { opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+
+/* ========================================================================
+   2. Control bar (sticky, frosted)
+   ===================================================================== */
+.bar {
+  position:sticky; top:0; z-index:50;
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0.875rem 2rem;
+  padding:0.875rem 1.5rem;
+  background:rgba(255,255,255,0.84);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--color-gray-200);
+}
+.bar__brand { display:flex; align-items:center; gap:0.75rem; }
+.bar__medal {
+  width:2.375rem; height:2.375rem; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:var(--color-gold-100); color:var(--color-gold-700);
+}
+.bar__medal svg { width:1.25rem; height:1.25rem; }
+.bar__brand h1 { margin:0; font-size:1.0625rem; font-weight:600; line-height:1.2; }
+.bar__brand p { margin:2px 0 0; font-size:0.875rem; color:var(--color-gray-600); line-height:1.2; }
+.bar__groups {
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0.625rem 1.375rem;
+  margin-left:auto;
+}
+.ctl { display:flex; align-items:center; gap:0.5rem; }
+.ctl__label { font-size:0.875rem; font-weight:500; color:var(--color-gray-600); }
+
+.seg {
+  display:flex; gap:2px; padding:3px;
+  background:var(--color-white);
+  border:1px solid var(--color-gray-200);
+  border-radius:999px;
+}
+.seg__btn {
+  display:inline-flex; align-items:center; gap:0.375rem;
+  padding:0.3125rem 0.75rem;
+  border:0; border-radius:999px;
+  background:transparent; color:var(--color-gray-700);
+  font-size:0.875rem; font-weight:500; white-space:nowrap;
+  transition:background 120ms ease, color 120ms ease;
+}
+.seg__btn:hover { background:var(--color-gray-100); }
+.seg__btn.is-active { background:var(--color-slate); color:var(--color-white); }
+.seg__btn svg { width:1rem; height:1rem; }
+.seg__key { font-weight:700; }
+.seg__btn.is-active .seg__key { color:var(--color-gold-300); }
+.seg__score {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:1.25rem; height:1.25rem; padding:0 0.25rem;
+  border-radius:999px;
+  background:var(--color-gold-400); color:var(--color-slate);
+  font-size:0.875rem; font-weight:600; line-height:1;
+}
+
+.dots { display:flex; gap:0.375rem; }
+.dot {
+  width:1.625rem; height:1.625rem;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--color-gray-300); border-radius:50%;
+  background:var(--color-white); color:var(--color-gray-500);
+  font-size:0.875rem; line-height:1; padding:0;
+  transition:background 120ms ease, border-color 120ms ease;
+}
+.dot:hover { border-color:var(--color-gold-400); background:var(--color-gold-50); }
+.dot.is-on {
+  background:var(--color-gold-400); border-color:var(--color-gold-600);
+  color:var(--color-slate); font-weight:600;
+}
+
+/* ========================================================================
+   3. Preview canvas, viewport frame, site-header stub
+   ===================================================================== */
+.canvas { padding:2rem 1.5rem 0.5rem; overflow-x:auto; }
+.frame {
+  margin:0 auto;
+  background:var(--color-white);
+  border-radius:14px;
+  box-shadow:var(--shadow-frame);
+  overflow:hidden;
+}
+.frame.vp-desktop { width:1280px; }
+.frame.vp-mobile  { width:390px; border-radius:26px; }
+
+.stub {
+  display:flex; align-items:center; gap:1.5rem;
+  height:64px; padding:0 2rem;
+  background:var(--color-slate);
+}
+.stub__logo img { height:38px; width:auto; }
+.stub__nav { display:flex; gap:1.75rem; margin-left:auto; }
+.stub__nav span { color:rgba(255,255,255,0.85); font-size:0.9375rem; font-weight:500; }
+.stub__tools { display:flex; align-items:center; gap:0.875rem; }
+.stub__search {
+  width:2.25rem; height:2.25rem;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.22);
+  color:rgba(255,255,255,0.85);
+}
+.stub__search svg { width:1rem; height:1rem; }
+.stub__burger { display:none; color:var(--color-white); }
+.stub__burger svg { width:1.375rem; height:1.375rem; }
+
+.vp-mobile .stub { height:56px; padding:0 1.125rem; gap:1rem; }
+.vp-mobile .stub__logo img { height:32px; }
+.vp-mobile .stub__nav { display:none; }
+.vp-mobile .stub__tools { margin-left:auto; }
+.vp-mobile .stub__burger { display:flex; }
+
+/* ========================================================================
+   4. Shared page primitives (header, form, chips, groups, rows, avatars)
+   ===================================================================== */
+.page { padding:1.25rem 3rem 5rem; animation:rise 280ms ease both; }
+.vp-mobile .page { padding:0.75rem 1.25rem 3.5rem; }
+
+.container   { max-width:56rem; margin-inline:auto; }
+.container-b { max-width:72rem; margin-inline:auto; }
+.container-e { max-width:50rem; margin-inline:auto; }
+
+.phead { padding:1.75rem 0 0.25rem; }
+.phead__title {
+  margin:0;
+  font-family:var(--font-display); font-weight:400;
+  font-size:2.625rem; line-height:1.15;
+  color:var(--color-slate);
+}
+.phead__title em { font-style:italic; }
+.phead__sub { margin:0.5rem 0 0; font-size:1.0625rem; color:var(--color-gray-600); }
+.vp-mobile .phead__title { font-size:1.875rem; }
+
+.rform { margin:1.375rem 0 0; }
+.rform__input {
+  width:100%;
+  padding:0.875rem 1.25rem;
+  font-family:var(--font-sans); font-size:1.25rem;
+  color:var(--color-slate);
+  background:var(--color-white);
+  border:1px solid var(--color-gray-300); border-radius:8px;
+  outline:none; appearance:none;
+}
+.rform__input:focus { border-color:var(--color-gold-400); box-shadow:0 0 0 3px var(--color-gold-100); }
+.rform__input::placeholder { color:var(--color-gray-400); }
+
+.chips { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; }
+.chip {
+  display:inline-flex; align-items:center; gap:0.375rem;
+  padding:0.4375rem 0.875rem;
+  border:1px solid var(--color-gray-200); border-radius:999px;
+  background:var(--color-white); color:var(--color-gray-700);
+  font-size:0.9375rem; font-weight:500;
+  transition:background 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+.chip:hover { background:var(--color-gold-50); border-color:var(--color-gold-300); }
+.chip.is-active { background:var(--color-gold-400); border-color:var(--color-gold-600); color:var(--color-slate); }
+.chip.is-disabled { opacity:0.45; cursor:default; pointer-events:none; }
+.chip__count { font-size:0.875rem; font-weight:400; opacity:0.7; }
+
+.groups { display:flex; flex-direction:column; gap:2.5rem; margin-top:2.5rem; }
+.ghead {
+  display:flex; align-items:baseline; gap:0.625rem;
+  margin-bottom:0.5rem; padding-bottom:0.75rem;
+  border-bottom:1px solid var(--color-gray-200);
+}
+.ghead h2 { margin:0; font-family:var(--font-sans); font-size:1.5rem; font-weight:600; color:var(--color-slate); }
+.gcount { font-size:0.9375rem; color:var(--color-gray-500); }
+
+.rrow {
+  display:flex; align-items:center; gap:0.875rem;
+  padding:0.75rem; border-radius:8px;
+  color:var(--color-slate); text-decoration:none;
+}
+.rrow:hover { background:var(--color-gold-50); }
+.rrow__body { display:flex; flex-direction:column; flex:1; min-width:0; }
+.rrow__title { font-size:1.0625rem; font-weight:500; color:var(--color-slate); }
+.rrow__sub { margin-top:2px; font-size:0.875rem; color:var(--color-gray-600); }
+
+.more {
+  display:inline-flex; align-items:center; gap:0.375rem;
+  margin-top:0.75rem; padding:0.25rem 0.75rem;
+  border:0; background:none;
+  color:var(--color-gold-700);
+  font-size:0.9375rem; font-weight:600;
+}
+.more:hover { text-decoration:underline; }
+.more svg { width:1rem; height:1rem; }
+
+.rempty { margin:3rem 0 0; text-align:center; font-size:1.125rem; line-height:1.5; color:var(--color-gray-600); }
+
+/* Photo avatar (members) and icon lead tile (everything else) */
+.avatar {
+  position:relative; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; overflow:hidden;
+  background:var(--color-gray-200);
+}
+.avatar__init { font-size:0.875rem; font-weight:600; color:var(--color-gray-600); }
+.avatar img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.avatar--row { width:2.75rem; height:2.75rem; }
+.lead {
+  width:2.75rem; height:2.75rem; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px;
+  background:var(--color-gold-100); color:var(--color-gold-700);
+}
+.lead svg { width:1.25rem; height:1.25rem; }
+
+/* ========================================================================
+   5. Option B — sidebar filters
+   ===================================================================== */
+.b-layout { display:grid; grid-template-columns:15rem minmax(0,1fr); gap:3rem; margin-top:1.75rem; }
+.b-rail__title { margin:0 0 0.75rem; font-size:1rem; font-weight:600; color:var(--color-slate); }
+.rail-list { display:flex; flex-direction:column; gap:2px; }
+.rail-item {
+  display:flex; align-items:center; justify-content:space-between; gap:0.75rem;
+  width:100%; padding:0.5625rem 0.875rem;
+  border:0; border-radius:8px;
+  background:none; color:var(--color-gray-700);
+  font-size:0.9375rem; font-weight:500; text-align:left;
+  transition:background 100ms ease;
+}
+.rail-item:hover { background:var(--color-gold-50); }
+.rail-item.is-active { background:var(--color-gold-100); color:var(--color-slate); font-weight:600; }
+.rail-item.is-disabled { opacity:0.45; cursor:default; pointer-events:none; }
+.rail-count { font-size:0.875rem; font-weight:400; color:var(--color-gray-500); }
+.rail-item.is-active .rail-count { color:var(--color-gold-700); font-weight:500; }
+
+.rail-facets {
+  margin-top:2rem; padding-top:1.5rem;
+  border-top:1px solid var(--color-gray-200);
+  opacity:0.6; pointer-events:none;
+}
+.rail-facets__note { margin:0 0 1rem; font-size:0.875rem; font-style:italic; color:var(--color-gray-500); }
+.facet { margin-bottom:1.5rem; }
+.facet h3 { margin:0 0 0.375rem; font-size:1rem; font-weight:600; color:var(--color-gray-700); }
+.facet-row { display:flex; align-items:center; gap:0.5rem; padding:0.1875rem 0; font-size:0.875rem; color:var(--color-gray-600); }
+.facet-box { width:1rem; height:1rem; flex:none; border:1.5px dashed var(--color-gray-300); border-radius:4px; }
+
+.b-results .rform { margin-top:0; }
+.b-results .groups { margin-top:2rem; }
+.b-chips { display:none; }
+
+.vp-mobile .b-layout { display:block; margin-top:1rem; }
+.vp-mobile .b-rail { display:none; }
+.vp-mobile .b-results .rform { margin-top:1.375rem; }
+.vp-mobile .b-chips { display:flex; }
+
+/* ========================================================================
+   6. Option C — member-first cards
+   ===================================================================== */
+.mgrid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap:2.5rem 1.5rem;
+  padding-top:1.25rem;
+}
+.mgrid--single { display:flex; justify-content:center; }
+.mgrid--single .mcard { width:11rem; }
+.mcard { text-align:center; }
+.avatar--card {
+  width:100%; max-width:10.625rem; margin:0 auto;
+  aspect-ratio:1 / 1;
+  border:3px solid transparent;
+  transition:border-color 200ms ease;
+}
+.mcard:hover .avatar--card { border-color:var(--color-gold-400); }
+.avatar--card .avatar__init { font-size:1.5rem; }
+.mcard__name { margin:1rem 0 0; font-size:1.125rem; font-weight:600; line-height:1.25; color:var(--color-slate); }
+.mcard__meta { margin:0.375rem 0 0; font-size:0.875rem; color:var(--color-gray-600); }
+.mcard__class { margin:0.125rem 0 0; font-size:0.875rem; color:var(--color-gray-500); }
+.vp-mobile .mgrid { grid-template-columns:repeat(2, 1fr); gap:2rem 1rem; }
+
+/* ========================================================================
+   7. Option D — tabbed groups
+   ===================================================================== */
+.tabs {
+  display:flex; gap:0.25rem;
+  margin-top:1.5rem;
+  border-bottom:1px solid var(--color-gray-200);
+  overflow-x:auto;
+}
+.tab {
+  display:inline-flex; align-items:center; gap:0.4375rem;
+  padding:0.625rem 1rem 0.75rem;
+  border:0; border-bottom:2.5px solid transparent; margin-bottom:-1px;
+  background:none;
+  color:var(--color-gray-600);
+  font-size:0.9375rem; font-weight:500; white-space:nowrap;
+  transition:color 100ms ease, border-color 100ms ease;
+}
+.tab:hover { color:var(--color-slate); }
+.tab.is-active { color:var(--color-slate); font-weight:600; border-bottom-color:var(--color-gold-500); }
+.tab:disabled { opacity:0.45; cursor:default; }
+.tab__count { font-size:0.875rem; font-weight:400; color:var(--color-gray-500); }
+.tab.is-active .tab__count { color:var(--color-gold-700); }
+.d-digest .grows { padding-top:0.125rem; }
+
+/* ========================================================================
+   8. Option E — unified ranked list with query hero
+   ===================================================================== */
+.e-hero { padding:2.25rem 0 0.25rem; }
+.e-hero__lede { margin:0; font-size:1.0625rem; color:var(--color-gray-600); }
+.e-hero__q {
+  margin:0.25rem 0 0;
+  font-family:var(--font-display); font-style:italic; font-weight:400;
+  font-size:4rem; line-height:1.08;
+  color:var(--color-slate);
+  overflow-wrap:anywhere;
+}
+.e-hero__q .qmark { color:var(--color-gold-500); }
+.e-hero__counts { margin:0.875rem 0 0; font-size:1rem; color:var(--color-gray-600); }
+.vp-mobile .e-hero__q { font-size:2.5rem; }
+
+.rform--line { margin-top:1.5rem; }
+.rform--line .rform__input {
+  max-width:28rem;
+  padding:0.5rem 0.25rem;
+  font-size:1.125rem;
+  background:transparent;
+  border:0; border-bottom:1.5px solid var(--color-gray-300); border-radius:0;
+}
+.rform--line .rform__input:focus { border-bottom-color:var(--color-gold-500); box-shadow:none; }
+
+.e-list { list-style:none; margin:1.75rem 0 0; padding:0; }
+.e-list li + li { border-top:1px solid var(--color-gray-100); }
+.e-list .rrow { padding:0.875rem 0.75rem; border-radius:10px; }
+
+.badge {
+  flex:none;
+  display:inline-flex; align-items:center;
+  padding:0.1875rem 0.625rem;
+  border-radius:999px;
+  font-size:0.875rem; font-weight:500; line-height:1.3;
+}
+.badge--members { background:var(--color-gold-100); color:var(--color-gold-950); }
+.badge--teams {
+  background:color-mix(in srgb, var(--color-blue) 14%, var(--color-white));
+  color:color-mix(in srgb, var(--color-blue) 72%, var(--color-slate));
+}
+.badge--classes {
+  background:color-mix(in srgb, var(--color-slate) 9%, var(--color-white));
+  color:var(--color-charcoal);
+}
+.badge--pages { background:var(--color-gray-100); color:var(--color-gray-700); }
+
+/* ========================================================================
+   9. Notes panel & footer
+   ===================================================================== */
+.notes { max-width:64rem; margin:1.75rem auto 0; padding:0 1.5rem; }
+.notes-card {
+  background:var(--color-white);
+  border:1px solid var(--color-gray-200); border-radius:12px;
+  padding:1.75rem 2rem;
+}
+.notes-card h2 { margin:0; font-size:1.125rem; font-weight:600; color:var(--color-slate); }
+.notes-card .pitch {
+  margin:0.375rem 0 1.25rem;
+  font-family:var(--font-display); font-style:italic;
+  font-size:1.1875rem; line-height:1.4;
+  color:var(--color-gray-700);
+}
+.notes-dl { display:grid; grid-template-columns:minmax(8rem, 10rem) 1fr; gap:0.625rem 1.5rem; margin:0; }
+.notes-dl dt { font-size:1rem; font-weight:600; color:var(--color-slate); }
+.notes-dl dd { margin:0; font-size:1rem; line-height:1.55; color:var(--color-gray-700); }
+
+.foot {
+  max-width:64rem; margin:1rem auto 0;
+  padding:0 1.5rem 3rem;
+  font-size:0.875rem; color:var(--color-gray-500);
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     Control bar
+     ====================================================================== -->
+<header class="bar">
+  <div class="bar__brand">
+    <span class="bar__medal" id="bar-medal" aria-hidden="true"></span>
+    <div>
+      <h1>Search Results — Design Exploration</h1>
+      <p>Ultimate Hall of Fame &middot; 5 directions &middot; 2 scenarios</p>
+    </div>
+  </div>
+  <div class="bar__groups">
+    <div class="ctl"><span class="ctl__label">Option</span><div class="seg" id="opt-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Scenario</span><div class="seg" id="scen-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Viewport</span><div class="seg" id="vp-seg"></div></div>
+    <div class="ctl"><span class="ctl__label">Score</span><div class="dots" id="score-dots"></div></div>
+  </div>
+</header>
+
+<!-- ======================================================================
+     Preview area
+     ====================================================================== -->
+<div class="canvas">
+  <div class="frame vp-desktop" id="frame">
+    <div id="page-root"></div>
+  </div>
+</div>
+
+<!-- ======================================================================
+     Per-option notes
+     ====================================================================== -->
+<div class="notes" id="notes-root"></div>
+
+<p class="foot">
+  Specimen only — no production code touched. Content is live production data:
+  16 members &middot; 10 teams &middot; 6 classes &middot; 8 news posts &middot; 3 events.
+  Counts in chips, tabs, rails, and headers are derived from the filtered data at render time.
+  The search input inside the preview is live — type to re-query.
+</p>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     1. Data — real production content (inlined from /tmp/uh-specimen-data.json)
+     =================================================================== */
+  var DATA = {
+    members: [
+      { name: 'Alex "Dutchy" Ghesquiere', photo: 'https://ultimatehall.org/wp-content/uploads/2025/12/0D213FDB-D603-40A5-AEE2-1BEB251EB72C-400x400.jpeg', type: 'Contributor', year: '2025', division: '' },
+      { name: 'Alex Nord', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/3FE23646-5C4A-4015-8E1E-AB5E13E0CAD8_4_5005_c.jpeg', type: 'Player', year: '2022', division: 'Open Division' },
+      { name: 'Alex Snyder', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/5866029C-E174-4005-B4C2-D6BF1ED2104C-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Alicia White', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/779B7631-C683-4D8F-A6EE-717A61DD0A91_1_201_a-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Allan "Al Bob" Nichols', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AllanNichols_HallofFame2018.jpg', type: 'Player', year: '2018', division: 'Open Division' },
+      { name: 'Allison Boyd', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AllisonBoydHeadshot.jpg', type: 'Player', year: '2019', division: "Women's Division" },
+      { name: 'Alyson Walker', photo: 'https://ultimatehall.org/wp-content/uploads/2023/08/4333E12D-FF04-4DC7-8CCF-68C60A88ECC0_4_5005_c.jpeg', type: 'Player', year: '2023', division: "Women's Division" },
+      { name: 'Amy Wilbur', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AmyWilbur_headshot.png', type: 'Player', year: '2016', division: "Women's Division" },
+      { name: 'Andrew Lugsdin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/04/AndrewLugsdin_headshot.png', type: 'Player', year: '2016', division: 'Open Division' },
+      { name: 'Andy Borinstein', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AndyBorinstein_1-299x400.jpeg', type: 'Contributor', year: '2009', division: '' },
+      { name: 'Andy Crews', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Andy-Crews-HoF-headshot-400x400.jpg', type: 'Player', year: '2020', division: 'Open Division' },
+      { name: 'Angela Lin', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/2018-Angela-Lin-HoF_headshot2-400x400.jpg', type: 'Player', year: '2018', division: "Women's Division" },
+      { name: 'Anja Haman', photo: 'https://ultimatehall.org/wp-content/uploads/2023/02/D04C364E-9C63-42ED-ACFA-FD70D8C8EE86_1_105_c-400x400.jpeg', type: 'Player', year: '2022', division: "Women's Division" },
+      { name: 'Ann (Cohan) Orders', photo: 'https://ultimatehall.org/wp-content/uploads/2021/03/AnnOrders_1-400x400.jpeg', type: 'Player', year: '2006', division: "Women's Division" },
+      { name: 'Anna Nazarov', photo: 'https://ultimatehall.org/wp-content/uploads/2024/11/A8F65C7F-BAF1-45DC-A77D-AF117B70653F-400x400.jpeg', type: 'Player', year: '2024', division: "Women's Division" },
+      { name: 'Augie Kreivenas', photo: 'https://ultimatehall.org/wp-content/uploads/2021/11/Augie-323x400.jpeg', type: 'Player', year: '2021', division: 'Open Division' }
+    ],
+    teams: [
+      { name: '10th St. Dealers', city: 'Burlington, VT', division: 'College Men' },
+      { name: '1994 Team USA Juniors', city: 'Colchester, U.K.', division: 'Youth Men' },
+      { name: '2000 Team USA U20 Girls', city: '', division: '' },
+      { name: '2000 Team USA U20 Open', city: '', division: 'Youth Men' },
+      { name: '2001 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+      { name: '2004 U.S. National Team', city: 'Turku, Finland', division: 'Club Women' },
+      { name: '2005 U.S. World Games Team', city: 'United States', division: 'Club Mixed' },
+      { name: '2008 U. S. National Team', city: 'Vancouver, BC Canada', division: 'Club Women' },
+      { name: '2009 U.S. World Games Team', city: '', division: 'Club Mixed' },
+      { name: '2011 Team USA Beach Mixed', city: '', division: '' }
+    ],
+    classes: [
+      { year: '2025', count: 11 },
+      { year: '2024', count: 25 },
+      { year: '2023', count: 13 },
+      { year: '2022', count: 16 },
+      { year: '2021', count: 9 },
+      { year: '2020', count: 7 }
+    ],
+    news: [
+      { title: 'Twelve Members Welcomed into the Ultimate Hall of Fame Class of 2025', date: 'November 23, 2025' },
+      { title: 'Ultimate Hall of Fame Class of 2025: Call to the Community', date: 'September 30, 2025' },
+      { title: 'Ultimate Hall of Fame Class of 2025 Finalists', date: 'August 8, 2025' },
+      { title: '2025 Hall of Fame Selection Begins', date: 'April 30, 2025' },
+      { title: 'Twenty five Members Welcomed into the Ultimate Hall of Fame Class of 2024', date: 'November 21, 2024' },
+      { title: 'Ultimate Hall of Fame Class of 2024: Call to the Community', date: 'October 3, 2024' },
+      { title: 'Ultimate Hall of Fame Class of 2024 Finalists', date: 'August 13, 2024' },
+      { title: '2024 Hall of Fame Selection Begins', date: 'April 26, 2024' }
+    ],
+    events: [
+      { title: '2023 Induction Ceremony' },
+      { title: '2018 Induction Ceremony' },
+      { title: '2013 Induction Ceremony' }
+    ]
+  };
+
+  var GROUPS = [
+    ['members', 'Members'],
+    ['teams', 'Teams'],
+    ['classes', 'Classes'],
+    ['pages', 'Pages']
+  ];
+  var SINGULAR = { members: 'member', teams: 'team', classes: 'class', pages: 'page' };
+
+  var SCENARIOS = {
+    al: { q: 'al', label: '“al” · name' },
+    y2024: { q: '2024', label: '“2024” · year' }
+  };
+
+  /* Normalized search pools. Members match on name + sub (sub carries
+     "Class of YYYY", so year queries find inductees by class). */
+  var POOLS = (function () {
+    var members = DATA.members.map(function (m) {
+      return {
+        group: 'members', title: m.name, photo: m.photo,
+        type: m.type, division: m.division, year: m.year,
+        sub: [m.type, m.division, 'Class of ' + m.year].filter(Boolean).join(' · ')
+      };
+    });
+    var teams = DATA.teams.map(function (t) {
+      return { group: 'teams', title: t.name, sub: [t.city, t.division].filter(Boolean).join(' · ') };
+    });
+    var classes = DATA.classes.map(function (c) {
+      return { group: 'classes', title: 'Class of ' + c.year, sub: c.count + ' inductees' };
+    });
+    var pages = DATA.news.map(function (n) {
+      return { group: 'pages', title: n.title, sub: 'News · ' + n.date, kind: 'News' };
+    }).concat(DATA.events.map(function (e) {
+      return { group: 'pages', title: e.title, sub: 'Event', kind: 'Event' };
+    }));
+    return { members: members, teams: teams, classes: classes, pages: pages };
+  })();
+
+  /* ======================================================================
+     2. Utilities
+     =================================================================== */
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /* Highlight every occurrence of q (case-insensitive) with <mark>. */
+  function hi(text, q) {
+    if (!q) { return esc(text); }
+    var lower = String(text).toLowerCase();
+    var lq = q.toLowerCase();
+    var out = '';
+    var i = 0;
+    for (;;) {
+      var idx = lower.indexOf(lq, i);
+      if (idx === -1) { out += esc(text.slice(i)); break; }
+      out += esc(text.slice(i, idx)) + '<mark>' + esc(text.slice(idx, idx + q.length)) + '</mark>';
+      i = idx + q.length;
+    }
+    return out;
+  }
+
+  function getInitials(name) {
+    var words = String(name).split(/\s+/).map(function (w) {
+      return w.replace(/^[^A-Za-z0-9]+/, '');
+    }).filter(function (w) { return w.length > 0; });
+    if (!words.length) { return '?'; }
+    var first = words[0].charAt(0);
+    var last = words.length > 1 ? words[words.length - 1].charAt(0) : '';
+    return (first + last).toUpperCase();
+  }
+
+  function svgIcon(paths) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
+  }
+  var I = {
+    search: svgIcon('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/>'),
+    users: svgIcon('<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+    medal: svgIcon('<path d="M7.2 10 4.5 3h5L12 7l2.5-4h5L16.8 10"/><circle cx="12" cy="15" r="5"/>'),
+    doc: svgIcon('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>'),
+    cal: svgIcon('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>'),
+    chev: svgIcon('<path d="m9 6 6 6-6 6"/>'),
+    desk: svgIcon('<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'),
+    phone: svgIcon('<rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/>'),
+    burger: svgIcon('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    trophy: svgIcon('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5M17 6h3a3 3 0 0 1-3 5"/>')
+  };
+  function leadIcon(item) {
+    if (item.group === 'teams') { return I.users; }
+    if (item.group === 'classes') { return I.medal; }
+    return item.kind === 'Event' ? I.cal : I.doc;
+  }
+
+  /* ======================================================================
+     3. Filtering — counts are always derived, never hardcoded
+     =================================================================== */
+  function filterData(q) {
+    var lq = q.trim().toLowerCase();
+    var groups = {};
+    var counts = {};
+    var total = 0;
+    GROUPS.forEach(function (def) {
+      var key = def[0];
+      var items = lq.length >= 2
+        ? POOLS[key].filter(function (it) {
+            return (it.title + ' ' + (it.sub || '')).toLowerCase().indexOf(lq) !== -1;
+          })
+        : [];
+      groups[key] = items;
+      counts[key] = items.length;
+      total += items.length;
+    });
+    return { groups: groups, counts: counts, total: total };
+  }
+
+  /* Option E relevance: prefix > word-start > substring, weighted so
+     members and classes outrank loose page matches. Deterministic. */
+  function rankItems(g, q) {
+    var lq = q.trim().toLowerCase();
+    var weight = { members: 15, classes: 12, teams: 8, pages: 4 };
+    var all = [].concat(g.groups.members, g.groups.teams, g.groups.classes, g.groups.pages);
+    return all.map(function (it) {
+      var t = it.title.toLowerCase();
+      var s = weight[it.group];
+      if (t.indexOf(lq) === 0) { s += 100; }
+      else if (t.split(/[^a-z0-9]+/).some(function (w) { return w.indexOf(lq) === 0; })) { s += 60; }
+      if (t.indexOf(lq) !== -1) { s += 25; }
+      else if ((it.sub || '').toLowerCase().indexOf(lq) !== -1) { s += 10; }
+      return { it: it, s: s };
+    }).sort(function (a, b) {
+      return b.s - a.s || a.it.title.localeCompare(b.it.title);
+    }).map(function (x) { return x.it; });
+  }
+
+  /* ======================================================================
+     4. Shared page fragments
+     =================================================================== */
+  function pageHead(q, total) {
+    if (!q) {
+      return '<header class="phead"><h1 class="phead__title">Search</h1></header>';
+    }
+    return '<header class="phead">' +
+      '<h1 class="phead__title">Search results for “<em>' + esc(q) + '</em>”</h1>' +
+      '<p class="phead__sub">' + total + ' ' + (total === 1 ? 'result' : 'results') + '</p>' +
+      '</header>';
+  }
+
+  function formHtml(q, variant) {
+    return '<form class="rform' + (variant ? ' ' + variant : '') + '" data-role="form" role="search">' +
+      '<input type="search" class="rform__input" data-role="q" value="' + esc(q) + '" ' +
+      'placeholder="Search members, teams, classes, pages…" aria-label="Search">' +
+      '</form>';
+  }
+
+  function chipsHtml(g, extraClass) {
+    var html = '<nav class="chips' + (extraClass ? ' ' + extraClass : '') + '">';
+    html += chipBtn('all', 'All', g.total);
+    GROUPS.forEach(function (def) {
+      html += chipBtn(def[0], def[1], g.counts[def[0]]);
+    });
+    return html + '</nav>';
+  }
+  function chipBtn(key, label, count) {
+    var active = state.filter === key;
+    var disabled = count === 0 && key !== 'all';
+    return '<button type="button" class="chip' + (active ? ' is-active' : '') + (disabled ? ' is-disabled' : '') + '"' +
+      ' data-filter="' + key + '"' + (disabled ? ' disabled' : '') + '>' +
+      label + ' <span class="chip__count">' + count + '</span></button>';
+  }
+
+  function gheadHtml(label, count) {
+    return '<header class="ghead"><h2>' + label + '</h2><span class="gcount">' + count + '</span></header>';
+  }
+
+  function avatarHtml(item, cls) {
+    var img = item.photo
+      ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.title) + '" loading="lazy" onerror="this.remove()">'
+      : '';
+    return '<span class="avatar ' + (cls || 'avatar--row') + '">' +
+      '<span class="avatar__init">' + esc(getInitials(item.title)) + '</span>' + img + '</span>';
+  }
+
+  function badgeLabel(item) {
+    if (item.group === 'members') { return 'Member'; }
+    if (item.group === 'teams') { return 'Team'; }
+    if (item.group === 'classes') { return 'Class'; }
+    return item.kind || 'Page';
+  }
+
+  /* rich=true adds the photo/icon lead and a type badge (Option E).
+     Plain rows mirror the shipped page: text only. */
+  function rowHtml(item, q, rich) {
+    var lead = '';
+    var badge = '';
+    if (rich) {
+      lead = item.group === 'members'
+        ? avatarHtml(item, 'avatar--row')
+        : '<span class="lead">' + leadIcon(item) + '</span>';
+      badge = '<span class="badge badge--' + item.group + '">' + esc(badgeLabel(item)) + '</span>';
+    }
+    var sub = item.sub
+      ? '<span class="rrow__sub">' + hi(item.sub, q) + '</span>'
+      : '';
+    return '<a class="rrow" href="#">' + lead +
+      '<span class="rrow__body"><span class="rrow__title">' + hi(item.title, q) + '</span>' + sub + '</span>' +
+      badge + '</a>';
+  }
+
+  /* Standard grouped section. Caps rows only in the "all" view; the
+     "Show all N x" link mirrors search.php's more-link behavior. */
+  function sectionHtml(key, label, items, q, cap) {
+    if (!items.length) { return ''; }
+    var limit = (state.filter === 'all' && cap) ? cap : items.length;
+    var rows = items.slice(0, limit).map(function (it) { return rowHtml(it, q, false); }).join('');
+    var more = '';
+    if (items.length > limit) {
+      more = '<button type="button" class="more" data-filter="' + key + '">Show all ' +
+        items.length + ' ' + label.toLowerCase() + ' ' + I.chev + '</button>';
+    }
+    return '<section class="group">' + gheadHtml(label, items.length) +
+      '<div class="grows">' + rows + '</div>' + more + '</section>';
+  }
+
+  function visibleGroupDefs() {
+    if (state.filter === 'all') { return GROUPS; }
+    return GROUPS.filter(function (def) { return def[0] === state.filter; });
+  }
+
+  /* Shared "no query yet" / "no matches" states (parity with search.php). */
+  function baseStates(g, q, container) {
+    var c = container || 'container';
+    if (q.trim().length < 2) {
+      return '<div class="' + c + '">' + pageHead('', 0) + formHtml(q) +
+        '<p class="rempty">Start typing to search members, teams, classes, and pages.</p></div>';
+    }
+    if (g.total === 0) {
+      return '<div class="' + c + '">' + pageHead(q, 0) + formHtml(q) +
+        '<p class="rempty">No matches for “' + esc(q) + '”.</p></div>';
+    }
+    return null;
+  }
+
+  /* ======================================================================
+     5. Option renderers
+     =================================================================== */
+
+  /* --- A. Current build (faithful baseline) --------------------------- */
+  function renderA(g, q) {
+    var pre = baseStates(g, q);
+    if (pre) { return pre; }
+    var sections = visibleGroupDefs().map(function (def) {
+      return sectionHtml(def[0], def[1], g.groups[def[0]], q, 5);
+    }).join('');
+    return '<div class="container">' +
+      pageHead(q, g.total) + formHtml(q) + chipsHtml(g) +
+      '<div class="groups">' + sections + '</div></div>';
+  }
+
+  /* --- B. Sidebar filters ---------------------------------------------- */
+  function renderB(g, q) {
+    var pre = baseStates(g, q, 'container-b');
+    if (pre) { return pre; }
+
+    var railItems = railBtn('all', 'All', g.total);
+    GROUPS.forEach(function (def) {
+      railItems += railBtn(def[0], def[1], g.counts[def[0]]);
+    });
+    var facets =
+      '<div class="rail-facets" aria-hidden="true">' +
+        '<p class="rail-facets__note">Future facets (sketch)</p>' +
+        '<div class="facet"><h3>Division</h3>' +
+          facetRow('Open') + facetRow("Women's") + facetRow('Mixed') +
+        '</div>' +
+        '<div class="facet"><h3>Era</h3>' +
+          facetRow('1980s–90s') + facetRow('2000s') + facetRow('2010s') + facetRow('2020s') +
+        '</div>' +
+      '</div>';
+    var rail = '<aside class="b-rail"><h2 class="b-rail__title">Filter results</h2>' +
+      '<div class="rail-list">' + railItems + '</div>' + facets + '</aside>';
+
+    var sections = visibleGroupDefs().map(function (def) {
+      return sectionHtml(def[0], def[1], g.groups[def[0]], q, 5);
+    }).join('');
+
+    return '<div class="container-b">' + pageHead(q, g.total) +
+      '<div class="b-layout">' + rail +
+      '<main class="b-results">' + formHtml(q) + chipsHtml(g, 'b-chips') +
+      '<div class="groups">' + sections + '</div></main></div></div>';
+  }
+  function railBtn(key, label, count) {
+    var active = state.filter === key;
+    var disabled = count === 0 && key !== 'all';
+    return '<button type="button" class="rail-item' + (active ? ' is-active' : '') + (disabled ? ' is-disabled' : '') + '"' +
+      ' data-filter="' + key + '"' + (disabled ? ' disabled' : '') + '>' +
+      '<span>' + label + '</span><span class="rail-count">' + count + '</span></button>';
+  }
+  function facetRow(label) {
+    return '<span class="facet-row"><span class="facet-box"></span>' + esc(label) + '</span>';
+  }
+
+  /* --- C. Member-first cards -------------------------------------------- */
+  function renderC(g, q) {
+    var pre = baseStates(g, q);
+    if (pre) { return pre; }
+    var sections = visibleGroupDefs().map(function (def) {
+      var key = def[0];
+      var items = g.groups[key];
+      if (!items.length) { return ''; }
+      if (key === 'members') {
+        var cards = items.map(function (m) { return cardHtml(m, q); }).join('');
+        var gridCls = 'mgrid' + (items.length === 1 ? ' mgrid--single' : '');
+        return '<section class="group">' + gheadHtml('Members', items.length) +
+          '<div class="' + gridCls + '">' + cards + '</div></section>';
+      }
+      return sectionHtml(key, def[1], items, q, 5);
+    }).join('');
+    return '<div class="container">' +
+      pageHead(q, g.total) + formHtml(q) + chipsHtml(g) +
+      '<div class="groups">' + sections + '</div></div>';
+  }
+  function cardHtml(m, q) {
+    var meta = [m.type, m.division].filter(Boolean).join(' · ');
+    return '<a class="mcard" href="#">' + avatarHtml(m, 'avatar--card') +
+      '<h3 class="mcard__name">' + hi(m.title, q) + '</h3>' +
+      '<p class="mcard__meta">' + esc(meta) + '</p>' +
+      '<p class="mcard__class">' + hi('Class of ' + m.year, q) + '</p></a>';
+  }
+
+  /* --- D. Tabbed groups -------------------------------------------------- */
+  function renderD(g, q) {
+    var pre = baseStates(g, q);
+    if (pre) { return pre; }
+
+    var tabs = '<div class="tabs" role="tablist">' + tabBtn('all', 'All', g.total);
+    GROUPS.forEach(function (def) {
+      tabs += tabBtn(def[0], def[1], g.counts[def[0]]);
+    });
+    tabs += '</div>';
+
+    var body;
+    if (state.filter === 'all') {
+      body = GROUPS.map(function (def) {
+        var items = g.groups[def[0]];
+        if (!items.length) { return ''; }
+        var rows = items.slice(0, 3).map(function (it) { return rowHtml(it, q, false); }).join('');
+        var viewall = items.length > 3
+          ? '<button type="button" class="more" data-filter="' + def[0] + '">View all ' +
+            items.length + ' ' + def[1].toLowerCase() + ' ' + I.chev + '</button>'
+          : '';
+        return '<section class="group">' + gheadHtml(def[1], items.length) +
+          '<div class="grows">' + rows + '</div>' + viewall + '</section>';
+      }).join('');
+      body = '<div class="groups d-digest">' + body + '</div>';
+    } else {
+      var def = GROUPS.filter(function (d) { return d[0] === state.filter; })[0];
+      var items = g.groups[def[0]];
+      body = '<div class="groups"><section class="group">' + gheadHtml(def[1], items.length) +
+        '<div class="grows">' + items.map(function (it) { return rowHtml(it, q, false); }).join('') +
+        '</div></section></div>';
+    }
+    return '<div class="container">' + pageHead(q, g.total) + formHtml(q) + tabs + body + '</div>';
+  }
+  function tabBtn(key, label, count) {
+    var active = state.filter === key;
+    var disabled = count === 0 && key !== 'all';
+    return '<button type="button" role="tab" aria-selected="' + active + '"' +
+      ' class="tab' + (active ? ' is-active' : '') + '" data-filter="' + key + '"' +
+      (disabled ? ' disabled' : '') + '>' + label +
+      '<span class="tab__count">' + count + '</span></button>';
+  }
+
+  /* --- E. Unified ranked list with query hero ---------------------------- */
+  function renderE(g, q) {
+    var pre = baseStates(g, q, 'container-e');
+    if (pre) { return pre; }
+
+    var parts = GROUPS.filter(function (def) { return g.counts[def[0]] > 0; })
+      .map(function (def) {
+        var n = g.counts[def[0]];
+        return n + ' ' + (n === 1 ? SINGULAR[def[0]] : def[1].toLowerCase());
+      });
+    var hero = '<header class="e-hero">' +
+      '<p class="e-hero__lede">Search results for</p>' +
+      '<p class="e-hero__q"><span class="qmark">“</span>' + esc(q) + '<span class="qmark">”</span></p>' +
+      '<p class="e-hero__counts">' + g.total + ' ' + (g.total === 1 ? 'result' : 'results') +
+      ' · ' + parts.join(' · ') + '</p></header>';
+
+    var ranked = rankItems(g, q);
+    if (state.filter !== 'all') {
+      ranked = ranked.filter(function (it) { return it.group === state.filter; });
+    }
+    var list = '<ol class="e-list">' + ranked.map(function (it) {
+      return '<li>' + rowHtml(it, q, true) + '</li>';
+    }).join('') + '</ol>';
+
+    return '<div class="container-e">' + hero + formHtml(q, 'rform--line') + chipsHtml(g) + list + '</div>';
+  }
+
+  /* ======================================================================
+     6. Option metadata & notes
+     =================================================================== */
+  var OPTIONS = {
+    A: {
+      short: 'Current', name: 'Current build',
+      pitch: 'Ship-parity baseline — the omnibox’s grouped rows at page scale.',
+      render: renderA,
+      notes: {
+        opt: 'Consistency with the omnibox: identical groups, rows, and sub-lines mean zero new patterns to maintain. Fast scan of “did my query hit each bucket?”',
+        trade: 'Every result looks the same — inductees, the marquee content, get no visual priority over a news post. Long flat lists read administrative rather than celebratory.',
+        mobile: 'Already a single column; chips wrap to a second row. Nothing collapses or changes shape.'
+      }
+    },
+    B: {
+      short: 'Sidebar', name: 'Sidebar filters',
+      pitch: 'A research tool: persistent filters with room to grow facets.',
+      render: renderB,
+      notes: {
+        opt: 'Filter-heavy sessions — counts stay visible while scrolling, and the rail has obvious space for future facets (division, era, induction type) without a redesign.',
+        trade: 'Spends a 240px rail on what is currently four filters; the results column narrows; the pattern reads “database admin” more than “hall of fame.”',
+        mobile: 'The rail collapses to the chip row (same as Option A). In production the facet sketch would live behind a “Filters” disclosure.'
+      }
+    },
+    C: {
+      short: 'Cards', name: 'Member-first cards',
+      pitch: 'Search that looks like the hall — faces first.',
+      render: renderC,
+      notes: {
+        opt: 'The site’s actual hierarchy: inductees are the product. Reusing the archive’s circular-photo member card makes search feel like browsing the hall, and faces are recognized faster than names.',
+        trade: 'Mixed visual grammar — a card grid followed by flat lists is heavier to scan, and a big member hit pushes teams/classes/pages well below the fold.',
+        mobile: 'Card grid drops to two columns; the other groups are unchanged rows.'
+      }
+    },
+    D: {
+      short: 'Tabs', name: 'Tabbed groups',
+      pitch: 'One group at a time; All is a digest.',
+      render: renderD,
+      notes: {
+        opt: 'Focus and scale — each tab is a clean single-type list, and the All digest (top 3 per group + “View all N”) keeps the landing view short no matter how many results exist.',
+        trade: 'Cross-group serendipity hides behind clicks; the All view can feel like a teaser. Tabs must sync to ?type= URLs to stay shareable — more state to manage.',
+        mobile: 'The tab bar scrolls horizontally; the digest and per-tab lists are unchanged.'
+      }
+    },
+    E: {
+      short: 'Ranked', name: 'Unified ranked list',
+      pitch: 'One list, best match first — with faces and badges inline.',
+      render: renderE,
+      notes: {
+        opt: 'Answer-first search: a single relevance-ordered list (Spotlight/Linear style) puts the best match on top regardless of bucket. The display-serif query hero gives the page an editorial identity, and photo/icon leads + type badges keep orientation without sections.',
+        trade: 'Ranking becomes a product decision and a permanent tuning burden; group counts are less prominent; “show me only teams” requires the filter pills rather than a visible section.',
+        mobile: 'Rows are already linear; the hero scales down to 40px. Badges stay but get tight — worth watching on long titles.'
+      }
+    }
+  };
+
+  /* ======================================================================
+     7. State, persistence, control bar
+     =================================================================== */
+  var STORE_KEY = 'uh-results-exploration';
+  var state = { option: 'A', scenario: 'al', viewport: 'desktop', filter: 'all', q: SCENARIOS.al.q, scores: {} };
+
+  (function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      if (saved.option && OPTIONS[saved.option]) { state.option = saved.option; }
+      if (saved.scenario && SCENARIOS[saved.scenario]) { state.scenario = saved.scenario; }
+      if (saved.viewport === 'mobile' || saved.viewport === 'desktop') { state.viewport = saved.viewport; }
+      if (saved.scores && typeof saved.scores === 'object') { state.scores = saved.scores; }
+      state.q = SCENARIOS[state.scenario].q;
+    } catch (e) { /* private mode etc. — run without persistence */ }
+  })();
+
+  function persist() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        option: state.option, scenario: state.scenario,
+        viewport: state.viewport, scores: state.scores
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  var frame = document.getElementById('frame');
+  var pageRoot = document.getElementById('page-root');
+  var notesRoot = document.getElementById('notes-root');
+  var optSeg = document.getElementById('opt-seg');
+  var scenSeg = document.getElementById('scen-seg');
+  var vpSeg = document.getElementById('vp-seg');
+  var scoreDots = document.getElementById('score-dots');
+  document.getElementById('bar-medal').innerHTML = I.trophy;
+
+  function renderControls() {
+    optSeg.innerHTML = Object.keys(OPTIONS).map(function (k) {
+      var sc = state.scores[k];
+      return '<button type="button" class="seg__btn' + (state.option === k ? ' is-active' : '') + '"' +
+        ' data-option="' + k + '" aria-pressed="' + (state.option === k) + '">' +
+        '<span class="seg__key">' + k + '</span>' + OPTIONS[k].short +
+        (sc ? '<span class="seg__score">' + sc + '</span>' : '') + '</button>';
+    }).join('');
+
+    scenSeg.innerHTML = Object.keys(SCENARIOS).map(function (k) {
+      var active = SCENARIOS[k].q === state.q;
+      return '<button type="button" class="seg__btn' + (active ? ' is-active' : '') + '"' +
+        ' data-scenario="' + k + '" aria-pressed="' + active + '">' + SCENARIOS[k].label + '</button>';
+    }).join('');
+
+    vpSeg.innerHTML =
+      '<button type="button" class="seg__btn' + (state.viewport === 'desktop' ? ' is-active' : '') + '"' +
+      ' data-viewport="desktop" aria-pressed="' + (state.viewport === 'desktop') + '">' + I.desk + 'Desktop 1280</button>' +
+      '<button type="button" class="seg__btn' + (state.viewport === 'mobile' ? ' is-active' : '') + '"' +
+      ' data-viewport="mobile" aria-pressed="' + (state.viewport === 'mobile') + '">' + I.phone + 'Mobile 390</button>';
+
+    var current = state.scores[state.option] || 0;
+    var dots = '';
+    for (var v = 1; v <= 5; v++) {
+      dots += '<button type="button" class="dot' + (v <= current ? ' is-on' : '') + '"' +
+        ' data-score="' + v + '" aria-pressed="' + (v <= current) + '"' +
+        ' aria-label="Score option ' + state.option + ': ' + v + ' of 5">' + v + '</button>';
+    }
+    scoreDots.innerHTML = dots;
+  }
+
+  function headerStub() {
+    return '<div class="stub" aria-hidden="true">' +
+      '<span class="stub__logo"><img src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame"></span>' +
+      '<nav class="stub__nav"><span>Members</span><span>Teams</span><span>News</span><span>About</span></nav>' +
+      '<span class="stub__tools"><span class="stub__search">' + I.search + '</span>' +
+      '<span class="stub__burger">' + I.burger + '</span></span></div>';
+  }
+
+  function notesHtml(key) {
+    var o = OPTIONS[key];
+    return '<div class="notes-card">' +
+      '<h2>Option ' + key + ' — ' + esc(o.name) + '</h2>' +
+      '<p class="pitch">' + o.pitch + '</p>' +
+      '<dl class="notes-dl">' +
+      '<dt>Optimizes for</dt><dd>' + o.notes.opt + '</dd>' +
+      '<dt>Trade-offs</dt><dd>' + o.notes.trade + '</dd>' +
+      '<dt>Mobile behavior</dt><dd>' + o.notes.mobile + '</dd>' +
+      '</dl></div>';
+  }
+
+  /* ======================================================================
+     8. Render orchestration
+     =================================================================== */
+  var refocusInput = false;
+
+  function render() {
+    var g = filterData(state.q);
+    /* Invalid filter for this query (e.g. group emptied by typing) → all,
+       mirroring search.php's whitelist fallback. */
+    if (state.filter !== 'all' && g.counts[state.filter] === 0) { state.filter = 'all'; }
+
+    frame.className = 'frame vp-' + state.viewport;
+    pageRoot.innerHTML = headerStub() +
+      '<div class="page page-' + state.option.toLowerCase() + '">' +
+      OPTIONS[state.option].render(g, state.q.trim()) + '</div>';
+    notesRoot.innerHTML = notesHtml(state.option);
+    renderControls();
+
+    if (refocusInput) {
+      refocusInput = false;
+      var input = pageRoot.querySelector('[data-role="q"]');
+      if (input) {
+        input.focus();
+        var len = input.value.length;
+        try { input.setSelectionRange(len, len); } catch (e) { /* search inputs in some engines */ }
+      }
+    }
+  }
+
+  /* ======================================================================
+     9. Events
+     =================================================================== */
+  document.querySelector('.bar').addEventListener('click', function (e) {
+    var el;
+    if ((el = e.target.closest('[data-option]'))) {
+      state.option = el.getAttribute('data-option');
+      state.filter = 'all';
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-scenario]'))) {
+      state.scenario = el.getAttribute('data-scenario');
+      state.q = SCENARIOS[state.scenario].q;
+      state.filter = 'all';
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-viewport]'))) {
+      state.viewport = el.getAttribute('data-viewport');
+      persist(); render(); return;
+    }
+    if ((el = e.target.closest('[data-score]'))) {
+      var v = parseInt(el.getAttribute('data-score'), 10);
+      if (state.scores[state.option] === v) { delete state.scores[state.option]; }
+      else { state.scores[state.option] = v; }
+      persist(); renderControls(); return;
+    }
+  });
+
+  pageRoot.addEventListener('click', function (e) {
+    var f = e.target.closest('[data-filter]');
+    if (f && !f.disabled) {
+      state.filter = f.getAttribute('data-filter');
+      render();
+      return;
+    }
+    var a = e.target.closest('a[href="#"]');
+    if (a) { e.preventDefault(); } // specimen rows do not navigate
+  });
+
+  pageRoot.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  var typeTimer = null;
+  pageRoot.addEventListener('input', function (e) {
+    var input = e.target.closest('[data-role="q"]');
+    if (!input) { return; }
+    var value = input.value;
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(function () {
+      state.q = value;
+      state.filter = 'all';
+      refocusInput = true;
+      render();
+    }, 140);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

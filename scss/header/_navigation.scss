@@ -1,94 +1,143 @@
+/*
+    .site-nav — one element, two presentations:
+
+    - Desktop (>= desktop-small): inline primary links in the brand bar,
+      15px uppercase Sorts Mill Goudy (locked in the header-nav-refine
+      specimen). Search / secondary / Donate hide — they live in the tray.
+    - Below desktop-small: the slide-in drawer, opened by
+      body.nav-overlay-open (see _nav-overlay-open.scss for the open state
+      and the .nav-search trigger styling).
+*/
+
 .site-nav {
     @include desktop-small {
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        grid-row: 1;
         grid-column: 4 / span 10;
     }
 
-    .link.desktop {
-        & + .link.desktop:not(.button) {
-            @include desktop-small {
-                margin-left: 1rem;
-            }
-
-            &:before {
-                @include desktop-small {
-                    content: "·";
-                    display: inline-block;
-                    margin-right: 1rem;
-                    transform: translateY(3px);
-                }
-            }
-        }
-
-        &.button {
-            @include desktop-small {
-                margin-left: 1rem;
-            }
-
-            @include desktop-medium {
-                margin-left: 1.5rem;
-            }
+    .nav-search {
+        @include desktop-small {
+            display: none;
         }
     }
 
-    .link.mobile-only {
+    .site-nav__links {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .site-nav__links--primary {
+        @include desktop-small {
+            flex-direction: row;
+            align-items: center;
+            gap: 2.25rem;
+        }
+    }
+
+    .site-nav__links--secondary,
+    .site-nav__donate {
         @include desktop-small {
             display: none;
         }
     }
 
     a {
+        font-family: $sorts-mill-goudy;
         text-transform: uppercase;
         letter-spacing: 0.15em;
-        font-size: 0.75rem;
-        font-family: $sorts-mill-goudy;
         white-space: nowrap;
+    }
 
+    .site-nav__links--primary a {
         @include desktop-small {
-            font-size: 0.675rem;
+            font-size: 0.75rem; // 12px — restored to the pre-redesign nav size
+
+            &:hover {
+                color: $gold-300;
+            }
+
+            svg {
+                display: none; // chevrons are drawer-only
+            }
         }
 
         @include desktop-medium {
-            font-size: 0.8125rem;
-        }
-
-        &:hover {
-            text-decoration: underline;
-            text-underline-offset: 8px;
-            text-decoration-thickness: 0.5px;
-            text-decoration-color: rgba($white, 0.5);
+            font-size: 0.8125rem; // 13px — matches the old 1280px+ bump
         }
     }
 
+    // ------------------------------------------------------------------
+    // Drawer — fixed full-height panel. Flex column so Donate can pin to
+    // the foot via margin-top: auto. visibility keeps the off-canvas links
+    // out of the tab order while closed.
+    // ------------------------------------------------------------------
     @media screen and (max-width: 991px) {
-        position: absolute;
+        position: fixed;
         top: 0;
+        bottom: 0;
+        left: 0;
         z-index: 1000;
-        left: -60vw;
-        width: 60vw;
-        height: 100vh;
+        width: min(340px, 80vw);
+        display: flex;
+        flex-direction: column;
         background: $slate;
         border-right: 1px solid $gray-700;
         box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
+        padding: 3.25rem 1.75rem 1.75rem;
+        overflow-y: auto;
         opacity: 0;
-        transition: all 0.2s ease-in-out;
-        padding: 3.25rem 2rem;
-        grid-column: 1 / -1;
+        visibility: hidden;
+        transform: translateX(calc(-100% - 1.5rem)); // extra clears the box-shadow
+        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out, visibility 0.2s;
 
-        .link {
-            padding-bottom: 2rem;
+        .site-nav__links--primary {
+            margin-top: 1.75rem;
+        }
 
-            & + .link {
-                margin-left: 0;
+        .site-nav__links--secondary {
+            margin-top: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .site-nav__links a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.8125rem 0.125rem;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+            svg {
+                flex: none;
+                color: rgba(255, 255, 255, 0.45);
+                transition: color 120ms ease, transform 120ms ease;
             }
-            &:before {
-                display: none;
-            }
 
-            a {
-                font-size: clamp(1rem, 1vw, 1.125rem);
+            &:hover {
+                color: $gold-300;
+
+                svg {
+                    color: $gold-300;
+                    transform: translateX(2px);
+                }
+            }
+        }
+
+        .site-nav__links--primary a {
+            font-size: 1.125rem;
+        }
+
+        .site-nav__donate {
+            margin-top: auto;
+            padding-top: 2rem;
+
+            .btn {
+                display: block;
+                text-align: center;
             }
         }
     }

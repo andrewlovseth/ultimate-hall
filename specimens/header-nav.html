@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ultimate Hall of Fame — Header &amp; Nav Design Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Sorts+Mill+Goudy:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+/* ==========================================================================
+   0. TOKENS + BASE
+   The project's actual tokens — nothing off-palette. Derived tints use
+   color-mix() or neutral white/black alphas only (same approach as prod SCSS).
+   ========================================================================== */
+:root {
+  --color-white:#fff; --color-slate:#231f20; --color-charcoal:#404040;
+  --color-gray-50:#fafafa; --color-gray-100:#efefef; --color-gray-200:#dcdcdc;
+  --color-gray-300:#bdbdbd; --color-gray-400:#989898; --color-gray-500:#7c7c7c;
+  --color-gray-600:#656565; --color-gray-700:#525252; --color-gray-900:#3d3d3d;
+  --color-gold-50:#fcfaea; --color-gold-100:#f9f5c8; --color-gold-200:#f4e994;
+  --color-gold-300:#eed556; --color-gold-400:#e7c22c; --color-gold-500:#d7aa1b;
+  --color-gold-600:#b98415; --color-gold-700:#946014; --color-gold-950:#3d210b;
+  --color-blue:#3e80ad;
+  --font-sans:"Work Sans",sans-serif; --font-display:"Sorts Mill Goudy",serif;
+
+  /* derived chrome tints */
+  --tint-w10: rgba(255,255,255,0.10);
+  --tint-w16: rgba(255,255,255,0.16);
+  --tint-w22: rgba(255,255,255,0.22);
+  --tint-w40: rgba(255,255,255,0.40);
+  --tint-w85: rgba(255,255,255,0.85);
+  --scrim: color-mix(in srgb, var(--color-slate) 58%, transparent);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-slate);
+  background: var(--color-gray-100);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+svg { display: block; }
+input { font: inherit; }
+ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p, dl, dd, dt { margin: 0; }
+
+:focus-visible { outline: 2px solid var(--color-gold-500); outline-offset: 2px; }
+
+/* kbd chips — 12px is reserved for key glyphs only (matches prod .omni kbd) */
+kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.25rem; height: 1.25rem; padding: 0 0.3125rem;
+  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 500; line-height: 1;
+  color: var(--color-gray-700); background: var(--color-white);
+  border: 1px solid var(--color-gray-200); border-bottom-width: 2px; border-radius: 4px;
+}
+.kbd-dark {
+  color: var(--tint-w85); background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.30); border-bottom-width: 1px;
+}
+
+/* ==========================================================================
+   1. CONTROL BAR — sticky, frosted
+   ========================================================================== */
+.ctrl {
+  position: sticky; top: 0; z-index: 500;
+  background: color-mix(in srgb, var(--color-white) 84%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+.ctrl__inner {
+  max-width: 1380px; margin-inline: auto;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem;
+  padding: 0.75rem 1.5rem;
+}
+.ctrl__title {
+  font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em;
+  margin-right: auto; white-space: nowrap;
+}
+.ctrl__title em { font-family: var(--font-display); font-style: italic; font-weight: 400; color: var(--color-gold-700); }
+
+.seg {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--color-gray-100); border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+}
+.seg button {
+  padding: 0.3rem 0.7rem; border-radius: 7px;
+  font-size: 0.875rem; font-weight: 500; color: var(--color-gray-600);
+  white-space: nowrap; transition: background 100ms ease, color 100ms ease;
+}
+.seg button:hover { color: var(--color-slate); }
+.seg button[aria-pressed="true"] {
+  background: var(--color-white); color: var(--color-slate); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.seg button b { font-weight: 700; color: var(--color-gold-700); margin-right: 0.3em; }
+.seg button[aria-pressed="true"] b { color: var(--color-gold-600); }
+.seg button span.w { color: var(--color-gray-500); font-weight: 400; margin-left: 0.3em; font-size: 0.875rem; }
+
+.score { display: inline-flex; align-items: center; gap: 0.5rem; }
+.score__label { font-size: 0.875rem; font-weight: 600; color: var(--color-gray-600); }
+.score__dots { display: inline-flex; gap: 0.3rem; }
+.score__dots button {
+  width: 1.375rem; height: 1.375rem; border-radius: 50%;
+  border: 1.5px solid var(--color-gray-300); background: var(--color-white);
+  padding: 0; transition: background 100ms ease, border-color 100ms ease, transform 100ms ease;
+}
+.score__dots button:hover { border-color: var(--color-gold-500); transform: scale(1.12); }
+.score__dots button.is-on { background: var(--color-gold-400); border-color: var(--color-gold-600); }
+.score__readout { font-size: 0.875rem; color: var(--color-gray-600); min-width: 2.2em; font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   2. STAGE + VIEWPORT FRAME
+   Media queries never fire on a narrowed child container — every responsive
+   rule below keys off .vp-desktop / .vp-tablet / .vp-mobile on the frame.
+   JS also adds .vp-compact for tablet+mobile shared behavior.
+   ========================================================================== */
+.stage { padding: 2.25rem 1.5rem 1rem; overflow-x: auto; }
+.frame {
+  position: relative; margin-inline: auto; overflow: hidden;
+  background: var(--color-slate);
+  border: 1px solid var(--color-gray-200); border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.07);
+}
+.frame.vp-desktop { width: 1280px; }
+.frame.vp-tablet  { width: 768px; }
+.frame.vp-mobile  { width: 390px; }
+.frame.vp-tablet, .frame.vp-mobile {
+  border: 1px solid var(--color-gray-300);
+  border-radius: 26px;
+  box-shadow: 0 0 0 6px var(--color-white), 0 0 0 7px var(--color-gray-200), 0 18px 48px rgba(0,0,0,0.10);
+}
+.stage__meta {
+  max-width: 1380px; margin: 0.875rem auto 0; text-align: center;
+  font-size: 0.875rem; color: var(--color-gray-500);
+}
+.opt[hidden] { display: none; }
+
+/* ==========================================================================
+   3. SHARED CHROME PRIMITIVES
+   ========================================================================== */
+
+/* --- omnibox trigger pill (prod .omni-trigger look) --- */
+.pill {
+  display: inline-flex; align-items: center; justify-content: flex-start;
+  gap: 0.625rem; padding: 0.4375rem 0.75rem 0.4375rem 0.875rem;
+  background: var(--tint-w10); border: 1px solid var(--tint-w22);
+  border-radius: 999px; color: var(--tint-w85);
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.pill:hover, .pill:focus-visible { background: var(--tint-w16); border-color: var(--tint-w40); }
+.pill svg { width: 1rem; height: 1rem; flex: none; }
+.pill__label { font-size: 0.875rem; font-weight: 500; }
+
+/* icon-only circle (markup-level) */
+.pill--icon { width: 2.25rem; height: 2.25rem; padding: 0; justify-content: center; }
+.pill--icon .pill__label, .pill--icon kbd { display: none; }
+
+/* contextual collapse to icon circle (viewport-level) */
+.vp-compact .opt-a .pill--collapsible,
+.vp-mobile  .opt-e .pill--collapsible {
+  width: 2.25rem; height: 2.25rem; padding: 0; justify-content: center;
+}
+.vp-compact .opt-a .pill--collapsible .pill__label,
+.vp-compact .opt-a .pill--collapsible kbd,
+.vp-mobile  .opt-e .pill--collapsible .pill__label,
+.vp-mobile  .opt-e .pill--collapsible kbd { display: none; }
+
+/* full-width field-look trigger (B tray) */
+.pill--bar { width: 100%; }
+.pill--bar .pill__label { flex: 1; text-align: left; font-weight: 400; color: rgba(255,255,255,0.7); }
+
+/* light variant (C utility row) */
+.pill--light { background: var(--color-white); border-color: var(--color-gray-300); color: var(--color-gray-700); }
+.pill--light:hover, .pill--light:focus-visible { background: var(--color-gold-50); border-color: var(--color-gold-300); }
+
+/* --- gold Donate button --- */
+.donate {
+  display: inline-flex; align-items: center;
+  padding: 0.5rem 1.05rem; border-radius: 4px;
+  background: var(--color-gold-400); border: 1px solid var(--color-gold-600);
+  color: var(--color-slate); font-size: 0.875rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+  transition: background 120ms ease;
+}
+.donate:hover { background: var(--color-gold-300); }
+.donate--compact { padding: 0.3rem 0.8rem; }
+
+/* --- hamburger + icon buttons --- */
+.burger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 8px; color: var(--color-white);
+  transition: background 120ms ease;
+}
+.burger:hover { background: var(--tint-w10); }
+.burger svg { width: 1.5rem; height: 1.5rem; }
+
+/* --- drawer (mobile nav overlay) --- */
+.drawer { display: none; position: absolute; inset: 0; z-index: 50; }
+.drawer.is-open { display: block; }
+.drawer__scrim { position: absolute; inset: 0; background: var(--scrim); animation: fadeIn 180ms ease; }
+.drawer__panel {
+  position: absolute; inset-block: 0; left: 0;
+  width: min(320px, 80%);
+  background: var(--color-slate); border-right: 1px solid var(--color-gray-700);
+  box-shadow: 0 0 24px rgba(0,0,0,0.3);
+  padding: 3.75rem 2rem 2rem;
+  overflow-y: auto;
+  animation: slideIn 220ms ease;
+}
+.drawer__close {
+  position: absolute; top: 0.875rem; right: 0.875rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.25rem; height: 2.25rem; border-radius: 50%; color: var(--tint-w85);
+}
+.drawer__close:hover { background: var(--tint-w10); }
+.drawer__close svg { width: 1.125rem; height: 1.125rem; }
+.drawer__links { display: flex; flex-direction: column; gap: 1.375rem; }
+.drawer__links a {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em;
+}
+.drawer__links a:hover { color: var(--color-gold-300); }
+.drawer__links a.is-primary { font-size: 1.125rem; }
+.drawer__rule { border: 0; border-top: 1px solid var(--tint-w16); margin: 1.5rem 0; }
+.drawer .donate { margin-top: 1.75rem; }
+
+/* --- search stub palette (the omnibox itself is another specimen's job) --- */
+.stub { position: absolute; inset: 0; z-index: 60; }
+.stub[hidden] { display: none; }
+.stub__scrim { position: absolute; inset: 0; background: var(--scrim); backdrop-filter: blur(2px); animation: fadeIn 160ms ease; }
+.stub__panel {
+  position: relative; z-index: 1;
+  width: min(560px, calc(100% - 2rem));
+  margin: 3rem auto 0;
+  background: var(--color-white); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  animation: popIn 180ms ease;
+}
+.stub__row {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--color-gray-200);
+}
+.stub__row > svg { width: 1.25rem; height: 1.25rem; color: var(--color-gray-500); flex: none; }
+.stub__input { flex: 1; min-width: 0; border: 0; outline: 0; font-size: 1.125rem; color: var(--color-slate); }
+.stub__input::placeholder { color: var(--color-gray-400); }
+.stub__close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.75rem; height: 1.75rem; flex: none; border-radius: 50%;
+  background: var(--color-gray-100); color: var(--color-gray-700);
+}
+.stub__close:hover { background: var(--color-gray-200); }
+.stub__close svg { width: 0.9375rem; height: 0.9375rem; }
+.stub__note { padding: 1.5rem 1.25rem 1.625rem; font-size: 0.875rem; color: var(--color-gray-600); text-align: center; }
+
+/* --- hero stub: stadium dusk under every header --- */
+.hero {
+  position: relative; text-align: center;
+  padding: 6.5rem 2.5rem 7.5rem;
+  background:
+    radial-gradient(120% 70% at 50% 112%, color-mix(in srgb, var(--color-gold-500) 30%, transparent), transparent 62%),
+    radial-gradient(70% 42% at 50% 118%, color-mix(in srgb, var(--color-gold-700) 50%, transparent), transparent 72%),
+    linear-gradient(180deg, var(--color-charcoal) 0%, var(--color-slate) 52%, color-mix(in srgb, var(--color-slate) 60%, var(--color-gold-950)) 100%);
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.06; mix-blend-mode: overlay;
+}
+.hero__rule { width: 64px; height: 2px; background: var(--color-gold-400); margin: 0 auto 1.5rem; }
+.hero__title {
+  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  font-size: 3.25rem; line-height: 1.12; color: var(--color-white);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+}
+.vp-tablet .hero { padding: 5.5rem 2rem 6.25rem; }
+.vp-tablet .hero__title { font-size: 2.625rem; }
+.vp-mobile .hero { padding: 4.5rem 1.5rem 5rem; }
+.vp-mobile .hero__title { font-size: 1.9375rem; }
+
+/* ==========================================================================
+   4. OPTION A — CURRENT + SEARCH (faithful baseline)
+   Slate bar · overlapping crest · uppercase Goudy links at today's tiny
+   sizes (13px desktop — knowingly below the 14px floor; it's the control).
+   ========================================================================== */
+.a-bar {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 2rem 2.5rem;
+  background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700);
+}
+.a-logo { position: relative; width: 164px; height: 2rem; flex: none; }
+.a-logo img { position: absolute; top: -1.5rem; left: 0; width: 100%; }
+.a-nav { display: flex; align-items: center; margin-left: auto; }
+.a-nav li { display: flex; align-items: center; }
+.a-nav li + li:not(.a-nav__btn)::before,
+.a-nav li.a-nav__btn ~ li::before {
+  content: "·"; color: var(--color-white); margin: 0 1rem; transform: translateY(2px);
+}
+.a-nav a:not(.donate) {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.15em; white-space: nowrap;
+}
+.a-nav a:not(.donate):hover {
+  text-decoration: underline; text-underline-offset: 8px;
+  text-decoration-thickness: 0.5px; text-decoration-color: rgba(255,255,255,0.5);
+}
+.a-nav .a-nav__btn { margin-left: 1.5rem; }
+.a-nav .a-nav__btn::before { display: none !important; }
+.a-burger { display: none; margin-left: auto; }
+
+.vp-compact .a-bar { padding: 1.5rem 1.5rem; }
+.vp-compact .a-logo { width: 128px; }
+.vp-compact .a-logo img { top: -1.125rem; }
+.vp-compact .a-nav { display: none; }
+.vp-compact .a-burger { display: inline-flex; }
+.vp-compact .a-pillwrap { margin-left: auto; }
+.vp-compact .a-burger { margin-left: 0; }
+.vp-mobile .a-bar { padding: 1.25rem 1.25rem; gap: 1rem; }
+.vp-mobile .a-logo { width: 104px; height: 1.75rem; }
+.vp-mobile .a-logo img { top: -0.875rem; }
+
+/* ==========================================================================
+   5. OPTION B — TWO-TIER SPLIT
+   Dark utility tray (search center, secondary links + Donate) above a
+   brand bar (crest + the three primary destinations at a legible 15px).
+   ========================================================================== */
+.b-chrome { position: relative; z-index: 2; }
+.b-tray {
+  display: grid; grid-template-columns: 1fr minmax(280px, 440px) 1fr;
+  align-items: center; gap: 1.5rem;
+  padding: 0.55rem 2.5rem;
+  background: linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.34)), var(--color-slate);
+  border-bottom: 1px solid var(--tint-w10);
+}
+.b-sec { display: flex; gap: 1.75rem; }
+.b-sec a { color: var(--color-gray-200); font-size: 0.875rem; font-weight: 500; }
+.b-sec a:hover { color: var(--color-gold-300); }
+.b-tray .donate { justify-self: end; }
+.b-bar {
+  display: flex; align-items: center; gap: 2rem;
+  padding: 1.375rem 2.5rem;
+  background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700);
+}
+.b-logo { position: relative; width: 150px; height: 2.25rem; flex: none; }
+.b-logo img { position: absolute; top: -1.125rem; left: 0; width: 100%; }
+.b-nav { display: flex; align-items: center; gap: 2.25rem; margin-left: auto; }
+.b-nav a {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.9375rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+}
+.b-nav a:hover { color: var(--color-gold-300); }
+.b-burger { display: none; margin-left: auto; }
+
+.vp-compact .b-tray { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 1.5rem; }
+.vp-compact .b-sec { display: none; }
+.vp-compact .b-tray .pill--bar { max-width: 460px; flex: 1; }
+.vp-compact .b-bar { padding: 1.125rem 1.5rem; }
+.vp-compact .b-nav { display: none; }
+.vp-compact .b-burger { display: inline-flex; }
+
+.vp-mobile .b-chrome { display: flex; flex-direction: column; }
+.vp-mobile .b-bar { order: 1; padding: 1rem 1.25rem; border-bottom: 0; }
+.vp-mobile .b-tray { order: 2; padding: 0 1rem 0.75rem; background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700); }
+.vp-mobile .b-tray .donate { display: none; }
+.vp-mobile .b-tray .pill--bar { max-width: none; border-radius: 10px; padding: 0.625rem 1rem; }
+/* Mobile: the tray sits directly below the bar, so the crest must not hang —
+   contain it fully (the hang only works where the hero is underneath). */
+.vp-mobile .b-logo { width: 56px; height: auto; }
+.vp-mobile .b-logo img { position: static; width: 56px; }
+
+/* ==========================================================================
+   6. OPTION C — CENTERED LOGO (museum symmetry)
+   Ivory hairline utility row (search + Donate) over a slate bar with the
+   crest centered between split nav, dropping into the hero like a facade crest.
+   ========================================================================== */
+.c-chrome { position: relative; z-index: 2; }
+.c-util {
+  display: flex; justify-content: flex-end; align-items: center; gap: 0.875rem;
+  padding: 0.45rem 2.5rem;
+  background: var(--color-gold-50); border-bottom: 1px solid var(--color-gray-200);
+}
+.c-bar {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem;
+  padding: 1.625rem 2.5rem;
+  background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700);
+}
+.c-nav { display: flex; align-items: center; gap: 2.25rem; }
+.c-nav--left { justify-self: end; }
+.c-nav--right { justify-self: start; }
+.c-nav a {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+}
+.c-nav a:hover { color: var(--color-gold-300); }
+.c-logo { position: relative; width: 150px; height: 2.5rem; }
+.c-logo img { position: absolute; top: -0.875rem; left: 0; width: 100%; }
+.c-burger { display: none; justify-self: start; }
+.c-search-compact { display: none; justify-self: end; }
+
+.vp-compact .c-util { display: none; }
+.vp-compact .c-bar { padding: 1.25rem 1.5rem; }
+.vp-compact .c-nav { display: none; }
+.vp-compact .c-burger { display: inline-flex; }
+.vp-compact .c-search-compact { display: inline-flex; }
+.vp-compact .c-logo { width: 124px; height: 2.25rem; }
+.vp-compact .c-logo img { top: -0.75rem; }
+.vp-mobile .c-bar { padding: 1rem 1.25rem; gap: 1rem; }
+.vp-mobile .c-logo { width: 104px; height: 2rem; }
+.vp-mobile .c-logo img { top: -0.625rem; }
+
+/* ==========================================================================
+   7. OPTION D — SEARCH-FORWARD
+   A real input is the header's center of gravity. Brand condenses to a
+   compact lockup; nav condenses to Hall of Famers + More ▾ + Donate.
+   ========================================================================== */
+.d-bar {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; gap: 1.75rem;
+  padding: 1.125rem 2.5rem;
+  background: var(--color-slate); border-bottom: 1px solid var(--color-gray-700);
+}
+.d-lockup { display: flex; align-items: center; gap: 0.875rem; flex: none; }
+.d-lockup img { width: 48px; }
+.d-wordmark {
+  font-family: var(--font-display); font-style: italic; font-size: 1.125rem;
+  color: var(--color-white); line-height: 1.15; max-width: 9.5rem;
+}
+.d-search {
+  flex: 1; max-width: 560px;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.625rem 0.875rem 0.625rem 1rem;
+  background: var(--tint-w10); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.d-search:hover, .d-search:focus-within { background: var(--tint-w16); border-color: var(--tint-w40); }
+.d-search > svg { width: 1.0625rem; height: 1.0625rem; color: var(--tint-w85); flex: none; }
+.d-search input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  font-size: 1rem; color: var(--color-white);
+}
+.d-search input::placeholder { color: rgba(255,255,255,0.55); }
+.d-tools { display: flex; align-items: center; gap: 1.5rem; margin-left: auto; }
+.d-tools > a:not(.donate), .d-more__btn {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+}
+.d-tools > a:not(.donate):hover, .d-more__btn:hover { color: var(--color-gold-300); }
+.d-more { position: relative; }
+.d-more__btn svg { width: 0.875rem; height: 0.875rem; transition: transform 150ms ease; }
+.d-more.is-open .d-more__btn svg { transform: rotate(180deg); }
+.d-more__menu {
+  display: none; position: absolute; top: calc(100% + 0.75rem); right: 0; z-index: 20;
+  min-width: 220px; padding: 0.5rem 0;
+  background: var(--color-white); border: 1px solid var(--color-gray-200); border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+  animation: popIn 140ms ease;
+}
+.d-more.is-open .d-more__menu { display: block; }
+.d-more__menu a {
+  display: block; padding: 0.5rem 1.125rem;
+  color: var(--color-slate); font-size: 1rem; font-weight: 500;
+}
+.d-more__menu a:hover { background: var(--color-gold-50); }
+.d-burger { display: none; }
+
+.vp-compact .d-bar { padding: 1rem 1.5rem; gap: 1.25rem; flex-wrap: wrap; }
+.vp-compact .d-wordmark { display: none; }
+.vp-compact .d-tools > a:not(.donate), .vp-compact .d-more { display: none; }
+.vp-compact .d-burger { display: inline-flex; }
+.vp-tablet .d-search { max-width: none; }
+.vp-tablet .d-tools { gap: 1rem; }
+.vp-mobile .d-bar { padding: 0.875rem 1.25rem 1rem; }
+.vp-mobile .d-lockup img { width: 44px; }
+.vp-mobile .d-tools .donate { display: none; }
+.vp-mobile .d-search { order: 9; flex-basis: 100%; max-width: none; padding-block: 0.5625rem; }
+
+/* ==========================================================================
+   8. OPTION E — MASTHEAD
+   Broadsheet nameplate: centered crest + display-italic wordmark band,
+   above a slim everything-bar (all five links + search + Donate) that
+   would be the only sticky chrome.
+   ========================================================================== */
+.e-chrome { position: relative; z-index: 2; }
+.e-masthead {
+  text-align: center; padding: 1.875rem 1.5rem 1.5rem;
+  background:
+    radial-gradient(90% 130% at 50% -45%, color-mix(in srgb, var(--color-gold-500) 22%, transparent), transparent 70%),
+    var(--color-slate);
+}
+.e-masthead img { width: 88px; margin: 0 auto 0.75rem; }
+.e-wordmark {
+  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  font-size: 2.125rem; line-height: 1.1; color: var(--color-white);
+}
+.e-nav {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem;
+  padding: 0.625rem 2rem;
+  background: linear-gradient(rgba(0,0,0,0.30), rgba(0,0,0,0.30)), var(--color-slate);
+  border-top: 1px solid var(--tint-w10);
+  border-bottom: 1px solid var(--color-gold-600);
+}
+.e-links { grid-column: 2; display: flex; align-items: center; gap: 1.875rem; }
+.e-links a {
+  color: var(--color-white); font-family: var(--font-display);
+  font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+}
+.e-links a:hover { color: var(--color-gold-300); }
+.e-tools { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 0.75rem; }
+.e-burger { display: none; grid-column: 1; justify-self: start; }
+
+.vp-compact .e-masthead { padding: 1.5rem 1.5rem 1.25rem; }
+.vp-compact .e-masthead img { width: 72px; }
+.vp-compact .e-wordmark { font-size: 1.75rem; }
+.vp-compact .e-nav { display: flex; justify-content: space-between; padding: 0.5rem 1.25rem; }
+.vp-compact .e-links { display: none; }
+.vp-compact .e-burger { display: inline-flex; }
+.vp-mobile .e-masthead { padding: 1.25rem 1rem 1rem; }
+.vp-mobile .e-masthead img { width: 60px; margin-bottom: 0.5rem; }
+.vp-mobile .e-wordmark { font-size: 1.375rem; }
+.vp-mobile .e-nav { padding: 0.5rem 1rem; gap: 0.625rem; }
+.vp-mobile .e-tools { gap: 0.625rem; }
+.vp-mobile .e-tools .donate { padding: 0.3rem 0.7rem; }
+
+/* ==========================================================================
+   9. NOTES
+   ========================================================================== */
+.notes { max-width: 960px; margin: 0 auto; padding: 1.75rem 1.5rem 4rem; }
+.note[hidden] { display: none; }
+.note {
+  background: var(--color-white); border: 1px solid var(--color-gray-200);
+  border-radius: 12px; padding: 2rem 2.25rem 2.25rem;
+}
+.note h2 { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.01em; }
+.note h2 b { color: var(--color-gold-700); font-weight: 700; }
+.note__pitch {
+  margin-top: 0.625rem; font-size: 1.0625rem; line-height: 1.55; color: var(--color-gray-900);
+}
+.note__pitch em { font-family: var(--font-display); font-style: italic; }
+.note dl {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.375rem 2rem; margin-top: 1.75rem; padding-top: 1.625rem;
+  border-top: 1px solid var(--color-gray-200);
+}
+.note dt { font-size: 0.875rem; font-weight: 600; color: var(--color-charcoal); }
+.note dd { margin-top: 0.375rem; font-size: 1rem; line-height: 1.55; color: var(--color-gray-700); }
+.notes__foot { margin-top: 1.25rem; text-align: center; font-size: 0.875rem; color: var(--color-gray-500); }
+
+/* ==========================================================================
+   10. ANIMATION
+   ========================================================================== */
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes slideIn { from { transform: translateX(-100%); } }
+@keyframes popIn { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     CONTROL BAR
+     ====================================================================== -->
+<header class="ctrl">
+  <div class="ctrl__inner">
+    <h1 class="ctrl__title">Header &amp; Nav — <em>Design Exploration</em></h1>
+
+    <div class="seg" role="group" aria-label="Header option">
+      <button type="button" data-set-option="A"><b>A</b>Current + Search</button>
+      <button type="button" data-set-option="B"><b>B</b>Two-Tier</button>
+      <button type="button" data-set-option="C"><b>C</b>Centered Logo</button>
+      <button type="button" data-set-option="D"><b>D</b>Search-Forward</button>
+      <button type="button" data-set-option="E"><b>E</b>Masthead</button>
+    </div>
+
+    <div class="seg" role="group" aria-label="Viewport">
+      <button type="button" data-set-viewport="desktop">Desktop<span class="w">1280</span></button>
+      <button type="button" data-set-viewport="tablet">Tablet<span class="w">768</span></button>
+      <button type="button" data-set-viewport="mobile">Mobile<span class="w">390</span></button>
+    </div>
+
+    <div class="score">
+      <span class="score__label">Rate</span>
+      <span class="score__dots" id="scoreDots">
+        <button type="button" data-score="1" aria-label="Rate 1 of 5"></button>
+        <button type="button" data-score="2" aria-label="Rate 2 of 5"></button>
+        <button type="button" data-score="3" aria-label="Rate 3 of 5"></button>
+        <button type="button" data-score="4" aria-label="Rate 4 of 5"></button>
+        <button type="button" data-score="5" aria-label="Rate 5 of 5"></button>
+      </span>
+      <span class="score__readout" id="scoreReadout">—</span>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================================
+     STAGE — the simulated viewport frame
+     ====================================================================== -->
+<div class="stage">
+  <div class="frame vp-desktop" id="frame">
+
+    <!-- ================================================================
+         OPTION A — CURRENT + SEARCH (baseline)
+         ================================================================ -->
+    <section class="opt opt-a" data-opt="A">
+      <div class="a-bar">
+        <div class="a-logo">
+          <a href="#"><img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame" /></a>
+        </div>
+        <div class="a-pillwrap">
+          <button type="button" class="pill pill--collapsible" data-open-search aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+            <span class="pill__label">Search</span>
+            <kbd class="kbd-dark">/</kbd>
+          </button>
+        </div>
+        <ul class="a-nav">
+          <li><a href="#">Hall of Famers</a></li>
+          <li><a href="#">Selection Process</a></li>
+          <li><a href="#">About the Hall</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Contact</a></li>
+          <li class="a-nav__btn"><a class="donate" href="#">Donate</a></li>
+        </ul>
+        <button type="button" class="burger a-burger" data-open-drawer aria-label="Open menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Ultimate Hall of Fame</h2>
+      </div>
+
+      <div class="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+          <nav class="drawer__links">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         OPTION B — TWO-TIER SPLIT
+         ================================================================ -->
+    <section class="opt opt-b" data-opt="B" hidden>
+      <div class="b-chrome">
+        <div class="b-tray">
+          <ul class="b-sec">
+            <li><a href="#">News</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <button type="button" class="pill pill--bar" data-open-search>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+            <span class="pill__label">Search the Hall — players, teams, classes&hellip;</span>
+            <kbd class="kbd-dark">/</kbd>
+          </button>
+          <a class="donate donate--compact" href="#">Donate</a>
+        </div>
+        <div class="b-bar">
+          <div class="b-logo">
+            <a href="#"><img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame" /></a>
+          </div>
+          <nav class="b-nav">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+          </nav>
+          <button type="button" class="burger b-burger" data-open-drawer aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Ultimate Hall of Fame</h2>
+      </div>
+
+      <div class="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+          <nav class="drawer__links">
+            <a class="is-primary" href="#">Hall of Famers</a>
+            <a class="is-primary" href="#">Selection Process</a>
+            <a class="is-primary" href="#">About the Hall</a>
+          </nav>
+          <hr class="drawer__rule" />
+          <nav class="drawer__links">
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         OPTION C — CENTERED LOGO
+         ================================================================ -->
+    <section class="opt opt-c" data-opt="C" hidden>
+      <div class="c-chrome">
+        <div class="c-util">
+          <button type="button" class="pill pill--light" data-open-search>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+            <span class="pill__label">Search</span>
+            <kbd>/</kbd>
+          </button>
+          <a class="donate donate--compact" href="#">Donate</a>
+        </div>
+        <div class="c-bar">
+          <button type="button" class="burger c-burger" data-open-drawer aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <nav class="c-nav c-nav--left">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+          </nav>
+          <div class="c-logo">
+            <a href="#"><img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="Ultimate Hall of Fame" /></a>
+          </div>
+          <nav class="c-nav c-nav--right">
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <button type="button" class="pill pill--icon c-search-compact" data-open-search aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Ultimate Hall of Fame</h2>
+      </div>
+
+      <div class="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+          <nav class="drawer__links">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         OPTION D — SEARCH-FORWARD
+         ================================================================ -->
+    <section class="opt opt-d" data-opt="D" hidden>
+      <div class="d-bar">
+        <a class="d-lockup" href="#">
+          <img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="" />
+          <span class="d-wordmark">Ultimate Hall of&nbsp;Fame</span>
+        </a>
+        <div class="d-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+          <input type="text" data-search-field placeholder="Search players, teams, classes&hellip;" aria-label="Search the Hall of Fame" />
+          <kbd class="kbd-dark">/</kbd>
+        </div>
+        <div class="d-tools">
+          <a href="#">Hall of Famers</a>
+          <div class="d-more">
+            <button type="button" class="d-more__btn" data-toggle-more aria-haspopup="true">
+              More
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="d-more__menu">
+              <a href="#">Selection Process</a>
+              <a href="#">About the Hall</a>
+              <a href="#">News</a>
+              <a href="#">Contact</a>
+            </div>
+          </div>
+          <a class="donate" href="#">Donate</a>
+          <button type="button" class="burger d-burger" data-open-drawer aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Ultimate Hall of Fame</h2>
+      </div>
+
+      <div class="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+          <nav class="drawer__links">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         OPTION E — MASTHEAD
+         ================================================================ -->
+    <section class="opt opt-e" data-opt="E" hidden>
+      <div class="e-chrome">
+        <div class="e-masthead">
+          <a href="#">
+            <img class="uh-logo" src="https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg" alt="" />
+            <div class="e-wordmark">Ultimate Hall of Fame</div>
+          </a>
+        </div>
+        <div class="e-nav">
+          <button type="button" class="burger e-burger" data-open-drawer aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <nav class="e-links">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <div class="e-tools">
+            <button type="button" class="pill pill--collapsible" data-open-search aria-label="Search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+              <span class="pill__label">Search</span>
+              <kbd class="kbd-dark">/</kbd>
+            </button>
+            <a class="donate donate--compact" href="#">Donate</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="hero__rule"></div>
+        <h2 class="hero__title">Celebrating the Greats of&nbsp;Ultimate</h2>
+      </div>
+
+      <div class="drawer">
+        <div class="drawer__scrim" data-close></div>
+        <div class="drawer__panel" role="dialog" aria-label="Menu">
+          <button type="button" class="drawer__close" data-close aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+          <nav class="drawer__links">
+            <a href="#">Hall of Famers</a>
+            <a href="#">Selection Process</a>
+            <a href="#">About the Hall</a>
+            <a href="#">News</a>
+            <a href="#">Contact</a>
+          </nav>
+          <a class="donate" href="#">Donate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SEARCH STUB PALETTE (shared — the real omnibox is its own specimen)
+         ================================================================ -->
+    <div class="stub" id="stub" hidden>
+      <div class="stub__scrim" data-close></div>
+      <div class="stub__panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="stub__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+          <input type="text" class="stub__input" placeholder="Search the Hall of Fame&hellip;" aria-label="Search" />
+          <button type="button" class="stub__close" data-close aria-label="Close search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+          </button>
+        </div>
+        <p class="stub__note">Stub only — the full omnibox lives in <strong>specimens/omnibox.html</strong>. This exploration is about where the trigger sits.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="stage__meta" id="stageMeta">Viewport 1280px — hamburger, drawer, and search trigger are clickable in every option.</p>
+</div>
+
+<!-- ======================================================================
+     NOTES — one per option
+     ====================================================================== -->
+<div class="notes">
+
+  <article class="note" data-opt="A">
+    <h2><b>Option A</b> — Current + Search <em style="font-family:var(--font-display);font-style:italic;font-weight:400;color:var(--color-gray-500);">(baseline)</em></h2>
+    <p class="note__pitch">Today's header, faithfully: slate bar, the crest hanging over the hero, uppercase Goudy links, gold Donate — with the omnibox pill slotted beside the logo. <em>The control group every redesign must beat.</em></p>
+    <dl>
+      <dt>Optimizes for</dt>
+      <dd>Zero migration risk and total familiarity. The overlapping-crest signature is untouched, and the omnibox lands without moving a single link.</dd>
+      <dt>Trade-offs</dt>
+      <dd>Nav type runs 11–13px uppercase — below the site's own 14px floor, and six links + pill + crest all fight for one row. Search reads as an accessory, not a feature.</dd>
+      <dt>Where search lives</dt>
+      <dd>Desktop: labeled pill (icon + "Search" + <strong>/</strong>) just right of the crest. Tablet/mobile: icon-only circle beside the hamburger — it never moves into the drawer.</dd>
+      <dt>Mobile answer</dt>
+      <dd>Crest shrinks to 104px; nav collapses to the left-slide slate drawer (Donate inside). Search stays surfaced as the icon circle in the bar.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>Nothing — matching production, the whole header scrolls away. The <strong>/</strong> shortcut is the only persistent route to search.</dd>
+    </dl>
+  </article>
+
+  <article class="note" data-opt="B" hidden>
+    <h2><b>Option B</b> — Two-Tier Split</h2>
+    <p class="note__pitch">A darker utility tray (search center, News · Contact left, Donate right) sits above a calmer brand bar carrying the crest and the three primary destinations at a legible 15px. <em>Wayfinding and utility each get their own floor.</em></p>
+    <dl>
+      <dt>Optimizes for</dt>
+      <dd>Search becomes permanently discoverable — a wide, field-shaped trigger in its own tray (the cb-fish dark-tray move, recast in slate + gold). Primary nav finally breathes.</dd>
+      <dt>Trade-offs</dt>
+      <dd>Roughly 44px more chrome before the hero. Two dark bars must stay visually distinct (the tray is darkened slate with a hairline), and Donate is less commanding at tray scale.</dd>
+      <dt>Where search lives</dt>
+      <dd>Desktop/tablet: the wide tray trigger, centered. Mobile: the tray flips <strong>below</strong> the brand bar as a full-width search bar — persistent, thumb-reachable.</dd>
+      <dt>Mobile answer</dt>
+      <dd>Brand bar = crest + hamburger; the drawer groups primary (large) over News/Contact (small) with Donate at the foot. Search keeps its own full-width row.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>Tray only — a slim 44px strip with search and Donate follows you; the brand bar scrolls away with the page.</dd>
+    </dl>
+  </article>
+
+  <article class="note" data-opt="C" hidden>
+    <h2><b>Option C</b> — Centered Logo</h2>
+    <p class="note__pitch">An ivory hairline utility row (search + Donate) above a slate bar where the crest sits dead-center between split nav, dropping into the hero like a crest on a building facade. <em>This is a hall of fame — let it feel like the institution it is.</em></p>
+    <dl>
+      <dt>Optimizes for</dt>
+      <dd>Ceremony and symmetry. The crest gains scale and prominence; the warm gold-50 utility strip frames the dark bar like museum letterhead.</dd>
+      <dt>Trade-offs</dt>
+      <dd>Split nav locks you into a 2/3 link balance — adding a seventh link later gets awkward. Three stacked strips cost vertical room, and centered logos are slower wayfinding than left-anchored ones.</dd>
+      <dt>Where search lives</dt>
+      <dd>Desktop: light pill in the utility row, top right. Tablet/mobile: the utility row drops; search becomes an icon circle mirroring the hamburger across the centered crest.</dd>
+      <dt>Mobile answer</dt>
+      <dd>Symmetric bar — hamburger left, crest center, search icon right. Donate moves into the drawer as the gold button.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>None by default. Recommended: a condensed sticky reprise (56px inline crest + hamburger + search icon) that fades in after the full header scrolls off.</dd>
+    </dl>
+  </article>
+
+  <article class="note" data-opt="D" hidden>
+    <h2><b>Option D</b> — Search-Forward</h2>
+    <p class="note__pitch">The Hall is a database of people — so the search field itself, not a pill, is the header's center of gravity. Brand condenses to a compact lockup; nav condenses to Hall of Famers + More&nbsp;▾ + Donate. <em>Treat search as the front door.</em></p>
+    <dl>
+      <dt>Optimizes for</dt>
+      <dd>The dominant visitor job: "find a player." A 560px field makes the omnibox impossible to miss — the reference-site pattern (IMDb, Baseball-Reference) applied to ultimate.</dd>
+      <dt>Trade-offs</dt>
+      <dd>Selection Process, About, News, and Contact lose top-level visibility behind More. A field this prominent promises instant answers, so the omnibox must be fast — and the bar is the busiest of the five.</dd>
+      <dt>Where search lives</dt>
+      <dd>Everywhere, always: a real input. Desktop centers it; tablet lets it flex between lockup and hamburger; focusing it opens the omnibox overlay.</dd>
+      <dt>Mobile answer</dt>
+      <dd>Two rows — crest + hamburger on top, then a persistent full-width search bar. Search never hides behind an icon; Donate and all links move to the drawer.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>The entire compact header sticks — it <strong>is</strong> the search bar, so hiding it would defeat the concept.</dd>
+    </dl>
+  </article>
+
+  <article class="note" data-opt="E" hidden>
+    <h2><b>Option E</b> — Masthead <em style="font-family:var(--font-display);font-style:italic;font-weight:400;color:var(--color-gray-500);">(my pick to argue about)</em></h2>
+    <p class="note__pitch">A broadsheet nameplate: centered crest above the wordmark set big in Goudy italic, with a faint gold glow — then one slim everything-bar (all five links + search + Donate) beneath a gold hairline. <em>Identity gets its ceremony once; a single slim bar does all the work forever after.</em></p>
+    <dl>
+      <dt>Optimizes for</dt>
+      <dd>The arrival moment. No current option ever shows the institution's name in chrome — the crest alone carries it. And after first paint, the chrome that follows you is the leanest of all five options.</dd>
+      <dt>Trade-offs</dt>
+      <dd>Tallest first-paint chrome (~190px desktop). The wordmark would collide with a hero that repeats the name — homepage hero copy should shift to a tagline (shown here). Interior pages likely want the slim bar alone.</dd>
+      <dt>Where search lives</dt>
+      <dd>In the slim bar, far right, always: labeled pill on desktop and tablet, icon circle at mobile. Because the bar is the sticky element, search is permanently one tap away.</dd>
+      <dt>Mobile answer</dt>
+      <dd>Masthead compresses to a 60px crest + 22px wordmark; the bar keeps hamburger + search icon + compact Donate. Nothing important ever leaves the surface.</dd>
+      <dt>Sticky on scroll</dt>
+      <dd>Slim bar only — the nameplate scrolls away like a newspaper masthead, leaving a 52px strip with nav, search, and Donate.</dd>
+    </dl>
+  </article>
+
+  <p class="notes__foot">Scores, option, and viewport persist locally (<code>uh-header-exploration</code>). Esc closes drawers, menus, and the search stub.</p>
+</div>
+
+<!-- ======================================================================
+     SCRIPT
+     ====================================================================== -->
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "uh-header-exploration";
+  var OPTIONS = ["A", "B", "C", "D", "E"];
+  var VIEWPORTS = { desktop: 1280, tablet: 768, mobile: 390 };
+
+  /* ---------- state ---------- */
+  var state = { option: "A", viewport: "desktop", scores: {} };
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    if (OPTIONS.indexOf(saved.option) !== -1) state.option = saved.option;
+    if (VIEWPORTS[saved.viewport]) state.viewport = saved.viewport;
+    if (saved.scores && typeof saved.scores === "object") state.scores = saved.scores;
+  } catch (e) { /* fresh start */ }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private mode */ }
+  }
+
+  /* ---------- elements ---------- */
+  var frame = document.getElementById("frame");
+  var stub = document.getElementById("stub");
+  var stubInput = stub.querySelector(".stub__input");
+  var stageMeta = document.getElementById("stageMeta");
+  var scoreDots = Array.prototype.slice.call(document.querySelectorAll("#scoreDots button"));
+  var scoreReadout = document.getElementById("scoreReadout");
+
+  /* ---------- overlays ---------- */
+  function closeMoreMenus() {
+    document.querySelectorAll(".d-more.is-open").forEach(function (m) { m.classList.remove("is-open"); });
+  }
+  function closeOverlays() {
+    document.querySelectorAll(".drawer.is-open").forEach(function (d) { d.classList.remove("is-open"); });
+    closeMoreMenus();
+    stub.hidden = true;
+  }
+  function openStub() {
+    closeOverlays();
+    stub.hidden = false;
+    stubInput.value = "";
+    stubInput.focus();
+  }
+
+  /* ---------- render ---------- */
+  function renderScore() {
+    var s = state.scores[state.option] || 0;
+    scoreDots.forEach(function (dot, i) { dot.classList.toggle("is-on", i < s); });
+    scoreReadout.textContent = s ? s + "/5" : "—";
+  }
+
+  function apply() {
+    frame.className = "frame vp-" + state.viewport + (state.viewport !== "desktop" ? " vp-compact" : "");
+
+    document.querySelectorAll(".opt").forEach(function (o) { o.hidden = o.dataset.opt !== state.option; });
+    document.querySelectorAll(".note").forEach(function (n) { n.hidden = n.dataset.opt !== state.option; });
+
+    document.querySelectorAll("[data-set-option]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setOption === state.option));
+    });
+    document.querySelectorAll("[data-set-viewport]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.setViewport === state.viewport));
+    });
+
+    stageMeta.textContent = "Viewport " + VIEWPORTS[state.viewport] +
+      "px — hamburger, drawer, and search trigger are clickable in every option.";
+
+    renderScore();
+    closeOverlays();
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener("click", function (e) {
+    // click outside any open More menu closes it
+    if (!e.target.closest(".d-more")) closeMoreMenus();
+
+    var t = e.target.closest(
+      "[data-set-option],[data-set-viewport],[data-score],[data-open-drawer],[data-open-search],[data-close],[data-toggle-more]"
+    );
+    if (!t) return;
+
+    if (t.dataset.setOption) {
+      state.option = t.dataset.setOption;
+      save(); apply();
+    } else if (t.dataset.setViewport) {
+      state.viewport = t.dataset.setViewport;
+      save(); apply();
+    } else if (t.dataset.score) {
+      var v = parseInt(t.dataset.score, 10);
+      state.scores[state.option] = (state.scores[state.option] === v) ? 0 : v;
+      save(); renderScore();
+    } else if (t.hasAttribute("data-open-drawer")) {
+      var opt = t.closest(".opt");
+      var drawer = opt && opt.querySelector(".drawer");
+      if (drawer) drawer.classList.add("is-open");
+    } else if (t.hasAttribute("data-open-search")) {
+      openStub();
+    } else if (t.hasAttribute("data-toggle-more")) {
+      t.closest(".d-more").classList.toggle("is-open");
+    } else if (t.hasAttribute("data-close")) {
+      var d = t.closest(".drawer");
+      if (d) d.classList.remove("is-open");
+      if (t.closest(".stub")) stub.hidden = true;
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeOverlays();
+  });
+
+  // Option D: the real input is the trigger — focusing it opens the omnibox stub
+  document.querySelectorAll("[data-search-field]").forEach(function (inp) {
+    inp.addEventListener("focus", function () {
+      inp.blur();
+      openStub();
+    });
+  });
+
+  /* ---------- logo fallback (specimen works offline) ---------- */
+  var FALLBACK = "data:image/svg+xml;utf8," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 144">' +
+    '<path d="M60 4 112 24v50c0 36-26 54-52 64C34 128 8 110 8 74V24Z" fill="#e7c22c" stroke="#946014" stroke-width="5"/>' +
+    '<path d="M60 16 102 32v42c0 29-21 44-42 52-21-8-42-23-42-52V32Z" fill="none" stroke="#946014" stroke-width="2"/>' +
+    '<text x="60" y="64" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="bold" fill="#231f20">HALL OF</text>' +
+    '<text x="60" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="bold" fill="#231f20">FAME</text>' +
+    "</svg>"
+  );
+  document.querySelectorAll("img.uh-logo").forEach(function (img) {
+    img.addEventListener("error", function () { img.src = FALLBACK; }, { once: true });
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

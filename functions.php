@@ -18,6 +18,8 @@ require_once( plugin_dir_path( __FILE__ ) . '/functions/member-helpers.php');
 
 require_once( plugin_dir_path( __FILE__ ) . '/functions/inaugural-helpers.php');
 
+require_once( plugin_dir_path( __FILE__ ) . '/functions/search-api.php');
+
 // Fix blog pagination: /news/page/2/ gets swallowed by post name rewrite rules
 // because the permalink structure starts with /news/. This adds an explicit rule.
 add_action('init', function () {

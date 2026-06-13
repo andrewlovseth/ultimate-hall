@@ -1,3 +1,48 @@
+/*
+    Drawer search trigger + the nav overlay open state.
+
+    .nav-search is the field-shaped button pinned at the top of the drawer
+    (template-parts/header/navigation.php). js/search.js binds palette-open
+    to every .js-omni-open and closes this overlay itself when the palette
+    opens. Styled at the top level — not under body.nav-overlay-open — so it
+    doesn't pop unstyled during the 0.2s close transition.
+*/
+
+.nav-search {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.6875rem 0.875rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: $work-sans;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: background 120ms ease, border-color 120ms ease;
+
+    svg {
+        flex: none;
+    }
+
+    span {
+        flex: 1;
+        text-align: left;
+        font-size: 1rem; // 16px — matches the drawer field in the specimen
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    &:hover,
+    &:focus-visible {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
 body.nav-overlay-open {
 	.hamburger {
         z-index: 100;
@@ -21,8 +66,9 @@ body.nav-overlay-open {
 
     @media screen and (max-width: 991px) {
         .site-nav {
-            left: 0;
+            transform: translateX(0);
             opacity: 1;
+            visibility: visible;
         }
     }
 }
