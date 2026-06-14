@@ -344,7 +344,7 @@ function bearsmith_search_format_item( $post, $query = '' ) {
                 if ( null !== $type_label ) {
                     $sub_parts[] = $type_label;
                 }
-                $sub_parts[] = get_the_title( $post ); // the group they belong to
+                $sub_parts[] = bearsmith_search_group_name( $post ); // the group they belong to
                 if ( $entry_match['extra'] > 0 ) {
                     $sub_parts[] = '+' . $entry_match['extra'] . ' more';
                 }
@@ -500,12 +500,30 @@ function bearsmith_search_image_url( $image ) {
 }
 
 /**
+ * The group's display name: the post title, trimmed at the first colon.
+ *
+ * Roster-style titles ("The Founders: Joel Silver, …") embed the members after
+ * a colon. Trimming there yields the group name proper ("The Founders") for two
+ * uses: deciding whether a query is a GROUP-name search (vs an individual), and
+ * labeling the group in an individual's sub-line. Titles without a colon (e.g.
+ * "The MOB") are returned whole.
+ *
+ * @param WP_Post $post Member post.
+ * @return string Group display name.
+ */
+function bearsmith_search_group_name( $post ) {
+    $title = get_the_title( $post );
+    $colon = mb_strpos( $title, ':' );
+    return ( false !== $colon ) ? trim( mb_substr( $title, 0, $colon ) ) : $title;
+}
+
+/**
  * Find the individual inside a GROUP member that matched the query.
  *
  * Returns null (so the caller renders the group normally — title = group name,
- * classification sub-line) when: no query, the post has no `entries`, the post
- * TITLE already contains the query (the group surfaced on its own name, e.g.
- * "MOB"), or no entry name matches.
+ * classification sub-line) when: no query, the post has no `entries`, the query
+ * matches the group NAME — the title up to any colon (e.g. "MOB" or "The
+ * Founders"), so the group surfaced on its own name — or no entry name matches.
  *
  * When one or more entry names match, returns
  * array( 'name' => '<first matching "First Last">', 'photo' => <url|null>,
@@ -527,9 +545,12 @@ function bearsmith_search_member_entry_match( $post, $query ) {
         return null;
     }
 
-    // If the title itself matched, the group surfaced on its own name — render
-    // it as a normal group result, not as one of its individuals.
-    if ( false !== mb_stripos( get_the_title( $post ), $query ) ) {
+    // If the query matches the GROUP NAME itself (the title up to any colon),
+    // the group surfaced on its own name — render it as the group, not as one
+    // of its individuals. Names listed AFTER the colon (roster-style titles
+    // like "The Founders: a, b, c") don't count, so searching one of those
+    // people still features the individual.
+    if ( false !== mb_stripos( bearsmith_search_group_name( $post ), $query ) ) {
         return null;
     }
 
