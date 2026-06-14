@@ -514,14 +514,15 @@ body.omni-open {
         text-overflow: ellipsis;
         white-space: nowrap;
 
-        // Vertical padding keeps Goudy's descenders clear of the highlight;
-        // box-decoration-break keeps wrapped highlights consistent on the
-        // results page (palette rows never wrap).
+        // Vertical-only padding: clears Goudy's descenders without padding the
+        // sides, so the highlight hugs the matched letters (no gap before the
+        // next character). box-decoration-break keeps wrapped highlights
+        // consistent on the results page (palette rows never wrap).
         mark {
-            background: $gold-200;
+            background: $gold-300; // vibrant yellow
             color: inherit;
             border-radius: 3px;
-            padding: 2px 2px 3px;
+            padding: 2px 0 3px;
             -webkit-box-decoration-break: clone;
             box-decoration-break: clone;
         }

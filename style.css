@@ -1922,11 +1922,11 @@ body.omni-open {
 }
 
 .omni-result__title mark {
-  background: var(--color-gold-200);
+  background: var(--color-gold-300);
   color: inherit;
   box-decoration-break: clone;
   border-radius: 3px;
-  padding: 2px 2px 3px;
+  padding: 2px 0 3px;
 }
 
 .omni-result__sub {
