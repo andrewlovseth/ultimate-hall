@@ -265,54 +265,80 @@ function bearsmith_grouped_search( $q, $per_group = 5, $only_group = null ) {
     $groups = array();
 
     foreach ( $group_defs as $key => $def ) {
-        $is_member_search = ! empty( $def['member_search'] );
-        $is_active        = ( null === $active_group ) || ( $key === $active_group );
+        $is_active = ( null === $active_group ) || ( $key === $active_group );
 
+        if ( ! empty( $def['member_search'] ) ) {
+            // Members EXPAND: a group inductee yields one result per matching
+            // individual, so the count reflects PEOPLE, not posts. Fetch every
+            // matching post (full objects, so one query primes all their meta),
+            // expand in PHP, then cap the displayed rows at $per_group.
+            $clauses = bearsmith_member_search_clauses( $q );
+            add_filter( 'posts_join', $clauses['join'] );
+            add_filter( 'posts_where', $clauses['where'] );
+            add_filter( 'posts_groupby', $clauses['groupby'] );
+            $query = new WP_Query( array(
+                'post_type'           => 'member',
+                'post_status'         => 'publish',
+                'posts_per_page'      => -1,
+                'orderby'             => 'title',
+                'order'               => 'ASC',
+                'ignore_sticky_posts' => true,
+                'no_found_rows'       => true, // people are counted in PHP below
+            ) );
+            remove_filter( 'posts_join', $clauses['join'] );
+            remove_filter( 'posts_where', $clauses['where'] );
+            remove_filter( 'posts_groupby', $clauses['groupby'] );
+
+            $people = 0;
+            $items  = array();
+            foreach ( $query->posts as $post ) {
+                $matches = bearsmith_search_member_entry_matches( $post, $q );
+
+                if ( empty( $matches ) ) {
+                    // Regular member, or a group matched on its own name.
+                    $people++;
+                    if ( $is_active && count( $items ) < $per_group ) {
+                        $items[] = bearsmith_search_format_item( $post, $q );
+                    }
+                    continue;
+                }
+
+                // One row per matching individual inside the group.
+                $people += count( $matches );
+                if ( $is_active ) {
+                    foreach ( $matches as $match ) {
+                        if ( count( $items ) >= $per_group ) {
+                            break;
+                        }
+                        $items[] = bearsmith_search_format_member_entry( $post, $match );
+                    }
+                }
+            }
+
+            $groups[] = array(
+                'key'   => $key,
+                'label' => $def['label'],
+                'count' => $people,
+                'items' => $items,
+            );
+            continue;
+        }
+
+        // Teams / classes / pages: WordPress' relevance-ordered `s` search.
+        // Active group returns up to $per_group items; inactive groups fetch a
+        // single ID just for the count (found_posts still reflects the total).
         $base_args = array(
             'post_status'         => 'publish',
-            // Active group returns up to $per_group items; the rest are
-            // count-only (1 ID row) — found_posts still reflects the true total.
             'posts_per_page'      => $is_active ? $per_group : 1,
             'ignore_sticky_posts' => true,
-            // No no_found_rows: found_posts is needed for group counts.
+            's'                   => $q,
         );
         if ( ! $is_active ) {
             $base_args['fields'] = 'ids';
         }
 
-        // The members group matches via the scoped SQL filter, not `s`. Every
-        // other group keeps WordPress' relevance-ordered `s` search.
-        if ( ! $is_member_search ) {
-            $base_args['s'] = $q;
-        }
+        $query = new WP_Query( array_merge( $base_args, $def['args'] ) );
 
-        $query_args = array_merge( $base_args, $def['args'] );
-
-        if ( $is_member_search ) {
-            // Title-OR-index matching: add the scoped filters immediately
-            // before the query and remove them immediately after, mirroring
-            // bearsmith_modify_repeater_meta_query()'s usage idiom. Title order
-            // (alphabetical) is fine here — there is no `s` relevance to honor.
-            $query_args['orderby'] = 'title';
-            $query_args['order']   = 'ASC';
-
-            $clauses = bearsmith_member_search_clauses( $q );
-
-            add_filter( 'posts_join', $clauses['join'] );
-            add_filter( 'posts_where', $clauses['where'] );
-            add_filter( 'posts_groupby', $clauses['groupby'] );
-
-            $query = new WP_Query( $query_args );
-
-            remove_filter( 'posts_join', $clauses['join'] );
-            remove_filter( 'posts_where', $clauses['where'] );
-            remove_filter( 'posts_groupby', $clauses['groupby'] );
-        } else {
-            // Default orderby is relevance when `s` is set — keep it.
-            $query = new WP_Query( $query_args );
-        }
-
-        // Inactive (count-only) groups fetched IDs, not posts — skip formatting.
         $items = array();
         if ( $is_active ) {
             foreach ( $query->posts as $post ) {
@@ -343,14 +369,12 @@ function bearsmith_grouped_search( $q, $per_group = 5, $only_group = null ) {
  * headshot, null for everything else (teams/classes/pages render initials
  * or icons client-side instead).
  *
- * When $query is supplied and a GROUP member matched on one of its `entries`
- * people (not its title), the sub-line shows "{induction_type} · {First Last}"
- * for the first matching individual (with " +N" when more than one matched),
- * so the row tells the user WHY the group surfaced.
+ * This renders a post as ITSELF — a member as the member, a group on its own
+ * name. Expanding a group into one row per matching individual is the caller's
+ * job (bearsmith_grouped_search), via bearsmith_search_format_member_entry().
  *
  * @param WP_Post $post  The matched post.
- * @param string  $query Optional. The trimmed search term, used to detect and
- *                       surface which individual inside a group matched.
+ * @param string  $query Optional. Unused; kept for call-site compatibility.
  * @return array { id, type, title, url, sub, photo }.
  */
 function bearsmith_search_format_item( $post, $query = '' ) {
@@ -361,30 +385,6 @@ function bearsmith_search_format_item( $post, $query = '' ) {
     switch ( $post->post_type ) {
         case 'member':
             $photo = bearsmith_search_member_photo( $post->ID );
-
-            // If this group surfaced because an individual inside it matched
-            // (and the group title itself did NOT), feature the PERSON: their
-            // name becomes the title, with the group named underneath.
-            $entry_match = bearsmith_search_member_entry_match( $post, $query );
-            if ( null !== $entry_match ) {
-                $title = $entry_match['name'];
-
-                // Prefer the individual's own photo; fall back to the group logo
-                // ($photo, set above) when the entry has none.
-                if ( ! empty( $entry_match['photo'] ) ) {
-                    $photo = $entry_match['photo'];
-                }
-
-                $type_label = bearsmith_search_choice_label( get_field( 'meta_induction_type', $post->ID ) );
-                if ( null !== $type_label ) {
-                    $sub_parts[] = $type_label;
-                }
-                $sub_parts[] = bearsmith_search_group_name( $post ); // the group they belong to
-                if ( $entry_match['extra'] > 0 ) {
-                    $sub_parts[] = '+' . $entry_match['extra'] . ' more';
-                }
-                break;
-            }
 
             // e.g. "Player · Class of 2010 · Open"
             $sub_parts[] = bearsmith_search_choice_label( get_field( 'meta_induction_type', $post->ID ) );
@@ -553,52 +553,40 @@ function bearsmith_search_group_name( $post ) {
 }
 
 /**
- * Find the individual inside a GROUP member that matched the query.
+ * All individuals inside a GROUP member whose names match the query.
  *
- * Returns null (so the caller renders the group normally — title = group name,
- * classification sub-line) when: no query, the post has no `entries`, the query
- * matches the group NAME — the title up to any colon (e.g. "MOB" or "The
- * Founders"), so the group surfaced on its own name — or no entry name matches.
+ * Returns an empty array (so the caller renders the post as the group itself —
+ * title = group name, classification sub-line) when: no query, the post has no
+ * `entries`, the query matches the group NAME (the title up to any colon, e.g.
+ * "MOB" or "The Founders" — the group surfaced on its own name), or no entry
+ * name matches. Otherwise returns one { name, photo } per matching person, in
+ * entry order — the caller emits a result row for each, so searching "Dave"
+ * surfaces every Dave in the group rather than the first plus a "+N more".
  *
- * When one or more entry names match, returns
- * array( 'name' => '<first matching "First Last">', 'photo' => <url|null>,
- * 'extra' => <N others> ). The caller promotes 'name' to the result title (the
- * person), shows their 'photo' when present (falling back to the group logo),
- * and names the group underneath — e.g. searching "Blocker" on "The MOB" yields
- * a row titled 'David "Blues" Blocker' with sub 'Special Merit · The MOB'.
- *
- * Matching is case-insensitive and substring-based, mirroring the SQL LIKE that
- * surfaced the post, so the featured person always agrees with the hit.
+ * Conjunctive, substring, case-insensitive — the same rule as the SQL — so every
+ * query word must appear in the person's name ("Dave Meyer" → 'Dave "Buddha"
+ * Meyer').
  *
  * @param WP_Post $post  Member post.
  * @param string  $query Trimmed search term.
- * @return array{name:string,photo:?string,extra:int}|null Match info, or null for default rendering.
+ * @return array<int,array{name:string,photo:?string}> Matching people (possibly empty).
  */
-function bearsmith_search_member_entry_match( $post, $query ) {
-    $query = trim( (string) $query );
-    if ( '' === $query ) {
-        return null;
+function bearsmith_search_member_entry_matches( $post, $query ) {
+    $query  = trim( (string) $query );
+    $tokens = bearsmith_search_tokens( $query );
+    if ( empty( $tokens ) ) {
+        return array();
     }
 
-    // If the query matches the GROUP NAME itself (the title up to any colon),
-    // the group surfaced on its own name — render it as the group, not as one
-    // of its individuals. Names listed AFTER the colon (roster-style titles
-    // like "The Founders: a, b, c") don't count, so searching one of those
-    // people still features the individual.
+    // Query matches the GROUP NAME (title up to any colon) → render as the
+    // group, not its individuals. Roster names after the colon don't count.
     if ( false !== mb_stripos( bearsmith_search_group_name( $post ), $query ) ) {
-        return null;
+        return array();
     }
 
     $rows = get_field( 'entries', $post->ID );
     if ( ! is_array( $rows ) || empty( $rows ) ) {
-        return null;
-    }
-
-    // Conjunctive match, same rule as the SQL: every query word must appear in
-    // the person's name (so "Dave Meyer" matches 'Dave "Buddha" Meyer').
-    $tokens = bearsmith_search_tokens( $query );
-    if ( empty( $tokens ) ) {
-        return null;
+        return array();
     }
 
     $matches = array();
@@ -630,14 +618,35 @@ function bearsmith_search_member_entry_match( $post, $query ) {
         }
     }
 
-    if ( empty( $matches ) ) {
-        return null;
+    return $matches;
+}
+
+/**
+ * Format one matched individual (from a group's `entries`) as a result item.
+ *
+ * The person is the title; the sub-line is "{induction_type} · {group name}".
+ * Their own entry photo is used when present, otherwise the group logo. The URL
+ * is the group post — individuals have no page of their own.
+ *
+ * @param WP_Post $post  The group member post.
+ * @param array   $match One entry from bearsmith_search_member_entry_matches().
+ * @return array { id, type, title, url, sub, photo }.
+ */
+function bearsmith_search_format_member_entry( $post, $match ) {
+    $sub_parts  = array();
+    $type_label = bearsmith_search_choice_label( get_field( 'meta_induction_type', $post->ID ) );
+    if ( null !== $type_label ) {
+        $sub_parts[] = $type_label;
     }
+    $sub_parts[] = bearsmith_search_group_name( $post );
 
     return array(
-        'name'  => $matches[0]['name'],
-        'photo' => $matches[0]['photo'],
-        'extra' => count( $matches ) - 1,
+        'id'    => $post->ID,
+        'type'  => 'member',
+        'title' => html_entity_decode( $match['name'], ENT_QUOTES, 'UTF-8' ),
+        'url'   => get_permalink( $post ),
+        'sub'   => html_entity_decode( implode( ' · ', $sub_parts ), ENT_QUOTES, 'UTF-8' ),
+        'photo' => ! empty( $match['photo'] ) ? $match['photo'] : bearsmith_search_member_photo( $post->ID ),
     );
 }
 
