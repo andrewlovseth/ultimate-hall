@@ -95,6 +95,32 @@ function bearsmith_refresh_member_search_index( $post_id ) {
 add_action( 'acf/save_post', 'bearsmith_refresh_member_search_index', 20 );
 
 /**
+ * Split a search query into word tokens for AND-of-terms (conjunctive) matching.
+ *
+ * Member search requires each typed word to appear (substring, case-insensitive),
+ * independently and in any order. This is what lets "Dave Meyer" find
+ * 'Dave "Buddha" Meyer': the nickname sits between the words, so a single
+ * contiguous match misses, but each word on its own is a clean substring.
+ * Capped at 10 tokens as a cheap guard against pathological queries.
+ *
+ * @param string $q Search term.
+ * @return string[] Word tokens (empty array for an empty query).
+ */
+function bearsmith_search_tokens( $q ) {
+    $q = trim( (string) $q );
+    if ( '' === $q ) {
+        return array();
+    }
+    $tokens = array_values( array_filter(
+        (array) preg_split( '/\s+/', $q ),
+        function ( $t ) {
+            return '' !== $t;
+        }
+    ) );
+    return array_slice( $tokens, 0, 10 );
+}
+
+/**
  * Build scoped posts_join + posts_where filters for the members search query.
  *
  * Mirrors the add_filter/remove_filter-around-the-query idiom of
@@ -103,12 +129,14 @@ add_action( 'acf/save_post', 'bearsmith_refresh_member_search_index', 20 );
  * (the count badge) and the per-group cap stay correct.
  *
  * Approach: LEFT JOIN postmeta on the index key (LEFT, not INNER, so members
- * with no index row still match on title), then AND a
- * ( post_title LIKE … OR meta_value LIKE … ) group onto the WHERE. Returns
- * both closures keyed 'join' and 'where'; the caller adds/removes each on its
- * respective hook. Duplicate rows are prevented with a GROUP BY on the posts
- * filter (see the 'groupby' closure) — a member can have at most one index
- * meta row, but GROUP BY is a cheap guarantee against any future fan-out.
+ * with no index row still match on title), then AND one
+ * ( post_title LIKE … OR meta_value LIKE … ) group PER QUERY TOKEN onto the
+ * WHERE — conjunctive matching, so every typed word must appear (in the title
+ * or the index) but not necessarily contiguously. Returns the closures keyed
+ * 'join'/'where'/'groupby'; the caller adds/removes each on its respective
+ * hook. Duplicate rows are prevented with a GROUP BY on the posts filter — a
+ * member has at most one index meta row, but GROUP BY is a cheap guarantee
+ * against any future fan-out.
  *
  * @param string $q Raw (already-trimmed) search term.
  * @return array{join:callable,where:callable,groupby:callable}
@@ -116,8 +144,12 @@ add_action( 'acf/save_post', 'bearsmith_refresh_member_search_index', 20 );
 function bearsmith_member_search_clauses( $q ) {
     global $wpdb;
 
-    // Escape the LIKE term once; wrap with % wildcards for a substring match.
-    $like = '%' . $wpdb->esc_like( (string) $q ) . '%';
+    // One LIKE group per word. Fall back to the whole string if it somehow has
+    // no tokens (grouped_search already drops queries under 2 chars).
+    $tokens = bearsmith_search_tokens( $q );
+    if ( empty( $tokens ) ) {
+        $tokens = array( (string) $q );
+    }
 
     return array(
         'join'    => function ( $join ) use ( $wpdb ) {
@@ -130,13 +162,16 @@ function bearsmith_member_search_clauses( $q ) {
             );
             return $join;
         },
-        'where'   => function ( $where ) use ( $wpdb, $like ) {
-            // post_title match OR index match. prepare() handles both LIKE values.
-            $where .= $wpdb->prepare(
-                " AND ( {$wpdb->posts}.post_title LIKE %s OR bs_idx.meta_value LIKE %s )",
-                $like,
-                $like
-            );
+        'where'   => function ( $where ) use ( $wpdb, $tokens ) {
+            // Every token must match the title OR the index — AND'd together.
+            foreach ( $tokens as $token ) {
+                $like   = '%' . $wpdb->esc_like( $token ) . '%';
+                $where .= $wpdb->prepare(
+                    " AND ( {$wpdb->posts}.post_title LIKE %s OR bs_idx.meta_value LIKE %s )",
+                    $like,
+                    $like
+                );
+            }
             return $where;
         },
         'groupby' => function ( $groupby ) use ( $wpdb ) {
@@ -559,6 +594,13 @@ function bearsmith_search_member_entry_match( $post, $query ) {
         return null;
     }
 
+    // Conjunctive match, same rule as the SQL: every query word must appear in
+    // the person's name (so "Dave Meyer" matches 'Dave "Buddha" Meyer').
+    $tokens = bearsmith_search_tokens( $query );
+    if ( empty( $tokens ) ) {
+        return null;
+    }
+
     $matches = array();
     foreach ( $rows as $row ) {
         if ( ! is_array( $row ) || empty( $row['vitals'] ) || ! is_array( $row['vitals'] ) ) {
@@ -568,8 +610,19 @@ function bearsmith_search_member_entry_match( $post, $query ) {
         $first = isset( $row['vitals']['first_name'] ) ? trim( (string) $row['vitals']['first_name'] ) : '';
         $last  = isset( $row['vitals']['last_name'] ) ? trim( (string) $row['vitals']['last_name'] ) : '';
         $full  = trim( $first . ' ' . $last );
+        if ( '' === $full ) {
+            continue;
+        }
 
-        if ( '' !== $full && false !== mb_stripos( $full, $query ) ) {
+        $all = true;
+        foreach ( $tokens as $token ) {
+            if ( false === mb_stripos( $full, $token ) ) {
+                $all = false;
+                break;
+            }
+        }
+
+        if ( $all ) {
             $matches[] = array(
                 'name'  => $full,
                 'photo' => isset( $row['vitals']['photo'] ) ? bearsmith_search_image_url( $row['vitals']['photo'] ) : null,

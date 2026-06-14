@@ -107,14 +107,28 @@
         });
     }
 
+    // Highlight every query word (conjunctive search matches per-word, so a
+    // multi-word query like "Dave Meyer" highlights "Dave" and "Meyer"
+    // separately rather than looking for the whole phrase contiguously).
     function highlight(text, q) {
         text = String(text == null ? '' : text);
-        if (!q) return esc(text);
-        var i = text.toLowerCase().indexOf(q.toLowerCase());
-        if (i === -1) return esc(text);
-        return esc(text.slice(0, i)) +
-            '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' +
-            esc(text.slice(i + q.length));
+        var tokens = String(q == null ? '' : q).trim().split(/\s+/).filter(Boolean);
+        if (!tokens.length) return esc(text);
+        // Longest first so overlapping tokens prefer the longer match.
+        tokens.sort(function (a, b) { return b.length - a.length; });
+        var pattern = tokens.map(function (t) {
+            return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex metachars
+        }).join('|');
+        var re = new RegExp('(' + pattern + ')', 'gi');
+        var out = '';
+        var last = 0;
+        var m;
+        while ((m = re.exec(text)) !== null) {
+            out += esc(text.slice(last, m.index)) + '<mark>' + esc(m[0]) + '</mark>';
+            last = m.index + m[0].length;
+            if (re.lastIndex === m.index) re.lastIndex++; // guard against zero-width matches
+        }
+        return out + esc(text.slice(last));
     }
 
     /* ---- recents (localStorage, best-effort: private mode may throw) ---- */
