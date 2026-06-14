@@ -6,21 +6,26 @@
     $last_name = $vitals['last_name'];
     $hometown = $vitals['hometown'];
     $birthdate_field = $vitals['birthdate'];
-    $birthdate = DateTime::createFromFormat('Ymd', $birthdate_field);
-   
+    $birthdate = FALSE;
+    if($birthdate_field) {
+        $birthdate = DateTime::createFromFormat('Ymd', $birthdate_field);
+    }
+
     $date_of_death_field = $vitals['date_of_death'];
+    $date_of_death = FALSE;
     if($date_of_death_field) {
         $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
     }
 
-    $today = new DateTime();
-    $birthday = new DateTime($birthdate_field);
-    $age = $today->diff($birthday);
+    $age = FALSE;
+    if($birthdate) {
+        $today = new DateTime();
+        $age = $today->diff($birthdate);
+    }
 
     $lifespan = FALSE;
-
-    if($date_of_death_field) {
-        $lifespan = $date_of_death->diff($birthday);
+    if($birthdate && $date_of_death) {
+        $lifespan = $date_of_death->diff($birthdate);
     }
 
 

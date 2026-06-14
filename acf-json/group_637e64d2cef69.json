@@ -143,6 +143,26 @@
             "layout": ""
         },
         {
+            "key": "field_637e64d2hidml",
+            "label": "Hide member list",
+            "name": "hide_member_list",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Hides the individual member entries on the front end while keeping them saved for search. Use for groups where you don't yet have per-person photos and bios.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
             "key": "field_637e65b3c73a5",
             "label": "Entries",
             "name": "entries",
@@ -683,5 +703,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1710786494
+    "modified": 1781453160
 }
