@@ -124,6 +124,9 @@ function uh_raw_rows( $member_id, $list ) {
 	$out  = array();
 	$keys = array();
 	$field = acf_get_field( $list );
+	if ( ! $field || empty( $field['sub_fields'] ) ) {
+		return array(); // uh_write_rows() refuses to write in this case.
+	}
 	foreach ( $field['sub_fields'] as $sf ) {
 		$keys[ $sf['key'] ] = $sf['name'];
 	}
@@ -164,6 +167,9 @@ function uh_clean_row( array $row ) {
 
 /** Write a member list, logging the previous rows so the change can be undone. */
 function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
+	if ( ! acf_get_field( $list ) ) {
+		return new WP_Error( 'uh_missing_field', "The {$list} field group is missing; nothing was written." );
+	}
 	$before = uh_raw_rows( $member_id, $list );
 	$log    = get_post_meta( $member_id, UH_CHANGELOG_META, true ) ?: array();
 	$change = array(
@@ -255,8 +261,9 @@ function uh_lists_schema() {
 
 /* ---------- permissions ---------- */
 
+/** Reads include drafts, private vitals and editors' logins in history, so they need Editor-level access. */
 function uh_can_read() {
-	return current_user_can( 'edit_posts' );
+	return current_user_can( 'edit_others_posts' );
 }
 
 function uh_can_edit_member( $input ) {
@@ -282,9 +289,9 @@ add_action(
 add_action( 'wp_abilities_api_init', 'uh_register_abilities' );
 
 function uh_register_abilities() {
-	$ro   = array( 'public' => true, 'annotations' => array( 'readonly' => true, 'destructive' => false, 'idempotent' => true ) );
-	$add  = array( 'public' => true, 'annotations' => array( 'readonly' => false, 'destructive' => false, 'idempotent' => false ) );
-	$edit = array( 'public' => true, 'annotations' => array( 'readonly' => false, 'destructive' => true, 'idempotent' => true ) );
+	$ro   = array( 'mcp' => array( 'public' => false ), 'annotations' => array( 'readonly' => true, 'destructive' => false, 'idempotent' => true ) );
+	$add  = array( 'mcp' => array( 'public' => false ), 'annotations' => array( 'readonly' => false, 'destructive' => false, 'idempotent' => false ) );
+	$edit = array( 'mcp' => array( 'public' => false ), 'annotations' => array( 'readonly' => false, 'destructive' => true, 'idempotent' => true ) );
 
 	wp_register_ability(
 		'uhof/find-member',
@@ -460,6 +467,9 @@ function uh_register_abilities() {
 				);
 				$label  = get_the_title( $team ) . ' ' . uh_format_span( $input['start_year'], $input['end_year'] ?? null, ! empty( $input['to_present'] ), ! empty( $input['approximate'] ) );
 				$change = uh_write_rows( $id, 'career', $rows, 'add-career-stint', 'Added career stint: ' . $label );
+				if ( is_wp_error( $change ) ) {
+					return $change;
+				}
 				return array( 'change_id' => $change, 'row' => count( $rows ) - 1, 'member' => uh_member_detail( $id )['career'] );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -500,6 +510,9 @@ function uh_register_abilities() {
 				}
 				$rows[] = array( 'tournament' => $tid, 'team' => $team, 'placement' => $input['placement'] );
 				$change = uh_write_rows( $id, 'results', $rows, 'add-result', sprintf( 'Added result: %s, %s, %s', get_the_title( $tid ), get_the_title( $team ), $input['placement'] ) );
+				if ( is_wp_error( $change ) ) {
+					return $change;
+				}
 				return array( 'change_id' => $change, 'row' => count( $rows ) - 1 );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -539,6 +552,9 @@ function uh_register_abilities() {
 					'description' => $input['description'],
 				);
 				$change = uh_write_rows( $id, 'service', $rows, 'add-service', 'Added service: ' . $input['description'] );
+				if ( is_wp_error( $change ) ) {
+					return $change;
+				}
 				return array( 'change_id' => $change, 'row' => count( $rows ) - 1 );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -601,6 +617,9 @@ function uh_register_abilities() {
 					return new WP_Error( 'uh_bad_years', 'end_year is before start_year.' );
 				}
 				$change = uh_write_rows( $id, $list, $rows, 'update-row', "Updated {$list} row {$i}: " . implode( ', ', $changed ) );
+				if ( is_wp_error( $change ) ) {
+					return $change;
+				}
 				return array( 'change_id' => $change, $list => uh_member_detail( $id )[ $list ][ $i ] );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -635,6 +654,9 @@ function uh_register_abilities() {
 				}
 				array_splice( $rows, $i, 1 );
 				$change = uh_write_rows( $id, $input['list'], $rows, 'remove-row', "Removed {$input['list']} row {$i}" );
+				if ( is_wp_error( $change ) ) {
+					return $change;
+				}
 				return array( 'change_id' => $change, 'remaining' => count( $rows ) );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -841,6 +863,9 @@ function uh_register_abilities() {
 						return array( 'restored' => 'vitals' );
 					}
 					$new = uh_write_rows( $id, $c['list'], $c['before'], 'undo-change', 'Undid: ' . $c['summary'] );
+					if ( is_wp_error( $new ) ) {
+						return $new;
+					}
 					return array( 'restored' => $c['list'], 'change_id' => $new );
 				}
 				return new WP_Error( 'uh_no_change', 'No change with that id on this member.' );
