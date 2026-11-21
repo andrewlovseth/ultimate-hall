@@ -298,7 +298,8 @@ function uh_admin_remember_sort() {
 			'order'   => isset( $_GET['order'] ) && 'desc' === strtolower( sanitize_key( wp_unslash( $_GET['order'] ) ) ) ? 'desc' : 'asc',
 		);
 		update_user_meta( $user, 'uh_list_sort', $saved );
-	} elseif ( isset( $saved[ $screen->id ] ) ) {
+	} elseif ( empty( $_GET['s'] ) && isset( $saved[ $screen->id ]['orderby'], $saved[ $screen->id ]['order'] ) && is_array( $saved[ $screen->id ] ) ) {
+		// A search keeps WordPress's relevance order.
 		$_GET['orderby'] = $_REQUEST['orderby'] = $saved[ $screen->id ]['orderby'];
 		$_GET['order']   = $_REQUEST['order'] = $saved[ $screen->id ]['order'];
 	}
