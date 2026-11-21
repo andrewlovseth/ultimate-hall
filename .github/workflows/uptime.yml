@@ -1,0 +1,65 @@
+# Hourly uptime and certificate check for ultimatehall.org. Replaces ManageWP's uptime monitor.
+# A failure opens one "Site alert: uptime" issue (GitHub emails the repo owner); the next green run closes it.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: uptime
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HOST: ultimatehall.org
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TITLE: "Site alert: uptime"
+    steps:
+      - name: Check pages and certificate
+        id: check
+        run: |
+          alerts=""
+          for path in / /members/ /class/2025/ /wp-login.php; do
+            code=""
+            for try in 1 2 3; do
+              code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' "https://$HOST$path" || true)
+              [ "$code" = 200 ] && break
+              sleep 20
+            done
+            echo "$path $code"
+            [ "$code" = 200 ] || alerts="$alerts- \`$path\` returned ${code:-no response} three times in a row"$'\n'
+          done
+          end=$(echo | openssl s_client -servername "$HOST" -connect "$HOST:443" 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+          if [ -n "$end" ]; then
+            days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+            echo "certificate expires in $days days"
+            [ "$days" -lt 14 ] && alerts="$alerts- The TLS certificate expires in $days days"$'\n'
+          else
+            alerts="$alerts- Could not read the TLS certificate"$'\n'
+          fi
+          { echo "alerts<<EOF"; printf '%s' "$alerts"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the alert issue
+        if: steps.check.outputs.alerts != ''
+        env:
+          ALERTS: ${{ steps.check.outputs.alerts }}
+        run: |
+          body=$(printf '%s\n\nRun: %s/%s/actions/runs/%s' "$ALERTS" "$GITHUB_SERVER_URL" "$GH_REPO" "$GITHUB_RUN_ID")
+          gh label create ops --color B60205 --description "Site health and uptime alerts" 2>/dev/null || true
+          num=$(gh issue list --state open --label ops --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body "$body"; else gh issue create --title "$TITLE" --label ops --body "$body"; fi
+          exit 1
+
+      - name: Close the alert issue when green
+        if: steps.check.outputs.alerts == ''
+        run: |
+          num=$(gh issue list --state open --label ops --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
+          [ -z "$num" ] || gh issue close "$num" --comment "Back to green."
