@@ -44,12 +44,12 @@
             </div>
 
         <div class="name">
-            <h2><?php echo $first_name . ' ' . $last_name; ?></h2>
+            <h2><?php echo esc_html( $first_name . ' ' . $last_name ); ?></h2>
         </div>
 
         <?php if($hometown): ?>
             <div class="hometown vital">
-                <p><strong>Hometown:</strong> <?php echo $hometown; ?></p>
+                <p><strong>Hometown:</strong> <?php echo esc_html( $hometown ); ?></p>
             </div>
         <?php endif; ?>
 

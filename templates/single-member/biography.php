@@ -17,7 +17,7 @@
             </div>
         <?php endif; ?>
 
-        <?php echo $biography; ?>
+        <?php echo wp_kses_post( $biography ); ?>
     </div>
 
     <?php $service = uh_member_service( get_the_ID() ); if ( $service ) : ?>
@@ -30,7 +30,7 @@
                 <?php foreach ( $service as $entry ) : ?>
                     <li>
                         <?php if ( $entry['years'] ) : ?><span class="year"><?php echo esc_html( $entry['years'] ); ?>:</span><?php endif; ?>
-                        <span class="description"><?php echo $entry['description']; ?></span>
+                        <span class="description"><?php echo esc_html( $entry['description'] ); ?></span>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -44,7 +44,7 @@
             </div>
 
             <div class="cta">
-                <a href="<?php echo $induction_speech['url']; ?>" class="btn btn__charcoal">Read <?php the_title(); ?>'s Induction Speech</a>
+                <a href="<?php echo esc_url( $induction_speech['url'] ); ?>" class="btn btn__charcoal">Read <?php the_title(); ?>'s Induction Speech</a>
             </div>
 
         </section>

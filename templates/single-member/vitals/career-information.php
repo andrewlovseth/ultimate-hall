@@ -64,8 +64,8 @@ if ( $has_groups || $national_teams || $professional ) :
 						</div>
 
 						<div class="team">
-							<a href="<?php echo get_permalink( $result['team'] ); ?>"><?php echo $result['team']->post_title; ?></a>
-							<span class="tournament"><a href="<?php echo get_permalink( $result['tournament'] ); ?>"><?php echo $result['tournament']->post_title; ?></a></span>
+							<a href="<?php echo esc_url( get_permalink( $result['team'] ) ); ?>"><?php echo esc_html( $result['team']->post_title ); ?></a>
+							<span class="tournament"><a href="<?php echo esc_url( get_permalink( $result['tournament'] ) ); ?>"><?php echo esc_html( $result['tournament']->post_title ); ?></a></span>
 						</div>
 					</div>
 				<?php endforeach; ?>
@@ -85,8 +85,8 @@ if ( $has_groups || $national_teams || $professional ) :
 						</div>
 
 						<div class="team">
-							<a href="<?php echo get_permalink( $stint['team'] ); ?>"><?php echo $stint['team']->post_title; ?></a>
-							<?php if ( $division ) : ?><span class="tournament"><a href="<?php echo get_permalink( $division ); ?>"><?php echo get_the_title( $division ); ?></a></span><?php endif; ?>
+							<a href="<?php echo esc_url( get_permalink( $stint['team'] ) ); ?>"><?php echo esc_html( $stint['team']->post_title ); ?></a>
+							<?php if ( $division ) : ?><span class="tournament"><a href="<?php echo esc_url( get_permalink( $division ) ); ?>"><?php echo esc_html( get_the_title( $division ) ); ?></a></span><?php endif; ?>
 						</div>
 					</div>
 				<?php endforeach; ?>

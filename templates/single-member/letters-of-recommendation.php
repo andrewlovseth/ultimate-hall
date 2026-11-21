@@ -12,7 +12,7 @@
 
                     <div class="letter">
                         <div class="copy p2 extended">
-                            <?php echo get_sub_field('text'); ?>
+                            <?php echo wp_kses_post( get_sub_field('text') ); ?>
                         </div>		
                     </div>
 

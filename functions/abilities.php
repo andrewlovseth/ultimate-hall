@@ -145,6 +145,23 @@ function uh_after_member_edit( $member_id ) {
 	do_action( 'spinupwp_purge_page_cache' );
 }
 
+/**
+ * Coerce one row to its stored types: ids and years to integers, flags to booleans, text to plain text.
+ * Every ability write goes through this, so agent-supplied markup never reaches the templates.
+ */
+function uh_clean_row( array $row ) {
+	foreach ( $row as $k => $v ) {
+		if ( in_array( $k, array( 'team', 'tournament', 'start_year', 'end_year' ), true ) ) {
+			$row[ $k ] = ( '' === $v || null === $v ) ? '' : (int) $v;
+		} elseif ( in_array( $k, array( 'to_present', 'approximate' ), true ) ) {
+			$row[ $k ] = (bool) $v;
+		} else {
+			$row[ $k ] = sanitize_text_field( (string) $v );
+		}
+	}
+	return $row;
+}
+
 /** Write a member list, logging the previous rows so the change can be undone. */
 function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
 	$before = uh_raw_rows( $member_id, $list );
@@ -160,7 +177,7 @@ function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
 	);
 	array_unshift( $log, $change );
 	update_post_meta( $member_id, UH_CHANGELOG_META, array_slice( $log, 0, UH_CHANGELOG_KEEP ) );
-	update_field( $list, array_values( $rows ), $member_id );
+	update_field( $list, array_values( array_map( 'uh_clean_row', $rows ) ), $member_id );
 	uh_after_member_edit( $member_id );
 	return $change['id'];
 }
@@ -578,6 +595,11 @@ function uh_register_abilities() {
 					$rows[ $i ][ $allowed[ $k ] ] = null === $v ? '' : $v;
 					$changed[]                    = $k;
 				}
+				$start = (int) ( $rows[ $i ]['start_year'] ?? 0 );
+				$end   = (int) ( $rows[ $i ]['end_year'] ?? 0 );
+				if ( $start && $end && $end < $start ) {
+					return new WP_Error( 'uh_bad_years', 'end_year is before start_year.' );
+				}
 				$change = uh_write_rows( $id, $list, $rows, 'update-row', "Updated {$list} row {$i}: " . implode( ', ', $changed ) );
 				return array( 'change_id' => $change, $list => uh_member_detail( $id )[ $list ][ $i ] );
 			},
@@ -655,7 +677,7 @@ function uh_register_abilities() {
 					$before[ $k ] = $vitals[ $keys[ $k ] ] ?? '';
 					$after[ $k ]  = $before[ $k ];
 					if ( array_key_exists( $k, $input ) ) {
-						$after[ $k ] = in_array( $k, array( 'birthdate', 'date_of_death' ), true ) ? str_replace( '-', '', $input[ $k ] ) : $input[ $k ];
+						$after[ $k ] = in_array( $k, array( 'birthdate', 'date_of_death' ), true ) ? str_replace( '-', '', $input[ $k ] ) : sanitize_text_field( $input[ $k ] );
 					}
 				}
 				$log = get_post_meta( $id, UH_CHANGELOG_META, true ) ?: array();
@@ -704,14 +726,14 @@ function uh_register_abilities() {
 						return new WP_Error( 'uh_similar_exists', 'Similar teams already exist in this division. Use one of these, or call again with confirm_new: true.', array( 'similar' => $similar ) );
 					}
 				}
-				$team = wp_insert_post( array( 'post_type' => 'team', 'post_status' => 'publish', 'post_title' => $input['name'] ), true );
+				$team = wp_insert_post( array( 'post_type' => 'team', 'post_status' => 'publish', 'post_title' => sanitize_text_field( $input['name'] ) ), true );
 				if ( is_wp_error( $team ) ) {
 					return $team;
 				}
 				update_field( 'division', array( $division ), $team );
-				update_field( 'city', (string) ( $input['city'] ?? '' ), $team );
+				update_field( 'city', sanitize_text_field( (string) ( $input['city'] ?? '' ) ), $team );
 				update_field( 'national_team', ! empty( $input['national_team'] ), $team );
-				update_field( 'aliases', implode( "\n", (array) ( $input['aliases'] ?? array() ) ), $team );
+				update_field( 'aliases', implode( "\n", array_map( 'sanitize_text_field', (array) ( $input['aliases'] ?? array() ) ) ), $team );
 				return uh_team_summary( $team );
 			},
 			'permission_callback' => fn() => current_user_can( 'publish_posts' ),
@@ -754,17 +776,17 @@ function uh_register_abilities() {
 						return new WP_Error( 'uh_similar_exists', 'Similar tournaments already exist for that year. Use one of these, or call again with confirm_new: true.', array( 'similar' => $similar ) );
 					}
 				}
-				$tid = wp_insert_post( array( 'post_type' => 'tournaments', 'post_status' => 'publish', 'post_title' => $input['name'] ), true );
+				$tid = wp_insert_post( array( 'post_type' => 'tournaments', 'post_status' => 'publish', 'post_title' => sanitize_text_field( $input['name'] ) ), true );
 				if ( is_wp_error( $tid ) ) {
 					return $tid;
 				}
 				update_field( 'details', array(
-					'location' => (string) ( $input['location'] ?? '' ),
+					'location' => sanitize_text_field( (string) ( $input['location'] ?? '' ) ),
 					'year'     => $year_post,
 					'series'   => $input['series'] ?? uh_guess_series( $input['name'] ),
 					'beach'    => ! empty( $input['beach'] ),
 				), $tid );
-				update_field( 'aliases', implode( "\n", (array) ( $input['aliases'] ?? array() ) ), $tid );
+				update_field( 'aliases', implode( "\n", array_map( 'sanitize_text_field', (array) ( $input['aliases'] ?? array() ) ) ), $tid );
 				return uh_tournament_summary( $tid );
 			},
 			'permission_callback' => fn() => current_user_can( 'publish_posts' ),

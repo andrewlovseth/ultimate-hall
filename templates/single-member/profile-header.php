@@ -8,7 +8,7 @@
 
 <section class="profile-header">
     <div class="class">
-        <h2 class="class__title"><?php echo inaugural_get_class_prefix($year); ?>Class of <?php echo $year; ?></h2>
+        <h2 class="class__title"><?php echo inaugural_get_class_prefix($year); ?>Class of <?php echo esc_html( $year ); ?></h2>
     </div>
 
     <div class="name">
@@ -17,11 +17,11 @@
 
     <div class="meta">
         <?php if($induction_type): ?>
-            <span class="meta__type"><?php echo $induction_type; ?></span>
+            <span class="meta__type"><?php echo esc_html( $induction_type ); ?></span>
         <?php endif; ?>
 
         <?php if($induction_division): ?>
-            <span class="meta__division"><?php echo $induction_division['label']; ?></span>
+            <span class="meta__division"><?php echo esc_html( $induction_division['label'] ); ?></span>
         <?php endif; ?>        
     </div>
 </section>

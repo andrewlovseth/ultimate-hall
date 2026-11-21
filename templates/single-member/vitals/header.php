@@ -28,7 +28,7 @@
 <div class="header">
     <?php if($headshot): ?>
         <div class="photo">
-            <img src="<?php echo $headshot['url']; ?>" alt="<?php echo $headshot['alt']; ?>" />
+            <img src="<?php echo esc_url( $headshot['url'] ); ?>" alt="<?php echo esc_attr( $headshot['alt'] ); ?>" />
         </div>
     <?php endif; ?>
 
@@ -38,7 +38,7 @@
 
     <?php if($hometown): ?>
         <div class="hometown vital">
-            <p><strong>Hometown:</strong> <?php echo $hometown; ?></p>
+            <p><strong>Hometown:</strong> <?php echo esc_html( $hometown ); ?></p>
         </div>
     <?php endif; ?>
 
