@@ -4,7 +4,7 @@
 
         // rel="external"
         $('a[rel="external"]').click(function () {
-            window.open($(this).attr("href"));
+            window.open($(this).attr("href"), "_blank", "noopener");
             return false;
         });
 

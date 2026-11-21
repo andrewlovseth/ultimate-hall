@@ -53,12 +53,7 @@ if ( ! function_exists( 'wp_body_open' ) ) {
 }
 
 
-// Add SVG Support
-function bearsmith_add_svg_support($mimes) {
-  $mimes['svg'] = 'image/svg+xml';
-  return $mimes;
-}
-add_filter('upload_mimes', 'bearsmith_add_svg_support');
+// SVG uploads are handled by the SVG Support plugin, which sanitizes them and limits who can upload.
 
 
 // Remove Comment
