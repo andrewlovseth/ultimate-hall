@@ -8,7 +8,7 @@
         background: $gold-400;
         border: 1px solid $gold-400-dark;
         padding: 1rem 2rem;
-        color: $white;
+        color: $charcoal; // white on gold-400 is 1.7:1; charcoal is 6.6:1, matching the Donate button
         font-family: $work-sans;
         font-weight: bold;
         text-transform: uppercase;
@@ -24,6 +24,7 @@
         }
 
         &__charcoal {
+            color: $white;
             background: $charcoal;
             border: 1px solid $charcoal-dark;
         }

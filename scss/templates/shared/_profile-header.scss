@@ -15,7 +15,7 @@
             display: inline-block;
             font-family: $work-sans;
             background: $gold-400;
-            color: $white;
+            color: $charcoal; // same as the gold buttons: white on gold-400 fails contrast
             text-transform: uppercase;
             letter-spacing: 0.15em;
             font-size: clamp(0.75rem, 0.9vw, 0.875rem);
