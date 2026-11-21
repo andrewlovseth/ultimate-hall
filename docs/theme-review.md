@@ -8,10 +8,10 @@ Checked and clean: no private member fields in the public REST API; search API S
 | --- | --- | --- |
 | 1 | Teammates query explosion (~850 queries/page) and per-request results cache | PR #1 |
 | 2 | Asset hardening: CDN jQuery 3.4.1, unsanitized SVG upload filter, plugins.js cache version, noopener | PR #2 |
-| 3 | Escaping in member templates; sanitize ability text input | in progress |
-| 4 | Render bugs and PHP 8 warnings | todo |
-| 5 | Dead and duplicated code | todo |
-| 6 | Ability permission tightening | todo |
+| 3 | Escaping in member templates; sanitize ability text input | PR #3 |
+| 4 | Render bugs and PHP 8 warnings | PR #4 |
+| 5 | Dead and duplicated code | PR #5 |
+| 6 | Ability permission tightening | PR #6 |
 
 ## 3. Escaping and ability input
 - Writable via abilities, printed raw: biography.php:33 service description; vitals/header.php:41 hometown; teammates.php:45 first name (fixed in #1).
