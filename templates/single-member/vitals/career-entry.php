@@ -8,10 +8,10 @@
 ?>
 <div class="entry">
     <div class="year">
-        <span><?php echo $year; ?></span>
+        <span><?php echo esc_html( $year ); ?></span>
     </div>
 
     <div class="team">
-        <a href="<?php echo get_permalink($team->ID); ?>"><?php echo $team->post_title; ?></a>
+        <a href="<?php echo esc_url( get_permalink( $team->ID ) ); ?>"><?php echo esc_html( $team->post_title ); ?></a>
     </div>
 </div>

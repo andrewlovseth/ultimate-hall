@@ -24,7 +24,7 @@
         <a href="<?php the_permalink(); ?>">
             <div class="content">
                 <?php if($image): ?>
-                    <img src="<?php echo $image['sizes']['thumbnail']; ?>" alt="<?php echo $image['alt']; ?>" />
+                    <img src="<?php echo esc_url( $image['sizes']['thumbnail'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>" />
                 <?php else: ?>
                     <div class="empty"></div>
                 <?php endif; ?>
@@ -41,11 +41,11 @@
             <div class="meta">
                 <h4>
                     <?php if($type): ?>
-                        <span class="type"><?php echo $type['label']; ?></span>                        
+                        <span class="type"><?php echo esc_html( $type['label'] ); ?></span>                        
                     <?php endif; ?>
 
                     <?php if($division): ?>
-                        <span class="division"><?php echo $division['label']; ?></span>
+                        <span class="division"><?php echo esc_html( $division['label'] ); ?></span>
                     <?php endif; ?>                
                 </h4>
             </div>
