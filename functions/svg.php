@@ -92,7 +92,7 @@ function uh_svg_sanitize( $svg ) {
 	if ( ! is_string( $svg ) || '' === trim( $svg ) || false !== strpos( $svg, "\0" ) || ! mb_check_encoding( $svg, 'UTF-8' ) ) {
 		return false;
 	}
-	if ( preg_match( '/<\?xml[^>]*encoding\s*=\s*["\'](?!utf-?8)/i', $svg ) ) {
+	if ( preg_match( '/<\?xml[^>]*encoding\s*=\s*["\'](?!utf-?8["\'])/i', $svg ) ) {
 		return false;
 	}
 
@@ -151,7 +151,7 @@ function uh_svg_sanitize( $svg ) {
 
 	// True when CSS could reach outside the file.
 	$unsafe_css = function ( $css ) {
-		return (bool) preg_match( '/\\\\|@import|url\s*+\(\s*+[\'"]?+\s*+(?!#)|expression\s*\(|javascript:|behavior\s*:|-moz-binding/i', $css );
+		return (bool) preg_match( '/\\\\|@import|url\s*+\(\s*+[\'"]?+\s*+(?!#)|image-set|image\s*\(|cross-fade|element\s*\(|expression\s*\(|javascript:|behavior\s*:|-moz-binding/i', $css );
 	};
 
 	$walk = function ( DOMNode $node ) use ( &$walk, $elements, $attributes, $svg_ns, $unsafe_css, $doc ) {
@@ -164,9 +164,6 @@ function uh_svg_sanitize( $svg ) {
 				$child = $text;
 			}
 			if ( XML_TEXT_NODE === $child->nodeType ) {
-				if ( 'style' === $node->localName && $unsafe_css( $child->nodeValue ) ) {
-					$node->removeChild( $child );
-				}
 				continue;
 			}
 			if ( XML_ELEMENT_NODE !== $child->nodeType || $svg_ns !== $child->namespaceURI || ! isset( $elements[ strtolower( $child->localName ) ] ) ) {
@@ -186,6 +183,17 @@ function uh_svg_sanitize( $svg ) {
 				if ( ! $keep ) {
 					$child->removeAttributeNode( $attr );
 				}
+			}
+			if ( 'style' === strtolower( $child->localName ) ) {
+				// Judge the stylesheet as the browser will read it: comments, CDATA and entities can split it into pieces.
+				$css = $child->textContent;
+				while ( $child->firstChild ) {
+					$child->removeChild( $child->firstChild );
+				}
+				if ( ! $unsafe_css( $css ) ) {
+					$child->appendChild( $doc->createTextNode( $css ) );
+				}
+				continue;
 			}
 			$walk( $child );
 		}
