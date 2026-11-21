@@ -41,7 +41,6 @@ function bearsmith_disable_gutenberg( $can_edit, $post_type ) {
 	return $can_edit;
 
 }
-add_filter( 'gutenberg_can_edit_post_type', 'bearsmith_disable_gutenberg', 10, 2 );
 add_filter( 'use_block_editor_for_post_type', 'bearsmith_disable_gutenberg', 10, 2 );
 
 

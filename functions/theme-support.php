@@ -17,10 +17,12 @@ add_theme_support('title-tag');
 add_theme_support('post-thumbnails');
 
 
-// Set Thumbnail Sizes
-update_option( 'thumbnail_size_w', 400 );
-update_option( 'thumbnail_size_h', 400 );
-update_option( 'thumbnail_crop', 1 );
+// Set Thumbnail Sizes once, when the theme is activated (not on every request)
+add_action( 'after_switch_theme', function () {
+    update_option( 'thumbnail_size_w', 400 );
+    update_option( 'thumbnail_size_h', 400 );
+    update_option( 'thumbnail_crop', 1 );
+} );
 
 // Switch default core markup for search form, comment form, and comments to output valid HTML5.
 add_theme_support('html5', array(
@@ -43,14 +45,6 @@ add_theme_support('custom-logo', array(
     'flex-width'  => true,
     'flex-height' => true,
 ));
-
-
-// Add wp_body_open
-if ( ! function_exists( 'wp_body_open' ) ) {
-    function wp_body_open() {
-        do_action( 'wp_body_open' );
-    }
-}
 
 
 // SVG uploads are handled by the SVG Support plugin, which sanitizes them and limits who can upload.

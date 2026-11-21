@@ -70,28 +70,6 @@ function bearsmith_build_member_search_index( $post_id ) {
     return $index;
 }
 
-/**
- * Keep the search index fresh whenever a member is saved.
- *
- * Priority 20 runs after ACF (priority 10) has written the `entries` rows to
- * meta, so get_field() inside the builder reads the just-saved values. Quick
- * Edit only touches the title (not `entries`), so acf/save_post is sufficient
- * — title matching is handled separately in SQL and never depends on this.
- *
- * @param int|string $post_id Post ID being saved (ACF passes "options" etc. for non-posts).
- * @return void
- */
-function bearsmith_refresh_member_search_index( $post_id ) {
-    // ACF fires this for options pages too; bail unless it's a real member post.
-    if ( ! is_numeric( $post_id ) ) {
-        return;
-    }
-    if ( 'member' !== get_post_type( (int) $post_id ) ) {
-        return;
-    }
-
-    bearsmith_build_member_search_index( (int) $post_id );
-}
 // uh_sync_member() (functions/model.php) rebuilds the search index on acf/save_post, so no hook here.
 
 /**
@@ -123,8 +101,7 @@ function bearsmith_search_tokens( $q ) {
 /**
  * Build scoped posts_join + posts_where filters for the members search query.
  *
- * Mirrors the add_filter/remove_filter-around-the-query idiom of
- * bearsmith_modify_repeater_meta_query(). The members query must match
+ * Uses the add_filter/remove_filter-around-the-query idiom. The members query must match
  * post_title OR the _bearsmith_search_index meta — in ONE query so found_posts
  * (the count badge) and the per-group cap stay correct.
  *

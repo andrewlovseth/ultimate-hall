@@ -31,7 +31,7 @@ The dev server proxies `https://ultimate-hall.ddev.site` at `http://localhost:30
 ### Function Organization
 Functions are split into focused files in `/functions/`:
 - `acf.php` - ACF options pages, relationship field sorting, `year` CPT registration
-- `query-helpers.php` - `bearsmith_default_query_args()`, repeater meta query helper
+- `query-helpers.php` - `bearsmith_default_query_args()`
 - `member-helpers.php` - `bearsmith_get_members_by_class()` for querying inductees
 - `inaugural-helpers.php` - Inaugural class-specific logic
 - `register-blocks.php` - ACF block registration
