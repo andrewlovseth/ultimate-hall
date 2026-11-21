@@ -74,8 +74,7 @@ jobs:
           cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
           git config user.name "github-actions[bot]"
           git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
-          git fetch origin lighthouse-results --depth=1 && git checkout -B lighthouse-results FETCH_HEAD || git checkout --orphan lighthouse-results
-          git rm -rq --cached . 2>/dev/null || true
+          git fetch origin lighthouse-results --depth=1 && git checkout -B lighthouse-results FETCH_HEAD || { git checkout --orphan lighthouse-results && git rm -rq --cached .; }
           mkdir -p "runs/$stamp"
           cp results/* "runs/$stamp/"
           cp results/summary.md latest.md

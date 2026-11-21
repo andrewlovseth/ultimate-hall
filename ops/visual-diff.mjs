@@ -12,11 +12,13 @@ mkdirSync(outDir, { recursive: true });
 const pages = readFileSync(pagesFile, 'utf8').trim().split('\n').map((l) => l.split(' ')).filter(([, u]) => u);
 const THEME = '/wp-content/themes/ultimate-hall/';
 const types = { css: 'text/css', js: 'text/javascript', woff2: 'font/woff2', svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg' };
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 const viewports = { mobile: { width: 390, height: 844 }, desktop: { width: 1440, height: 900 } };
 
 const browser = await chromium.launch();
 async function shot(url, vp, local) {
-	const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+	// A normal desktop Chrome user agent: Google Fonts serves different files to "HeadlessChrome".
+	const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, reducedMotion: 'reduce', userAgent: UA });
 	const page = await ctx.newPage();
 	if (local) {
 		await page.route((u) => u.pathname.startsWith(THEME), (route) => {
