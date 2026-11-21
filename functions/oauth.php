@@ -138,6 +138,13 @@ function uh_oauth_client( $client_id ) {
 }
 
 function uh_oauth_register( WP_REST_Request $request ) {
+	// Registration is open by design (claude.ai registers itself), so cap it per address.
+	$ip    = preg_replace( '/[^0-9a-f:.]/i', '', (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+	$count = (int) get_transient( 'uh_oauth_reg_' . md5( $ip ) );
+	if ( $count >= 20 ) {
+		return uh_oauth_error( 'temporarily_unavailable', 'Too many registrations from this address; try again in an hour.', 429 );
+	}
+	set_transient( 'uh_oauth_reg_' . md5( $ip ), $count + 1, HOUR_IN_SECONDS );
 	$body = $request->get_json_params() ?: $request->get_body_params();
 	$uris = array_values( array_filter( (array) ( $body['redirect_uris'] ?? array() ), 'is_string' ) );
 	if ( ! $uris ) {
