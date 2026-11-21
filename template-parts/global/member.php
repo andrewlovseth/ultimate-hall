@@ -21,10 +21,10 @@
 
 <div class="member">
     <div class="photo">
-        <a href="<?php the_permalink(); ?>">
+        <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
             <div class="content">
                 <?php if($image): ?>
-                    <img src="<?php echo esc_url( $image['sizes']['thumbnail'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>" />
+                    <?php echo wp_get_attachment_image( $image['ID'], 'thumbnail', false, array( 'sizes' => '(min-width: 768px) 170px, 25vw' ) ); ?>
                 <?php else: ?>
                     <div class="empty"></div>
                 <?php endif; ?>

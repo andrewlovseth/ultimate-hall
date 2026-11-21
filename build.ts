@@ -84,13 +84,13 @@ async function compileCSS(entry: string, isDev = false): Promise<CompileResult> 
     // Extract @charset and @import rules before LightningCSS processing
     const { topRules, rest } = extractTopRules(result.css);
 
-    // Process with LightningCSS for autoprefixing only (no minification)
-    // Original gulpfile didn't minify, and WordPress needs the theme header comment
+    // Process with LightningCSS: autoprefixing, and minification for production builds
+    // WordPress needs the theme header comment, which extractTopRules keeps out of the minifier
     // errorRecovery allows legacy CSS with vendor prefixes to pass through
     const transformed = transform({
       filename: outputFile,
       code: Buffer.from(rest),
-      minify: false,
+      minify: !isDev, // the theme header comment is kept in topRules
       sourceMap: isDev,
       errorRecovery: true,
       targets: browserslistToTargets([

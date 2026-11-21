@@ -13,7 +13,14 @@
             <?php if( $photos ): ?>
                 <?php foreach( array_values( $photos ) as $i => $photo ): ?>
                     <div class="photo<?php if ( 0 === $i ) echo ' is-active'; ?>">
-                        <?php echo wp_get_attachment_image($photo['ID'], 'full'); ?>
+                        <?php
+                            // First photo is the LCP: load it eagerly at high priority; the rest wait.
+                            echo wp_get_attachment_image( $photo['ID'], 'full', false, array(
+                                'sizes'         => '(min-width: 768px) 100vw, 150vw',
+                                'loading'       => 0 === $i ? 'eager' : 'lazy',
+                                'fetchpriority' => 0 === $i ? 'high' : 'low',
+                            ) );
+                        ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
