@@ -471,7 +471,10 @@ function uh_oauth_user_grants( $user_id ) {
 
 function uh_oauth_profile_section( $user ) {
 	$grants = uh_oauth_user_grants( $user->ID );
-	echo '<h2>Claude connections</h2>';
+	echo '<h2 id="uh-claude-connections">Claude connections</h2>';
+	if ( function_exists( 'uh_guide_page' ) ) {
+		echo '<p><a href="' . esc_url( admin_url( 'admin.php?page=uh-claude' ) ) . '">How to connect and what Claude can do</a></p>';
+	}
 	if ( ! $grants ) {
 		echo '<p class="description">No Claude apps are connected to this account. Connect one from Claude with the Hall\'s address: <code>' . esc_html( uh_oauth_resource() ) . '</code></p>';
 		return;
@@ -508,6 +511,20 @@ add_action(
 	function ( $password, $user_id ) {
 		foreach ( array_keys( uh_oauth_user_grants( $user_id ) ) as $id ) {
 			uh_oauth_revoke_grant( $id );
+		}
+	},
+	10,
+	2
+);
+// A password changed on the profile page goes through wp_update_user(), which doesn't fire wp_set_password.
+add_action(
+	'profile_update',
+	function ( $user_id, $old ) {
+		$new = get_userdata( $user_id );
+		if ( $new && $old && $new->user_pass !== $old->user_pass ) {
+			foreach ( array_keys( uh_oauth_user_grants( $user_id ) ) as $id ) {
+				uh_oauth_revoke_grant( $id );
+			}
 		}
 	},
 	10,
