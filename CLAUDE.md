@@ -43,6 +43,7 @@ Functions are split into focused files in `/functions/`:
 - `abilities-teams.php` - team and tournament rosters, edits and aliases, `merge` (preview first, then confirm) and `trash`
 - `abilities-log.php` - every ability write is logged on the post (`_uh_changes`, before snapshots for undo) and in a site-wide feed (`uh_change_feed`); `recent-changes`, `member-history`, `undo-change`
 - `mcp.php` - serves those abilities as MCP tools at `/wp-json/uhof/mcp` (needs the MCP Adapter plugin)
+- `oauth.php` - Claude sign-in for that MCP server: a small OAuth 2.1 server (discovery at `/.well-known/oauth-*`, client registration limited to Claude's callbacks and localhost, `/oauth/authorize` Allow screen, PKCE-only codes, hashed rotating tokens). Bearer tokens work only on `/uhof/mcp` and only for Editors and up. Users see and disconnect Claude on their profile page. Check it locally with `ddev wp eval-file wp/wp-content/themes/ultimate-hall/ops/test-oauth.php <editor-login>`.
 - `admin-columns.php` - wp-admin list columns, sorts, filters and remembered sorts for members, teams, tournaments and media; replaces Admin Columns Pro
 - `svg.php` - SVG uploads, administrators only, every file rewritten by an allowlist sanitizer (`uh_svg_sanitize()`); replaces the SVG Support plugin
 
