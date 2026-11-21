@@ -1,0 +1,263 @@
+{
+ "url": "https://ultimatehall.org/tournaments/2018-wucc/",
+ "scores": {
+  "performance": 100,
+  "accessibility": 95,
+  "best-practices": 100,
+  "seo": 100
+ },
+ "allRuns": [
+  [
+   100,
+   95,
+   100,
+   100
+  ],
+  [
+   100,
+   95,
+   100,
+   100
+  ],
+  [
+   100,
+   95,
+   100,
+   100
+  ]
+ ],
+ "metrics": {
+  "first-contentful-paint": "0.4 s",
+  "largest-contentful-paint": "0.5 s",
+  "total-blocking-time": "0 ms",
+  "cumulative-layout-shift": "0",
+  "speed-index": "0.5 s",
+  "server-response-time": "Root document took 90 ms"
+ },
+ "lcp": "<img width=\"400\" height=\"400\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-h…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw\" decoding=\"async\" fetchpriority=\"high\">",
+ "failing": [
+  {
+   "id": "target-size",
+   "title": "Touch targets do not have sufficient size or spacing.",
+   "score": 0,
+   "items": [
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-audl/\">",
+      "label": "2018 AUDL"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,4,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-masters-championships/\">",
+      "label": "2018 Masters Championships"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,4,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-usa-ultimate-beach-grandmasters/\">",
+      "label": "2018 USA Ultimate Beach Grandmasters"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-4-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,5,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-usa-ultimate-beach-nationals/\">",
+      "label": "2018 USA Ultimate Beach Nationals"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-6-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,6,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-usa-ultimate-club-championships/\">",
+      "label": "2018 USA Ultimate Club Championships"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-2-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,1,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-usa-ultimate-grand-masters-champ…\">",
+      "label": "2018 USA Ultimate Grand Masters Championships"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-3-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,2,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-usa-ultimate-great-grand-masters…\">",
+      "label": "2018 USA Ultimate Great Grand Masters Championships"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,4,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    },
+    {
+     "node": {
+      "selector": "div.content > div.tournaments-list > div.tournament > a",
+      "snippet": "<a href=\"https://ultimatehall.org/tournaments/2018-wmucc/\">",
+      "label": "2018 WMUCC"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-4-A\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,2,SECTION,0,DIV,1,DIV,5,DIV,0,A\",\"selector\":\"div.content > div.tournaments-list > div.tourna"
+    }
+   ]
+  },
+  {
+   "id": "unminified-javascript",
+   "title": "Minify JavaScript",
+   "score": 0.5,
+   "display": "Est savings of 3 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/search.js?ver=1795300107",
+     "totalBytes": 7680,
+     "wastedBytes": 3570,
+     "wastedPercent": 46.478066659031036
+    }
+   ]
+  },
+  {
+   "id": "modern-image-formats",
+   "title": "Serve images in next-gen formats",
+   "score": 0,
+   "display": "Est savings of 30 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img.attachment-thumbnail",
+      "snippet": "<img width=\"198\" height=\"264\" src=\"https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3F…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw",
+      "label": "div.photo > a > div.content > img.attachment-thumbnail"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3FD-DF6306ADC91E_4_5005_c.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 32422,
+     "wastedBytes": 18410.75,
+     "wastedWebpBytes": 13962
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img.attachment-thumbnail",
+      "snippet": "<img width=\"400\" height=\"400\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-h…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw",
+      "label": "div.photo > a > div.content > img.attachment-thumbnail"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-headshot-400x400.jpg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 24419,
+     "wastedBytes": 12130.35,
+     "wastedWebpBytes": 9643
+    }
+   ]
+  },
+  {
+   "id": "uses-optimized-images",
+   "title": "Efficiently encode images",
+   "score": 0.5,
+   "display": "Est savings of 6 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img.attachment-thumbnail",
+      "snippet": "<img width=\"198\" height=\"264\" src=\"https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3F…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw",
+      "label": "div.photo > a > div.content > img.attachment-thumbnail"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3FD-DF6306ADC91E_4_5005_c.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 32422,
+     "wastedBytes": 5913
+    }
+   ]
+  },
+  {
+   "id": "uses-responsive-images",
+   "title": "Properly size images",
+   "score": 0,
+   "display": "Est savings of 36 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img.attachment-thumbnail",
+      "snippet": "<img width=\"400\" height=\"400\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-h…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw",
+      "label": "div.photo > a > div.content > img.attachment-thumbnail"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-headshot-400x400.jpg",
+     "totalBytes": 24419,
+     "wastedBytes": 20414,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img.attachment-thumbnail",
+      "snippet": "<img width=\"198\" height=\"264\" src=\"https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3F…\" class=\"attachment-thumbnail size-thumbnail\" alt=\"\" sizes=\"(min-width: 768px) 170px, 25vw",
+      "label": "div.photo > a > div.content > img.attachment-thumbnail"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3FD-DF6306ADC91E_4_5005_c.jpeg",
+     "totalBytes": 32422,
+     "wastedBytes": 16144,
+     "wastedPercent": 49.79338842975206
+    }
+   ]
+  },
+  {
+   "id": "image-delivery-insight",
+   "title": "Improve image delivery",
+   "score": 0,
+   "display": "Est savings of 46 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2023/02/DA4AC502-7266-4808-A3FD-DF6306ADC91E_4_5005_c.jpeg",
+     "totalBytes": 32422,
+     "wastedBytes": 26590,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":25888}]}"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Dominique-Fontenette-headshot-400x400.jpg",
+     "totalBytes": 24419,
+     "wastedBytes": 20414,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    }
+   ]
+  },
+  {
+   "id": "network-dependency-tree-insight",
+   "title": "Network dependency tree",
+   "score": 0,
+   "items": [
+    {
+     "type": "list-section",
+     "value": "{\"type\":\"network-tree\",\"chains\":{\"29FED0B8749FB3C9E80CF5FD8332728A\":{\"url\":\"https://ultimatehall.org/tournaments/2018-wucc/\",\"navStartToEndTime\":273,\"transferSize\":6076,\"isLongest\":true,\"children\":{\"1"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnected origins",
+     "description": "[preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.",
+     "value": "{\"type\":\"text\",\"value\":\"no origins were preconnected\"}"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnect candidates",
+     "description": "Add [preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints to your most important origins, but try to use no more than 4.",
+     "value": "{\"type\":\"text\",\"value\":\"No additional origins are good candidates for preconnecting\"}"
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-insight",
+   "title": "Render blocking requests",
+   "score": 0.5,
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795300107",
+     "totalBytes": 11834
+    }
+   ]
+  }
+ ]
+}
