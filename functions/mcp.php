@@ -23,7 +23,7 @@ add_action(
 			'uhof',
 			'mcp',
 			'Ultimate Hall of Fame',
-			'Find and edit Hall of Fame members, teams and tournaments. Look things up before creating them; every member edit is logged and can be undone.',
+			'Find, create and edit Hall of Fame members, teams, tournaments and induction classes. Look things up before creating them, preview merges before confirming them, and read a member before changing rows. Every change is logged and can be undone.',
 			'1.0.0',
 			array( \WP\MCP\Transport\HttpTransport::class ),
 			\WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class,
