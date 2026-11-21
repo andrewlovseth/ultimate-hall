@@ -240,10 +240,13 @@ class UH_CLI {
 	 * Merge duplicate teams or tournaments into one.
 	 *
 	 * ## OPTIONS
+	 *
 	 * <keep>
 	 * : Post ID to keep.
+	 *
 	 * <drop>...
 	 * : Post IDs to merge into <keep> and trash.
+	 *
 	 * [--apply]
 	 * : Write. Without it, lists the references that would move.
 	 */
