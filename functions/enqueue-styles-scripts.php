@@ -7,24 +7,17 @@
 
 // Enqueue custom styles and scripts
 function bearsmith_enqueue_styles_and_scripts() {
-    // Register and noConflict jQuery 3.4.1
-    wp_register_script( 'jquery.3.4.1', 'https://code.jquery.com/jquery-3.4.1.min.js' );
-
-    wp_add_inline_script( 'jquery.3.4.1', 'var jQuery = $.noConflict(true);' );
-
-
 	$uri = get_stylesheet_directory_uri();
     $dir = get_stylesheet_directory();
 
-    $script_last_updated_at = filemtime($dir . '/js/site.js');
     $style_last_updated_at = filemtime($dir . '/style.css');
 
     // Add style.css and third-party css
-    wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.css', '', $style_last_updated_at );
+    wp_enqueue_style( 'style', $uri . '/style.css', array(), $style_last_updated_at );
 
-    // Add plugins.js & site.js (with jQuery dependency)
-    wp_enqueue_script( 'custom-plugins', get_stylesheet_directory_uri() . '/js/plugins.js', array( 'jquery.3.4.1' ), $script_last_updated_at, true );
-    wp_enqueue_script( 'custom-site', get_stylesheet_directory_uri() . '/js/site.js', array( 'jquery.3.4.1' ), $script_last_updated_at, true );
+    // plugins.js & site.js use WordPress's bundled jQuery (3.7+), each versioned by its own file time
+    wp_enqueue_script( 'custom-plugins', $uri . '/js/plugins.js', array( 'jquery' ), filemtime( $dir . '/js/plugins.js' ), true );
+    wp_enqueue_script( 'custom-site', $uri . '/js/site.js', array( 'jquery', 'custom-plugins' ), filemtime( $dir . '/js/site.js' ), true );
 
     // Omnibox search (vanilla JS, no jQuery dependency, loaded in footer)
     $search_script_last_updated_at = filemtime( $dir . '/js/search.js' );
