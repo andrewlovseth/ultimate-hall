@@ -57,7 +57,7 @@
 		Home hero crossfade. Every .photo sits in the same grid cell; the one
 		with .is-active is opaque and CSS fades between them. The first photo is
 		marked active in the template, so with no JS (or one photo) it just
-		shows that. Pauses on hover, while the tab is hidden, and never starts
+		shows that. Pauses while the tab is hidden, and never starts
 		when the visitor prefers reduced motion.
 	*/
 	var slider = document.querySelector('.hero-slider');
@@ -66,17 +66,14 @@
 
 	if (slides.length > 1 && !reduceMotion) {
 		var current = 0;
-		var hovering = false;
 		var INTERVAL = 5000;
 
 		window.setInterval(function () {
-			if (hovering || document.hidden) return;
+			if (document.hidden) return;
+			// Both photos fade at once, same as Slick's fade mode did.
 			slides[current].classList.remove('is-active');
 			current = (current + 1) % slides.length;
 			slides[current].classList.add('is-active');
 		}, INTERVAL);
-
-		slider.addEventListener('mouseenter', function () { hovering = true; });
-		slider.addEventListener('mouseleave', function () { hovering = false; });
 	}
 })();
