@@ -1,0 +1,681 @@
+{
+ "url": "https://ultimatehall.org/team/maine-iacs/",
+ "scores": {
+  "performance": 65,
+  "accessibility": 83,
+  "best-practices": 93,
+  "seo": 92
+ },
+ "allRuns": [
+  [
+   64,
+   83,
+   93,
+   92
+  ],
+  [
+   65,
+   83,
+   93,
+   92
+  ],
+  [
+   86,
+   83,
+   93,
+   92
+  ]
+ ],
+ "metrics": {
+  "first-contentful-paint": "4.8 s",
+  "largest-contentful-paint": "7.0 s",
+  "total-blocking-time": "0 ms",
+  "cumulative-layout-shift": "0.004",
+  "speed-index": "4.8 s",
+  "server-response-time": "Root document took 0 ms"
+ },
+ "lcp": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nation…\" alt=\"\">",
+ "failing": [
+  {
+   "id": "first-contentful-paint",
+   "title": "First Contentful Paint",
+   "score": 0.12,
+   "display": "4.8 s",
+   "items": []
+  },
+  {
+   "id": "largest-contentful-paint",
+   "title": "Largest Contentful Paint",
+   "score": 0.06,
+   "display": "7.0 s",
+   "items": []
+  },
+  {
+   "id": "speed-index",
+   "title": "Speed Index",
+   "score": 0.68,
+   "display": "4.8 s",
+   "items": []
+  },
+  {
+   "id": "errors-in-console",
+   "title": "Browser errors were logged to the console",
+   "score": 0,
+   "items": [
+    {
+     "source": "network",
+     "description": "Failed to load resource: the server responded with a status of 404 ()",
+     "sourceLocation": "{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/favicon.ico\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}"
+    }
+   ]
+  },
+  {
+   "id": "interactive",
+   "title": "Time to Interactive",
+   "score": 0.53,
+   "display": "7.0 s",
+   "items": []
+  },
+  {
+   "id": "largest-contentful-paint-element",
+   "title": "Largest Contentful Paint element",
+   "score": 0,
+   "display": "6,990 ms",
+   "items": [
+    {
+     "type": "table",
+     "headings": "[{\"key\":\"node\",\"valueType\":\"node\",\"label\":\"Element\"}]",
+     "items": "[{\"node\":{\"type\":\"node\",\"lhId\":\"page-7-IMG\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,1,SECTION,0,DIV,0,DIV,0,DIV,0,A,0,DIV,0,IMG\",\"selector\":\"div.photo > a > div.content > img\",\"boundingRect\":{\"top\":263,\"bo"
+    },
+    {
+     "type": "table",
+     "headings": "[{\"key\":\"phase\",\"valueType\":\"text\",\"label\":\"Phase\"},{\"key\":\"percent\",\"valueType\":\"text\",\"label\":\"% of LCP\"},{\"key\":\"timing\",\"valueType\":\"ms\",\"label\":\"Timing\"}]",
+     "items": "[{\"phase\":\"TTFB\",\"timing\":600.014,\"percent\":\"9%\"},{\"phase\":\"Load Delay\",\"timing\":542.1385922842568,\"percent\":\"8%\"},{\"phase\":\"Load Time\",\"timing\":627.276291248764,\"percent\":\"9%\"},{\"phase\":\"Render Delay"
+    }
+   ]
+  },
+  {
+   "id": "unsized-images",
+   "title": "Image elements do not have explicit `width` and `height`",
+   "score": 0.5,
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg",
+     "node": {
+      "selector": "header.site-header > div.logo > a > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg\" alt=\"\">",
+      "label": "header.site-header > div.logo > a > img"
+     }
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg",
+     "node": {
+      "selector": "footer.site-footer > div.logo > a > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg\" alt=\"\">",
+      "label": "footer.site-footer > div.logo > a > img"
+     }
+    }
+   ]
+  },
+  {
+   "id": "color-contrast",
+   "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+   "score": 0,
+   "items": [
+    {
+     "node": {
+      "selector": "section.page-header > div.location > h2 > span.city",
+      "snippet": "<span class=\"city\">",
+      "label": "SAN FRANCISCO, CALIFORNIA"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-BODY\",\"path\":\"1,HTML,1,BODY\",\"selector\":\"body.wp-singular\",\"boundingRect\":{\"top\":0,\"bottom\":6435,\"left\":0,\"right\":412,\"width\":412,"
+    },
+    {
+     "node": {
+      "selector": "section.page-header > div.location > h2 > span.division",
+      "snippet": "<span class=\"division\">",
+      "label": "CLUB WOMEN"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-BODY\",\"path\":\"1,HTML,1,BODY\",\"selector\":\"body.wp-singular\",\"boundingRect\":{\"top\":0,\"bottom\":6435,\"left\":0,\"right\":412,\"width\":412,"
+    }
+   ]
+  },
+  {
+   "id": "link-name",
+   "title": "Links do not have a discernible name",
+   "score": 0,
+   "items": [
+    {
+     "node": {
+      "selector": "div#page > header.site-header > div.logo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/\">",
+      "label": "div#page > header.site-header > div.logo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div#page > header.site-header > div.hamburger > a.js-nav-trigger",
+      "snippet": "<a href=\"#\" class=\"js-nav-trigger\">",
+      "label": "div#page > header.site-header > div.hamburger > a.js-nav-trigger"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/caryn-lucido/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/christine-wags-wagner/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/gloria-glo-lust-phillips/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/jackie-watson-pierce/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/jennifer-jd-donnelly/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/molly-goodwin/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-resources",
+   "title": "Eliminate render-blocking resources",
+   "score": 0,
+   "display": "Est savings of 4,000 ms",
+   "items": [
+    {
+     "url": "https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap",
+     "totalBytes": 1406,
+     "wastedMs": 845
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+     "totalBytes": 29972,
+     "wastedMs": 304
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedMs": 152
+    }
+   ]
+  },
+  {
+   "id": "unminified-css",
+   "title": "Minify CSS",
+   "score": 0.5,
+   "display": "Est savings of 2 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedBytes": 2096,
+     "wastedPercent": 16.25151581416615
+    }
+   ]
+  },
+  {
+   "id": "unminified-javascript",
+   "title": "Minify JavaScript",
+   "score": 0.5,
+   "display": "Est savings of 3 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/search.js?ver=1795287854",
+     "totalBytes": 7680,
+     "wastedBytes": 3570,
+     "wastedPercent": 46.478066659031036
+    }
+   ]
+  },
+  {
+   "id": "unused-css-rules",
+   "title": "Reduce unused CSS",
+   "score": 0,
+   "display": "Est savings of 11 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "wastedBytes": 11282,
+     "wastedPercent": 89.75508418980975,
+     "totalBytes": 12570
+    }
+   ]
+  },
+  {
+   "id": "modern-image-formats",
+   "title": "Serve images in next-gen formats",
+   "score": 0,
+   "display": "Est savings of 660 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/ChristineWagner_headsh…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/ChristineWagner_headshot.png",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 194628,
+     "wastedBytes": 183901.9,
+     "wastedWebpBytes": 182074
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/JackieWatsonPierce_hea…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/JackieWatsonPierce_headshot.png",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 177631,
+     "wastedBytes": 166533.55,
+     "wastedWebpBytes": 164623
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/NicoleSproutBeck_heads…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/NicoleSproutBeck_headshot.png",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 141459,
+     "wastedBytes": 131326.75,
+     "wastedWebpBytes": 129959
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 83990,
+     "wastedBytes": 73902.8,
+     "wastedWebpBytes": 72532
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/GloriaLustPhillips_1.j…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/GloriaLustPhillips_1.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 55079,
+     "wastedBytes": 42801.5,
+     "wastedWebpBytes": 39349
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/MollyGoodwin_headshot.…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/MollyGoodwin_headshot.jpg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 51209,
+     "wastedBytes": 41928.3,
+     "wastedWebpBytes": 39821
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nation…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nationals.jpg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 26525,
+     "wastedBytes": 21736.3,
+     "wastedWebpBytes": 21077
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/11/JD-323x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/11/JD-323x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 28959,
+     "wastedBytes": 13769.85,
+     "wastedWebpBytes": 8883
+    }
+   ]
+  },
+  {
+   "id": "uses-optimized-images",
+   "title": "Efficiently encode images",
+   "score": 0,
+   "display": "Est savings of 138 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 83990,
+     "wastedBytes": 61974
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/MollyGoodwin_headshot.…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/MollyGoodwin_headshot.jpg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 51209,
+     "wastedBytes": 32307
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/GloriaLustPhillips_1.j…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/GloriaLustPhillips_1.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 55079,
+     "wastedBytes": 31137
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nation…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nationals.jpg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 26525,
+     "wastedBytes": 16087
+    }
+   ]
+  },
+  {
+   "id": "uses-responsive-images",
+   "title": "Properly size images",
+   "score": 0,
+   "display": "Est savings of 121 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/ChristineWagner_headsh…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/ChristineWagner_headshot.png",
+     "totalBytes": 194628,
+     "wastedBytes": 34378,
+     "wastedPercent": 17.663666666666668
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/JackieWatsonPierce_hea…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/JackieWatsonPierce_headshot.png",
+     "totalBytes": 177631,
+     "wastedBytes": 31376,
+     "wastedPercent": 17.663666666666668
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/NicoleSproutBeck_heads…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/NicoleSproutBeck_headshot.png",
+     "totalBytes": 141459,
+     "wastedBytes": 24987,
+     "wastedPercent": 17.663666666666668
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg",
+     "totalBytes": 83990,
+     "wastedBytes": 17708,
+     "wastedPercent": 21.083386581469643
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/11/JD-323x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/11/JD-323x400.jpeg",
+     "totalBytes": 28959,
+     "wastedBytes": 15118,
+     "wastedPercent": 52.20414086687306
+    }
+   ]
+  },
+  {
+   "id": "legacy-javascript",
+   "title": "Avoid serving legacy JavaScript to modern browsers",
+   "score": 0.5,
+   "display": "Est savings of 0 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/plugins.js?ver=1795287854",
+     "wastedBytes": 305,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"signal\":\"@babel/plugin-transform-spread\",\"location\":{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/wp-content/themes/ultimate-hall/js/plugins.js?ver=1795287854",
+     "totalBytes": 0
+    }
+   ]
+  },
+  {
+   "id": "meta-description",
+   "title": "Document does not have a meta description",
+   "score": 0,
+   "items": []
+  },
+  {
+   "id": "font-size",
+   "title": "Document doesn't use legible font sizes",
+   "score": 0,
+   "display": "53.18% legible text",
+   "items": [
+    {
+     "source": "{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854\",\"urlProvider\":\"network\",\"line\":3490,\"column\":56}",
+     "selector": "body.single-team section.other-teams .team a .location",
+     "coverage": "27.84%",
+     "fontSize": "10.8px"
+    },
+    {
+     "source": "{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854\",\"urlProvider\":\"network\",\"line\":943,\"column\":36}",
+     "selector": ".member-grid .info .meta .division",
+     "coverage": "4.43%",
+     "fontSize": "10.8px"
+    },
+    {
+     "source": "{\"type\":\"code\",\"value\":\"Add'l illegible text\"}",
+     "selector": "",
+     "coverage": "14.55%",
+     "fontSize": "< 12px"
+    },
+    {
+     "source": "{\"type\":\"code\",\"value\":\"Legible text\"}",
+     "selector": "",
+     "coverage": "53.18%",
+     "fontSize": "≥ 12px"
+    }
+   ]
+  },
+  {
+   "id": "image-delivery-insight",
+   "title": "Improve image delivery",
+   "score": 0,
+   "display": "Est savings of 710 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/ChristineWagner_headshot.png",
+     "totalBytes": 194628,
+     "wastedBytes": 190595,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":184187},{\"reason\":\"This ima"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/JackieWatsonPierce_headshot.png",
+     "totalBytes": 177631,
+     "wastedBytes": 173598,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":167251},{\"reason\":\"This ima"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/NicoleSproutBeck_headshot.png",
+     "totalBytes": 141459,
+     "wastedBytes": 137426,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":131018},{\"reason\":\"This ima"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/Peggy_Hollinger.jpeg",
+     "totalBytes": 83990,
+     "wastedBytes": 79783,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":73586},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/GloriaLustPhillips_1.jpeg",
+     "totalBytes": 55079,
+     "wastedBytes": 51718,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":45717},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/MollyGoodwin_headshot.jpg",
+     "totalBytes": 51209,
+     "wastedBytes": 46168,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":44542},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/11/JD-323x400.jpeg",
+     "totalBytes": 28959,
+     "wastedBytes": 24797,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":11586},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nationals.jpg",
+     "totalBytes": 26525,
+     "wastedBytes": 22500,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":21875}]}"
+    }
+   ]
+  },
+  {
+   "id": "lcp-discovery-insight",
+   "title": "LCP request discovery",
+   "score": 0,
+   "items": [
+    {
+     "type": "checklist",
+     "items": "{\"priorityHinted\":{\"label\":\"fetchpriority=high should be applied\",\"value\":false},\"requestDiscoverable\":{\"label\":\"Request is discoverable in initial document\",\"value\":true},\"eagerlyLoaded\":{\"label\":\"la"
+    },
+    {
+     "type": "node",
+     "lhId": "page-7-IMG",
+     "path": "1,HTML,1,BODY,0,DIV,2,MAIN,1,SECTION,0,DIV,0,DIV,0,DIV,0,A,0,DIV,0,IMG",
+     "selector": "div.photo > a > div.content > img",
+     "boundingRect": "{\"top\":263,\"bottom\":405,\"left\":36,\"right\":178,\"width\":142,\"height\":142}",
+     "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/03/CarynLucido_1990Nation…\" alt=\"\">",
+     "nodeLabel": "div.photo > a > div.content > img"
+    }
+   ]
+  },
+  {
+   "id": "network-dependency-tree-insight",
+   "title": "Network dependency tree",
+   "score": 0,
+   "items": [
+    {
+     "type": "list-section",
+     "value": "{\"type\":\"network-tree\",\"chains\":{\"785FC1C77BBDAE2A28E305135097EA75\":{\"url\":\"https://ultimatehall.org/team/maine-iacs/\",\"navStartToEndTime\":39,\"transferSize\":7821,\"isLongest\":true,\"children\":{\"8322.2\":"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnected origins",
+     "description": "[preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.",
+     "value": "{\"type\":\"text\",\"value\":\"no origins were preconnected\"}"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnect candidates",
+     "description": "Add [preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints to your most important origins, but try to use no more than 4."
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-insight",
+   "title": "Render blocking requests",
+   "score": 0,
+   "display": "Est savings of 4,000 ms",
+   "items": [
+    {
+     "url": "https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap",
+     "totalBytes": 1406,
+     "wastedMs": 845
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+     "totalBytes": 29972,
+     "wastedMs": 304
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+     "totalBytes": 5025,
+     "wastedMs": 152
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedMs": 152
+    }
+   ]
+  }
+ ]
+}
