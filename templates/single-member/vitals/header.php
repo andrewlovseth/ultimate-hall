@@ -1,27 +1,19 @@
 <?php
 
-    $vitals = get_field('vitals');
-    $hometown = $vitals['hometown'];
-    $birthdate_field = $vitals['birthdate'];
-    $birthdate = DateTime::createFromFormat('Ymd', $birthdate_field);
+    $vitals = get_field('vitals') ?: array();
+    $hometown = $vitals['hometown'] ?? '';
+    $birthdate_field = $vitals['birthdate'] ?? '';
+    $birthdate = $birthdate_field ? DateTime::createFromFormat('Ymd', $birthdate_field) : false;
 
-    $date_of_death_field = $vitals['date_of_death'];
-    if($date_of_death_field) {
-        $date_of_death = DateTime::createFromFormat('Ymd', $date_of_death_field);
-    }
+    $date_of_death_field = $vitals['date_of_death'] ?? '';
+    $date_of_death = $date_of_death_field ? DateTime::createFromFormat('Ymd', $date_of_death_field) : false;
 
-    $photos = get_field('photos');
-    $headshot = $photos['headshot'];
-   
-    $today = new DateTime();
-    $birthday = new DateTime($birthdate_field);
-    $age = $today->diff($birthday);
+    $photos = get_field('photos') ?: array();
+    $headshot = $photos['headshot'] ?? null;
 
-    $lifespan = FALSE;
+    $age = $birthdate ? ( new DateTime() )->diff($birthdate) : false;
 
-    if($date_of_death_field) {
-        $lifespan = $date_of_death->diff($birthday);
-    }
+    $lifespan = ( $birthdate && $date_of_death ) ? $date_of_death->diff($birthdate) : false;
 
 ?>
 
