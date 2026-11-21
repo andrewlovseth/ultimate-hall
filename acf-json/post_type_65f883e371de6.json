@@ -56,7 +56,7 @@
     "show_in_nav_menus": true,
     "show_in_rest": true,
     "rest_base": "",
-    "rest_namespace": "wp\/v2",
+    "rest_namespace": "wp/v2",
     "rest_controller_class": "",
     "menu_position": "",
     "menu_icon": "dashicons-flag",
@@ -66,7 +66,8 @@
     "supports": [
         "title",
         "thumbnail",
-        "page-attributes"
+        "page-attributes",
+        "revisions"
     ],
     "taxonomies": [],
     "has_archive": true,
@@ -84,5 +85,5 @@
     "delete_with_user": false,
     "register_meta_box_cb": "",
     "enter_title_here": "",
-    "modified": 1710785507
+    "modified": 1795240913
 }

@@ -20,21 +20,19 @@
         <?php echo $biography; ?>
     </div>
 
-    <?php if(have_rows('contributions_and_service')): ?>
+    <?php $service = uh_member_service( get_the_ID() ); if ( $service ) : ?>
         <section class="contributions-and-service">
             <div class="section-header">
                 <h3 class="small">Contributions & Service</h3>
             </div>
 
             <ul>
-                <?php while(have_rows('contributions_and_service')): the_row(); ?>
-                
+                <?php foreach ( $service as $entry ) : ?>
                     <li>
-                        <?php if(get_sub_field('year')): ?><span class="year"><?php echo get_sub_field('year'); ?>:</span><?php endif; ?>
-                        <span class="description"><?php echo get_sub_field('description'); ?></span>
+                        <?php if ( $entry['years'] ) : ?><span class="year"><?php echo esc_html( $entry['years'] ); ?>:</span><?php endif; ?>
+                        <span class="description"><?php echo $entry['description']; ?></span>
                     </li>
-
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </ul>
         </section>
     <?php endif; ?>

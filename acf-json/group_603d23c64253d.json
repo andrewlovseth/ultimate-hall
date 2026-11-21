@@ -109,7 +109,7 @@
                         "class": "",
                         "id": ""
                     },
-                    "display_format": "m\/d\/Y",
+                    "display_format": "m/d/Y",
                     "return_format": "Ymd",
                     "first_day": 1
                 },
@@ -127,7 +127,7 @@
                         "class": "",
                         "id": ""
                     },
-                    "display_format": "m\/d\/Y",
+                    "display_format": "m/d/Y",
                     "return_format": "Ymd",
                     "first_day": 1
                 }
@@ -188,12 +188,12 @@
             "endpoint": 0
         },
         {
-            "key": "field_603d252cf8d01",
-            "label": "Playing Career",
-            "name": "playing_career",
+            "key": "field_uh_career",
+            "label": "Career",
+            "name": "career",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "",
+            "instructions": "One row per stint on a team. Leave To blank for a single season. Split broken stints (1992–1994 and 1997) into two rows.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -205,41 +205,20 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "+ Add Team",
+            "button_label": "+ Add Stint",
             "rows_per_page": 20,
             "sub_fields": [
                 {
-                    "key": "field_603d252cf8d04",
-                    "label": "Year",
-                    "name": "year",
-                    "aria-label": "",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "25",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": "",
-                    "parent_repeater": "field_603d252cf8d01"
-                },
-                {
-                    "key": "field_603d252cf8d02",
+                    "key": "field_uh_career_team",
                     "label": "Team",
                     "name": "team",
                     "aria-label": "",
                     "type": "post_object",
                     "instructions": "",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "34",
                         "class": "",
                         "id": ""
                     },
@@ -247,15 +226,103 @@
                         "team"
                     ],
                     "taxonomy": "",
-                    "allow_null": 0,
+                    "allow_null": 1,
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d252cf8d01",
-                    "bidirectional_target": []
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_uh_career"
                 },
                 {
-                    "key": "field_605e3ee9bd6f7",
+                    "key": "field_uh_career_start",
+                    "label": "From",
+                    "name": "start_year",
+                    "aria-label": "",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "min": 1950,
+                    "max": 2100,
+                    "placeholder": "",
+                    "step": 1,
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_uh_career"
+                },
+                {
+                    "key": "field_uh_career_end",
+                    "label": "To",
+                    "name": "end_year",
+                    "aria-label": "",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "min": 1950,
+                    "max": 2100,
+                    "placeholder": "",
+                    "step": 1,
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_uh_career"
+                },
+                {
+                    "key": "field_uh_career_present",
+                    "label": "To present",
+                    "name": "to_present",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_uh_career"
+                },
+                {
+                    "key": "field_uh_career_approx",
+                    "label": "Approx.",
+                    "name": "approximate",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_uh_career"
+                },
+                {
+                    "key": "field_uh_career_note",
                     "label": "Note",
                     "name": "note",
                     "aria-label": "",
@@ -273,17 +340,17 @@
                     "prepend": "",
                     "append": "",
                     "maxlength": "",
-                    "parent_repeater": "field_603d252cf8d01"
+                    "parent_repeater": "field_uh_career"
                 }
             ]
         },
         {
-            "key": "field_603d2499f8cf2",
-            "label": "US Championships",
-            "name": "us_championships",
+            "key": "field_uh_results",
+            "label": "Results",
+            "name": "results",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "",
+            "instructions": "One row per tournament appearance. The tournament's own Series (U.S., World, Pro) decides where it shows on the profile.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -295,36 +362,11 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "+ Add Tournament",
+            "button_label": "+ Add Result",
             "rows_per_page": 20,
             "sub_fields": [
                 {
-                    "key": "field_60528acf4152b",
-                    "label": "Team",
-                    "name": "team",
-                    "aria-label": "",
-                    "type": "post_object",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "post_type": [
-                        "team"
-                    ],
-                    "taxonomy": "",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "return_format": "object",
-                    "ui": 1,
-                    "parent_repeater": "field_603d2499f8cf2",
-                    "bidirectional_target": []
-                },
-                {
-                    "key": "field_603eaa1044b5d",
+                    "key": "field_uh_results_tournament",
                     "label": "Tournament",
                     "name": "tournament",
                     "aria-label": "",
@@ -333,7 +375,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "40",
                         "class": "",
                         "id": ""
                     },
@@ -341,91 +383,15 @@
                         "tournaments"
                     ],
                     "taxonomy": "",
-                    "allow_null": 0,
+                    "allow_null": 1,
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d2499f8cf2",
-                    "bidirectional_target": []
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_uh_results"
                 },
                 {
-                    "key": "field_603eaa67ed37c",
-                    "label": "Placement",
-                    "name": "placement",
-                    "aria-label": "",
-                    "type": "select",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "1st": "1st",
-                        "2nd": "2nd",
-                        "3rd": "3rd",
-                        "4th": "4th",
-                        "5th": "5th",
-                        "6th": "6th",
-                        "7th": "7th",
-                        "8th": "8th",
-                        "9th": "9th",
-                        "10th": "10th",
-                        "11th": "11th",
-                        "12th": "12th",
-                        "13th": "13th",
-                        "14th": "14th",
-                        "15th": "15th",
-                        "16th": "16th",
-                        "Pool Play": "Pool Play",
-                        "Power Pools": "Power Pools",
-                        "Pre-Quarterfinals": "Pre-Quarterfinals",
-                        "Quarterfinals": "Quarterfinals",
-                        "Semifinals": "Semifinals",
-                        "Finals": "Finals",
-                        "Regionals": "Regionals",
-                        "Sectionals": "Sectionals",
-                        "1st Round": "1st Round",
-                        "2nd Round": "2nd Round",
-                        "3rd Round": "3rd Round",
-                        "4th Round": "4th Round"
-                    },
-                    "default_value": false,
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": "",
-                    "parent_repeater": "field_603d2499f8cf2"
-                }
-            ]
-        },
-        {
-            "key": "field_603d24cff8cf8",
-            "label": "WFDF Championships",
-            "name": "wfdf_championships",
-            "aria-label": "",
-            "type": "repeater",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "table",
-            "button_label": "+ Add Tournament",
-            "rows_per_page": 20,
-            "sub_fields": [
-                {
-                    "key": "field_60528b0904ec0",
+                    "key": "field_uh_results_team",
                     "label": "Team",
                     "name": "team",
                     "aria-label": "",
@@ -434,7 +400,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "40",
                         "class": "",
                         "id": ""
                     },
@@ -442,40 +408,15 @@
                         "team"
                     ],
                     "taxonomy": "",
-                    "allow_null": 0,
+                    "allow_null": 1,
                     "multiple": 0,
                     "return_format": "object",
                     "ui": 1,
-                    "parent_repeater": "field_603d24cff8cf8",
-                    "bidirectional_target": []
+                    "bidirectional_target": [],
+                    "parent_repeater": "field_uh_results"
                 },
                 {
-                    "key": "field_603ea8c9259e9",
-                    "label": "Tournament",
-                    "name": "tournament",
-                    "aria-label": "",
-                    "type": "post_object",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "post_type": [
-                        "tournaments"
-                    ],
-                    "taxonomy": "",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "return_format": "object",
-                    "ui": 1,
-                    "parent_repeater": "field_603d24cff8cf8",
-                    "bidirectional_target": []
-                },
-                {
-                    "key": "field_603d24cff8cfd",
+                    "key": "field_uh_results_placement",
                     "label": "Placement",
                     "name": "placement",
                     "aria-label": "",
@@ -484,7 +425,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "20",
                         "class": "",
                         "id": ""
                     },
@@ -505,158 +446,36 @@
                         "14th": "14th",
                         "15th": "15th",
                         "16th": "16th",
-                        "Pool Play": "Pool Play",
-                        "Power Pools": "Power Pools",
-                        "Pre-Quarterfinals": "Pre-Quarterfinals",
-                        "Quarterfinals": "Quarterfinals",
-                        "Semifinals": "Semifinals",
                         "Finals": "Finals",
-                        "1st Round": "1st Round",
-                        "2nd Round": "2nd Round",
-                        "3rd Round": "3rd Round",
-                        "4th Round": "4th Round"
-                    },
-                    "default_value": false,
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": "",
-                    "parent_repeater": "field_603d24cff8cf8"
-                }
-            ]
-        },
-        {
-            "key": "field_60a3e3a643140",
-            "label": "Pro Seasons",
-            "name": "pro_seasons",
-            "aria-label": "",
-            "type": "repeater",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "table",
-            "button_label": "+ Add Tournament",
-            "rows_per_page": 20,
-            "sub_fields": [
-                {
-                    "key": "field_60a3e3a743141",
-                    "label": "Team",
-                    "name": "team",
-                    "aria-label": "",
-                    "type": "post_object",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "post_type": [
-                        "team"
-                    ],
-                    "taxonomy": "",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "return_format": "object",
-                    "ui": 1,
-                    "parent_repeater": "field_60a3e3a643140",
-                    "bidirectional_target": []
-                },
-                {
-                    "key": "field_60a3e3a743142",
-                    "label": "Season",
-                    "name": "season",
-                    "aria-label": "",
-                    "type": "post_object",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "post_type": [
-                        "tournaments"
-                    ],
-                    "taxonomy": "",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "return_format": "object",
-                    "ui": 1,
-                    "parent_repeater": "field_60a3e3a643140",
-                    "bidirectional_target": []
-                },
-                {
-                    "key": "field_60a3e3a743143",
-                    "label": "Placement",
-                    "name": "placement",
-                    "aria-label": "",
-                    "type": "select",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "1st": "1st",
-                        "2nd": "2nd",
-                        "3rd": "3rd",
-                        "4th": "4th",
-                        "5th": "5th",
-                        "6th": "6th",
-                        "7th": "7th",
-                        "8th": "8th",
-                        "9th": "9th",
-                        "10th": "10th",
-                        "11th": "11th",
-                        "12th": "12th",
-                        "13th": "13th",
-                        "14th": "14th",
-                        "15th": "15th",
-                        "16th": "16th",
-                        "Pool Play": "Pool Play",
-                        "Power Pools": "Power Pools",
-                        "Pre-Quarterfinals": "Pre-Quarterfinals",
-                        "Quarterfinals": "Quarterfinals",
                         "Semifinals": "Semifinals",
-                        "Finals": "Finals",
+                        "Quarterfinals": "Quarterfinals",
+                        "Pre-Quarterfinals": "Pre-Quarterfinals",
+                        "Power Pools": "Power Pools",
+                        "Pool Play": "Pool Play",
                         "Playoffs": "Playoffs",
                         "Missed Playoffs": "Missed Playoffs",
                         "1st Round": "1st Round",
                         "2nd Round": "2nd Round",
                         "3rd Round": "3rd Round",
-                        "4th Round": "4th Round"
+                        "4th Round": "4th Round",
+                        "Regionals": "Regionals",
+                        "Sectionals": "Sectionals"
                     },
                     "default_value": false,
-                    "allow_null": 0,
+                    "allow_null": 1,
                     "multiple": 0,
                     "ui": 0,
                     "return_format": "value",
                     "ajax": 0,
                     "placeholder": "",
-                    "parent_repeater": "field_60a3e3a643140"
+                    "parent_repeater": "field_uh_results"
                 }
             ]
         },
         {
-            "key": "field_603d24e0f8cfe",
+            "key": "field_uh_service",
             "label": "Contributions and Service",
-            "name": "contributions_and_service",
+            "name": "service",
             "aria-label": "",
             "type": "repeater",
             "instructions": "",
@@ -675,28 +494,95 @@
             "rows_per_page": 20,
             "sub_fields": [
                 {
-                    "key": "field_603d24eff8cff",
-                    "label": "Year",
-                    "name": "year",
+                    "key": "field_uh_service_start",
+                    "label": "From",
+                    "name": "start_year",
                     "aria-label": "",
-                    "type": "text",
+                    "type": "number",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "20",
+                        "width": "12",
                         "class": "",
                         "id": ""
                     },
                     "default_value": "",
+                    "min": 1950,
+                    "max": 2100,
                     "placeholder": "",
+                    "step": 1,
                     "prepend": "",
                     "append": "",
-                    "maxlength": "",
-                    "parent_repeater": "field_603d24e0f8cfe"
+                    "parent_repeater": "field_uh_service"
                 },
                 {
-                    "key": "field_603d24f2f8d00",
+                    "key": "field_uh_service_end",
+                    "label": "To",
+                    "name": "end_year",
+                    "aria-label": "",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "12",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "min": 1950,
+                    "max": 2100,
+                    "placeholder": "",
+                    "step": 1,
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_uh_service"
+                },
+                {
+                    "key": "field_uh_service_present",
+                    "label": "To present",
+                    "name": "to_present",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_uh_service"
+                },
+                {
+                    "key": "field_uh_service_approx",
+                    "label": "Approx.",
+                    "name": "approximate",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_uh_service"
+                },
+                {
+                    "key": "field_uh_service_desc",
                     "label": "Description",
                     "name": "description",
                     "aria-label": "",
@@ -714,7 +600,7 @@
                     "prepend": "",
                     "append": "",
                     "maxlength": "",
-                    "parent_repeater": "field_603d24e0f8cfe"
+                    "parent_repeater": "field_uh_service"
                 }
             ]
         },
@@ -1218,9 +1104,9 @@
                         "open-division": "Open Division",
                         "womens-division": "Women's Division",
                         "mixed-division": "Mixed Division",
-                        "open-division-look-back": "Open Division\/Look Back",
-                        "womens-division-look-back": "Women's Division\/Look Back",
-                        "mixed-division-look-back": "Mixed Division\/Look Back",
+                        "open-division-look-back": "Open Division/Look Back",
+                        "womens-division-look-back": "Women's Division/Look Back",
+                        "mixed-division-look-back": "Mixed Division/Look Back",
                         "look-back": "Look Back",
                         "inaugural-class": "Inaugural Class"
                     },
@@ -1385,6 +1271,6 @@
     ],
     "active": true,
     "description": "",
-    "show_in_rest": 0,
-    "modified": 1710786405
+    "show_in_rest": 1,
+    "modified": 1795239988
 }

@@ -64,6 +64,26 @@
             "ui": 1,
             "ui_on_text": "",
             "ui_off_text": ""
+        },
+        {
+            "key": "field_uh_team_aliases",
+            "label": "Also known as",
+            "name": "aliases",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Other names this is known by, one per line. Search and Claude's lookups match these.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": ""
         }
     ],
     "location": [
@@ -96,5 +116,6 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1616024692
+    "modified": 1795241003,
+    "show_in_rest": 1
 }
