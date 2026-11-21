@@ -1,17 +1,17 @@
 | Page | Perf | A11y | Best practices | SEO | LCP | TBT | CLS |
 |---|---|---|---|---|---|---|---|
-| home-desktop | 99 | 100 | 100 | 100 | 0.9 s | 0 ms | 0.009 |
-| home-mobile | 83 | 100 | 100 | 100 | 1.2 s | 680 ms | 0.006 |
-| members-desktop | 100 | 100 | 100 | 100 | 0.6 s | 0 ms | 0.001 |
-| members-mobile | 100 | 100 | 96 | 100 | 1.8 s | 40 ms | 0 |
-| class-desktop | 100 | 100 | 100 | 100 | 0.5 s | 0 ms | 0.001 |
-| class-mobile | 100 | 100 | 100 | 100 | 1.8 s | 0 ms | 0 |
-| member-desktop | 100 | 95 | 100 | 100 | 0.3 s | 0 ms | 0.006 |
-| member-mobile | 94 | 95 | 96 | 100 | 3.0 s | 0 ms | 0 |
-| team-desktop | 99 | 100 | 100 | 100 | 0.8 s | 0 ms | 0 |
-| team-mobile | 91 | 100 | 96 | 100 | 3.6 s | 0 ms | 0 |
-| tournament-desktop | 100 | 95 | 100 | 100 | 0.4 s | 0 ms | 0.001 |
-| tournament-mobile | 100 | 100 | 100 | 100 | 1.4 s | 0 ms | 0 |
+| home-desktop | 98 | 100 | 100 | 100 | 1.2 s | 0 ms | 0.005 |
+| home-mobile | 82 | 100 | 100 | 100 | 4.4 s | 0 ms | 0.006 |
+| members-desktop | 99 | 100 | 100 | 100 | 0.6 s | 0 ms | 0.001 |
+| members-mobile | 97 | 100 | 96 | 100 | 2.6 s | 50 ms | 0 |
+| class-desktop | 100 | 100 | 100 | 100 | 0.8 s | 0 ms | 0 |
+| class-mobile | 84 | 100 | 100 | 100 | 4.2 s | 0 ms | 0 |
+| member-desktop | 100 | 95 | 100 | 100 | 0.7 s | 0 ms | 0 |
+| member-mobile | 86 | 95 | 96 | 100 | 4.0 s | 0 ms | 0 |
+| team-desktop | 97 | 100 | 100 | 100 | 1.3 s | 0 ms | 0 |
+| team-mobile | 81 | 100 | 96 | 100 | 5.1 s | 0 ms | 0 |
+| tournament-desktop | 100 | 95 | 100 | 100 | 0.7 s | 0 ms | 0 |
+| tournament-mobile | 89 | 100 | 100 | 100 | 3.5 s | 0 ms | 0 |
 
 Visual check:
 | Page | Height before | Height after | Pixels changed |
