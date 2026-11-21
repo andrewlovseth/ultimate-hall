@@ -22,10 +22,23 @@ const UH_CHANGELOG_KEEP = 100;
 /** Ability names served over MCP, in the order tools are listed. */
 function uh_ability_names() {
 	return array(
-		'uhof/find-member', 'uhof/get-member', 'uhof/find-team', 'uhof/find-tournament', 'uhof/list-divisions',
-		'uhof/add-career-stint', 'uhof/add-result', 'uhof/add-service', 'uhof/update-row', 'uhof/remove-row',
-		'uhof/update-member-vitals', 'uhof/create-team', 'uhof/create-tournament', 'uhof/member-history', 'uhof/undo-change',
+		// Read.
+		'uhof/find-member', 'uhof/get-member', 'uhof/list-class', 'uhof/find-team', 'uhof/get-team',
+		'uhof/find-tournament', 'uhof/get-tournament', 'uhof/list-divisions', 'uhof/find-media',
+		// Members.
+		'uhof/create-member', 'uhof/update-member', 'uhof/update-member-vitals', 'uhof/set-bio', 'uhof/set-photo',
+		'uhof/add-career-stint', 'uhof/add-result', 'uhof/add-service', 'uhof/add-award', 'uhof/update-row', 'uhof/remove-row',
+		// Teams, tournaments, classes.
+		'uhof/create-team', 'uhof/update-team', 'uhof/create-tournament', 'uhof/update-tournament', 'uhof/create-year',
+		'uhof/merge', 'uhof/trash',
+		// History.
+		'uhof/recent-changes', 'uhof/member-history', 'uhof/undo-change',
 	);
+}
+
+/** Post statuses an editor works with: everything but trash and auto-drafts. */
+function uh_editable_statuses() {
+	return array( 'publish', 'draft', 'pending', 'private', 'future' );
 }
 
 /* ---------- shared helpers ---------- */
@@ -91,9 +104,9 @@ function uh_tournament_summary( $tid ) {
 }
 
 /** Fuzzy search a post type by title and aliases. */
-function uh_fuzzy_find( $post_type, $query, $limit = 10, $filter = null ) {
+function uh_fuzzy_find( $post_type, $query, $limit = 10, $filter = null, $statuses = 'publish' ) {
 	$hits = array();
-	foreach ( get_posts( array( 'post_type' => $post_type, 'post_status' => 'publish', 'numberposts' => -1 ) ) as $p ) {
+	foreach ( get_posts( array( 'post_type' => $post_type, 'post_status' => $statuses, 'numberposts' => -1 ) ) as $p ) {
 		if ( $filter && ! $filter( $p ) ) {
 			continue;
 		}
@@ -154,7 +167,7 @@ function uh_after_member_edit( $member_id ) {
  */
 function uh_clean_row( array $row ) {
 	foreach ( $row as $k => $v ) {
-		if ( in_array( $k, array( 'team', 'tournament', 'start_year', 'end_year' ), true ) ) {
+		if ( in_array( $k, array( 'team', 'tournament', 'year', 'start_year', 'end_year' ), true ) ) {
 			$row[ $k ] = ( '' === $v || null === $v ) ? '' : (int) $v;
 		} elseif ( in_array( $k, array( 'to_present', 'approximate' ), true ) ) {
 			$row[ $k ] = (bool) $v;
@@ -171,21 +184,43 @@ function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
 		return new WP_Error( 'uh_missing_field', "The {$list} field group is missing; nothing was written." );
 	}
 	$before = uh_raw_rows( $member_id, $list );
-	$log    = get_post_meta( $member_id, UH_CHANGELOG_META, true ) ?: array();
-	$change = array(
-		'id'      => wp_generate_uuid4(),
-		'time'    => gmdate( 'c' ),
-		'user'    => wp_get_current_user()->user_login,
-		'ability' => $ability,
-		'list'    => $list,
-		'summary' => $summary,
-		'before'  => $before,
-	);
-	array_unshift( $log, $change );
-	update_post_meta( $member_id, UH_CHANGELOG_META, array_slice( $log, 0, UH_CHANGELOG_KEEP ) );
+	$id     = uh_log_change( $member_id, $ability, $list, $summary, $before );
 	update_field( $list, array_values( array_map( 'uh_clean_row', $rows ) ), $member_id );
 	uh_after_member_edit( $member_id );
-	return $change['id'];
+	return $id;
+}
+
+/** Short fingerprint of a member list. Row edits must quote it, so stale row numbers are refused. */
+function uh_list_version( $member_id, $list ) {
+	return substr( md5( wp_json_encode( uh_raw_rows( $member_id, $list ) ) ), 0, 10 );
+}
+
+function uh_check_version( $member_id, $list, $version ) {
+	if ( (string) $version !== uh_list_version( $member_id, $list ) ) {
+		return new WP_Error( 'uh_stale', "The {$list} list changed since you read it, so its row numbers may have moved. Call get-member again and use the new row numbers and list_version." );
+	}
+	return true;
+}
+
+/** A calendar year as its year post id, or an error naming the fix. */
+function uh_require_year( $year ) {
+	$post = uh_year_post( $year );
+	return $post ? $post : new WP_Error( 'uh_no_year', 'There is no year page for ' . (int) $year . '. Create it with create-year first.' );
+}
+
+/** Year spans of a member's stints on one team, as [start, end] pairs; approximate stints widen by two years. */
+function uh_team_spans( $member_id, $team_id ) {
+	$out = array();
+	foreach ( uh_raw_rows( $member_id, 'career' ) as $r ) {
+		if ( (int) $r['team'] !== (int) $team_id || ! $r['start_year'] ) {
+			continue;
+		}
+		$start = (int) $r['start_year'];
+		$end   = ! empty( $r['to_present'] ) ? (int) gmdate( 'Y' ) : ( $r['end_year'] ? (int) $r['end_year'] : $start );
+		$pad   = ! empty( $r['approximate'] ) ? 2 : 0;
+		$out[] = array( $start - $pad, $end + $pad );
+	}
+	return $out;
 }
 
 function uh_member_detail( $member_id ) {
@@ -229,14 +264,37 @@ function uh_member_detail( $member_id ) {
 			'description' => (string) $r['description'],
 		);
 	}
+	$awards = array();
+	foreach ( uh_raw_rows( $member_id, 'awards' ) as $i => $r ) {
+		$awards[] = array(
+			'row'   => $i,
+			'year'  => ! empty( $r['year'] ) ? (int) get_the_title( $r['year'] ) : null,
+			'award' => (string) ( $r['award'] ?? '' ),
+		);
+	}
+	$photo  = function ( $name ) use ( $member_id ) {
+		$id = (int) uh_get_raw( $member_id, 'photos.' . $name );
+		return $id ? array( 'attachment_id' => $id, 'url' => wp_get_attachment_url( $id ) ) : null;
+	};
 	return array(
-		'id'             => (int) $member_id,
-		'name'           => html_entity_decode( get_the_title( $member_id ), ENT_QUOTES, 'UTF-8' ),
-		'status'         => get_post_status( $member_id ),
-		'url'            => get_permalink( $member_id ),
-		'class'          => ! empty( $meta['class'] ) ? get_the_title( $meta['class'] ) : null,
-		'induction_type' => $meta['induction_type']['label'] ?? null,
-		'vitals'         => array(
+		'id'                 => (int) $member_id,
+		'name'               => html_entity_decode( get_the_title( $member_id ), ENT_QUOTES, 'UTF-8' ),
+		'status'             => get_post_status( $member_id ),
+		'url'                => get_permalink( $member_id ),
+		'class'              => ! empty( $meta['class'] ) ? get_the_title( $meta['class'] ) : null,
+		'induction_type'     => $meta['induction_type']['label'] ?? null,
+		'induction_division' => $meta['induction_division']['label'] ?? null,
+		'biography'          => (string) uh_get_raw( $member_id, 'biography' ),
+		'headshot'           => $photo( 'headshot' ),
+		'player_card'        => $photo( 'player_card' ),
+		'list_versions'      => array(
+			'career'  => uh_list_version( $member_id, 'career' ),
+			'results' => uh_list_version( $member_id, 'results' ),
+			'service' => uh_list_version( $member_id, 'service' ),
+			'awards'  => uh_list_version( $member_id, 'awards' ),
+		),
+		'awards'             => $awards,
+		'vitals'             => array(
 			'first_name'    => $vitals['first_name'] ?? '',
 			'last_name'     => $vitals['last_name'] ?? '',
 			'hometown'      => $vitals['hometown'] ?? '',
@@ -256,7 +314,11 @@ function uh_year_schema( $desc ) {
 }
 
 function uh_lists_schema() {
-	return array( 'type' => 'string', 'enum' => array( 'career', 'results', 'service' ), 'description' => 'Which list on the member: career (team stints), results (tournament appearances) or service (contributions).' );
+	return array( 'type' => 'string', 'enum' => array( 'career', 'results', 'service', 'awards' ), 'description' => 'Which list on the member: career (team stints), results (tournament appearances), service (contributions) or awards.' );
+}
+
+function uh_version_schema() {
+	return array( 'type' => 'string', 'description' => 'The list_versions value for this list from your latest get-member (or the list_version a previous write returned). Refused if the list changed since.' );
 }
 
 /* ---------- permissions ---------- */
@@ -297,7 +359,7 @@ function uh_register_abilities() {
 		'uhof/find-member',
 		array(
 			'label'               => 'Find member',
-			'description'         => 'Find Hall of Fame members by name (nicknames and partial names work). Returns ids to use with get-member and the add/update abilities.',
+			'description'         => 'Find Hall of Fame members by name (nicknames and partial names work), drafts included. Returns ids and status to use with get-member and the add/update abilities.',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
@@ -306,13 +368,14 @@ function uh_register_abilities() {
 			),
 			'execute_callback'    => function ( $input ) {
 				$out = array();
-				foreach ( uh_fuzzy_find( 'member', $input['query'], 10 ) as $hit ) {
+				foreach ( uh_fuzzy_find( 'member', $input['query'], 10, null, uh_editable_statuses() ) as $hit ) {
 					$meta  = get_field( 'meta', $hit[1] ) ?: array();
 					$out[] = array(
-						'id'    => $hit[1],
-						'name'  => html_entity_decode( get_the_title( $hit[1] ), ENT_QUOTES, 'UTF-8' ),
-						'class' => ! empty( $meta['class'] ) ? get_the_title( $meta['class'] ) : null,
-						'score' => $hit[0],
+						'id'     => $hit[1],
+						'name'   => html_entity_decode( get_the_title( $hit[1] ), ENT_QUOTES, 'UTF-8' ),
+						'status' => get_post_status( $hit[1] ),
+						'class'  => ! empty( $meta['class'] ) ? get_the_title( $meta['class'] ) : null,
+						'score'  => $hit[0],
 					);
 				}
 				return array( 'members' => $out );
@@ -326,7 +389,7 @@ function uh_register_abilities() {
 		'uhof/get-member',
 		array(
 			'label'               => 'Get member',
-			'description'         => 'Everything editable on one member: vitals, career stints, tournament results and service, each row numbered. Read this before adding or changing rows, to avoid duplicates.',
+			'description'         => 'Everything editable on one member: status, class, vitals, biography, photos, career stints, tournament results, service and awards, each row numbered, plus list_versions to pass to update-row and remove-row. Read this before adding or changing anything, to avoid duplicates.',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
@@ -451,10 +514,18 @@ function uh_register_abilities() {
 				if ( ! empty( $input['end_year'] ) && $input['end_year'] < $input['start_year'] ) {
 					return new WP_Error( 'uh_bad_years', 'end_year is before start_year.' );
 				}
-				$rows = uh_raw_rows( $id, 'career' );
+				$rows     = uh_raw_rows( $id, 'career' );
+				$warnings = array();
+				$start    = (int) $input['start_year'];
+				$end      = ! empty( $input['to_present'] ) ? (int) gmdate( 'Y' ) : (int) ( $input['end_year'] ?? $start );
 				foreach ( $rows as $r ) {
-					if ( (int) $r['team'] === $team && (int) $r['start_year'] === (int) $input['start_year'] ) {
+					if ( (int) $r['team'] === $team && (int) $r['start_year'] === $start ) {
 						return new WP_Error( 'uh_duplicate', 'This member already has a stint on that team starting that year. Use update-row to change it.' );
+					}
+				}
+				foreach ( uh_team_spans( $id, $team ) as $span ) {
+					if ( $start <= $span[1] && $end >= $span[0] ) {
+						$warnings[] = sprintf( 'Overlaps an existing stint on this team (%d to %d). If they are one continuous run, combine them with update-row and remove-row.', $span[0], $span[1] );
 					}
 				}
 				$rows[] = array(
@@ -470,7 +541,7 @@ function uh_register_abilities() {
 				if ( is_wp_error( $change ) ) {
 					return $change;
 				}
-				return array( 'change_id' => $change, 'row' => count( $rows ) - 1, 'member' => uh_member_detail( $id )['career'] );
+				return array( 'change_id' => $change, 'row' => count( $rows ) - 1, 'list_version' => uh_list_version( $id, 'career' ), 'warnings' => $warnings, 'career' => uh_member_detail( $id )['career'] );
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $add,
@@ -508,12 +579,20 @@ function uh_register_abilities() {
 						return new WP_Error( 'uh_duplicate', 'This member already has a result at that tournament with that team. Use update-row to change the placement.' );
 					}
 				}
+				$warnings = array();
+				$year     = (int) uh_tournament_year( $tid );
+				$spans    = uh_team_spans( $id, $team );
+				if ( ! $spans ) {
+					$warnings[] = 'This member has no career stint on ' . get_the_title( $team ) . '. Add one with add-career-stint if they played there.';
+				} elseif ( $year && ! array_filter( $spans, fn( $s ) => $year >= $s[0] && $year <= $s[1] ) ) {
+					$warnings[] = "None of this member's stints on " . get_the_title( $team ) . " covers {$year}. Check the tournament year or the career years.";
+				}
 				$rows[] = array( 'tournament' => $tid, 'team' => $team, 'placement' => $input['placement'] );
 				$change = uh_write_rows( $id, 'results', $rows, 'add-result', sprintf( 'Added result: %s, %s, %s', get_the_title( $tid ), get_the_title( $team ), $input['placement'] ) );
 				if ( is_wp_error( $change ) ) {
 					return $change;
 				}
-				return array( 'change_id' => $change, 'row' => count( $rows ) - 1 );
+				return array( 'change_id' => $change, 'row' => count( $rows ) - 1, 'list_version' => uh_list_version( $id, 'results' ), 'warnings' => $warnings );
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $add,
@@ -555,7 +634,7 @@ function uh_register_abilities() {
 				if ( is_wp_error( $change ) ) {
 					return $change;
 				}
-				return array( 'change_id' => $change, 'row' => count( $rows ) - 1 );
+				return array( 'change_id' => $change, 'row' => count( $rows ) - 1, 'list_version' => uh_list_version( $id, 'service' ) );
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $add,
@@ -566,30 +645,36 @@ function uh_register_abilities() {
 		'uhof/update-row',
 		array(
 			'label'               => 'Update a row',
-			'description'         => 'Change fields on one numbered row of a member\'s career, results or service (row numbers come from get-member). Only the fields you pass change. Field names match get-member: career uses team_id, start_year, end_year, to_present, approximate, note; results uses tournament_id, team_id, placement; service uses start_year, end_year, to_present, approximate, description.',
+			'description'         => 'Change fields on one numbered row of a member\'s career, results, service or awards (row numbers and list_version come from get-member). Only the fields you pass change. Career: team_id, start_year, end_year, to_present, approximate, note. Results: tournament_id, team_id, placement. Service: start_year, end_year, to_present, approximate, description. Awards: year, award.',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
 				'properties' => array(
-					'member_id' => array( 'type' => 'integer' ),
-					'list'      => uh_lists_schema(),
-					'row'       => array( 'type' => 'integer', 'minimum' => 0 ),
-					'fields'    => array( 'type' => 'object', 'description' => 'Fields to change on that row.' ),
+					'member_id'    => array( 'type' => 'integer' ),
+					'list'         => uh_lists_schema(),
+					'row'          => array( 'type' => 'integer', 'minimum' => 0 ),
+					'list_version' => uh_version_schema(),
+					'fields'       => array( 'type' => 'object', 'description' => 'Fields to change on that row.' ),
 				),
-				'required'   => array( 'member_id', 'list', 'row', 'fields' ),
+				'required'   => array( 'member_id', 'list', 'row', 'list_version', 'fields' ),
 			),
 			'execute_callback'    => function ( $input ) {
 				$id = uh_require_post( $input['member_id'], 'member' );
 				if ( is_wp_error( $id ) ) {
 					return $id;
 				}
-				$list    = $input['list'];
+				$list  = $input['list'];
+				$fresh = uh_check_version( $id, $list, $input['list_version'] );
+				if ( is_wp_error( $fresh ) ) {
+					return $fresh;
+				}
 				$rows    = uh_raw_rows( $id, $list );
 				$i       = (int) $input['row'];
 				$allowed = array(
 					'career'  => array( 'team_id' => 'team', 'start_year' => 'start_year', 'end_year' => 'end_year', 'to_present' => 'to_present', 'approximate' => 'approximate', 'note' => 'note' ),
 					'results' => array( 'tournament_id' => 'tournament', 'team_id' => 'team', 'placement' => 'placement' ),
 					'service' => array( 'start_year' => 'start_year', 'end_year' => 'end_year', 'to_present' => 'to_present', 'approximate' => 'approximate', 'description' => 'description' ),
+					'awards'  => array( 'year' => 'year', 'award' => 'award' ),
 				)[ $list ];
 				if ( ! isset( $rows[ $i ] ) ) {
 					return new WP_Error( 'uh_no_row', "No row {$i} in {$list}." );
@@ -608,6 +693,12 @@ function uh_register_abilities() {
 					if ( 'placement' === $k && ! in_array( $v, uh_placements(), true ) ) {
 						return new WP_Error( 'uh_bad_placement', 'Placement must be one of: ' . implode( ', ', uh_placements() ) );
 					}
+					if ( 'year' === $k && 'awards' === $list ) {
+						$v = uh_require_year( $v );
+						if ( is_wp_error( $v ) ) {
+							return $v;
+						}
+					}
 					$rows[ $i ][ $allowed[ $k ] ] = null === $v ? '' : $v;
 					$changed[]                    = $k;
 				}
@@ -620,7 +711,7 @@ function uh_register_abilities() {
 				if ( is_wp_error( $change ) ) {
 					return $change;
 				}
-				return array( 'change_id' => $change, $list => uh_member_detail( $id )[ $list ][ $i ] );
+				return array( 'change_id' => $change, 'list_version' => uh_list_version( $id, $list ), $list => uh_member_detail( $id )[ $list ][ $i ] );
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $edit,
@@ -631,21 +722,26 @@ function uh_register_abilities() {
 		'uhof/remove-row',
 		array(
 			'label'               => 'Remove a row',
-			'description'         => 'Delete one numbered row from a member\'s career, results or service. Logged, and reversible with undo-change.',
+			'description'         => 'Delete one numbered row from a member\'s career, results, service or awards. Rows after it move up one, so use the list_version this returns for the next edit. Logged, and reversible with undo-change.',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
 				'properties' => array(
-					'member_id' => array( 'type' => 'integer' ),
-					'list'      => uh_lists_schema(),
-					'row'       => array( 'type' => 'integer', 'minimum' => 0 ),
+					'member_id'    => array( 'type' => 'integer' ),
+					'list'         => uh_lists_schema(),
+					'row'          => array( 'type' => 'integer', 'minimum' => 0 ),
+					'list_version' => uh_version_schema(),
 				),
-				'required'   => array( 'member_id', 'list', 'row' ),
+				'required'   => array( 'member_id', 'list', 'row', 'list_version' ),
 			),
 			'execute_callback'    => function ( $input ) {
 				$id = uh_require_post( $input['member_id'], 'member' );
 				if ( is_wp_error( $id ) ) {
 					return $id;
+				}
+				$fresh = uh_check_version( $id, $input['list'], $input['list_version'] );
+				if ( is_wp_error( $fresh ) ) {
+					return $fresh;
 				}
 				$rows = uh_raw_rows( $id, $input['list'] );
 				$i    = (int) $input['row'];
@@ -657,7 +753,7 @@ function uh_register_abilities() {
 				if ( is_wp_error( $change ) ) {
 					return $change;
 				}
-				return array( 'change_id' => $change, 'remaining' => count( $rows ) );
+				return array( 'change_id' => $change, 'remaining' => count( $rows ), 'list_version' => uh_list_version( $id, $input['list'] ) );
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $edit,
@@ -668,7 +764,7 @@ function uh_register_abilities() {
 		'uhof/update-member-vitals',
 		array(
 			'label'               => 'Update member vitals',
-			'description'         => 'Change a member\'s first name, last name, hometown, birthdate or date of death. Dates are YYYY-MM-DD. Only the fields you pass change.',
+			'description'         => 'Change a member\'s first name, last name, hometown, birthdate or date of death. Dates are YYYY-MM-DD. Only the fields you pass change. A name change does not rename the member\'s page; use update-member with title for that.',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
@@ -687,27 +783,23 @@ function uh_register_abilities() {
 				if ( is_wp_error( $id ) ) {
 					return $id;
 				}
-				$vitals = get_field( 'vitals', $id, false ) ?: array();
-				$field  = acf_get_field( 'vitals' );
-				$keys   = array();
-				foreach ( $field['sub_fields'] as $sf ) {
-					$keys[ $sf['name'] ] = $sf['key'];
-				}
-				$before = array();
-				$after  = array();
-				foreach ( array( 'first_name', 'last_name', 'hometown', 'birthdate', 'date_of_death' ) as $k ) {
-					$before[ $k ] = $vitals[ $keys[ $k ] ] ?? '';
-					$after[ $k ]  = $before[ $k ];
+				$before = uh_vitals_raw( $id );
+				$after  = $before;
+				foreach ( array_keys( $before ) as $k ) {
 					if ( array_key_exists( $k, $input ) ) {
 						$after[ $k ] = in_array( $k, array( 'birthdate', 'date_of_death' ), true ) ? str_replace( '-', '', $input[ $k ] ) : sanitize_text_field( $input[ $k ] );
 					}
 				}
-				$log = get_post_meta( $id, UH_CHANGELOG_META, true ) ?: array();
-				array_unshift( $log, array( 'id' => wp_generate_uuid4(), 'time' => gmdate( 'c' ), 'user' => wp_get_current_user()->user_login, 'ability' => 'update-member-vitals', 'list' => 'vitals', 'summary' => 'Updated vitals', 'before' => $before ) );
-				update_post_meta( $id, UH_CHANGELOG_META, array_slice( $log, 0, UH_CHANGELOG_KEEP ) );
+				$change = uh_log_change( $id, 'update-member-vitals', 'vitals', 'Updated vitals: ' . implode( ', ', array_keys( array_diff_assoc( $after, $before ) ) ), $before );
 				update_field( 'vitals', $after, $id );
 				uh_after_member_edit( $id );
-				return array( 'change_id' => $log[0]['id'], 'vitals' => uh_member_detail( $id )['vitals'] );
+				$vitals = uh_member_detail( $id )['vitals'];
+				$out    = array( 'change_id' => $change, 'vitals' => $vitals );
+				$name   = trim( $vitals['first_name'] . ' ' . $vitals['last_name'] );
+				if ( $name && uh_normalize_name( $name ) !== uh_normalize_name( get_the_title( $id ) ) ) {
+					$out['warnings'] = array( 'The page title is still "' . html_entity_decode( get_the_title( $id ), ENT_QUOTES, 'UTF-8' ) . '". If the name changed, call update-member with the new title.' );
+				}
+				return $out;
 			},
 			'permission_callback' => 'uh_can_edit_member',
 			'meta'                => $edit,
@@ -756,7 +848,8 @@ function uh_register_abilities() {
 				update_field( 'city', sanitize_text_field( (string) ( $input['city'] ?? '' ) ), $team );
 				update_field( 'national_team', ! empty( $input['national_team'] ), $team );
 				update_field( 'aliases', implode( "\n", array_map( 'sanitize_text_field', (array) ( $input['aliases'] ?? array() ) ) ), $team );
-				return uh_team_summary( $team );
+				$change = uh_log_change( $team, 'create-team', 'create', 'Created team ' . get_the_title( $team ), null );
+				return uh_team_summary( $team ) + array( 'change_id' => $change );
 			},
 			'permission_callback' => fn() => current_user_can( 'publish_posts' ),
 			'meta'                => $add,
@@ -767,7 +860,7 @@ function uh_register_abilities() {
 		'uhof/create-tournament',
 		array(
 			'label'               => 'Create tournament',
-			'description'         => 'Create a tournament for a year. Name it like the existing ones: "<year> <event>", e.g. "2024 USA Ultimate Club Championships". Series: us (U.S. nationals), world (WFDF and other international events), pro (AUDL, UFA, PUL, WUL, MLU). Refuses near-duplicates for the same year unless confirm_new is true.',
+			'description'         => 'Create a tournament for a year. Name it like the existing ones: "<year> <event>", e.g. "2024 USA Ultimate Club Championships". Series: us (U.S. nationals), world (WFDF and other international events), pro (AUDL, UFA, PUL, WUL, MLU). Refuses near-duplicates for the same year unless confirm_new is true. The year page must exist (create-year).',
 			'category'            => 'uhof',
 			'input_schema'        => array(
 				'type'       => 'object',
@@ -783,9 +876,9 @@ function uh_register_abilities() {
 				'required'   => array( 'name', 'year' ),
 			),
 			'execute_callback'    => function ( $input ) {
-				$year_post = uh_year_post( $input['year'] );
-				if ( ! $year_post ) {
-					return new WP_Error( 'uh_no_year', 'There is no year page for ' . (int) $input['year'] . '. Ask a site admin to add it.' );
+				$year_post = uh_require_year( $input['year'] );
+				if ( is_wp_error( $year_post ) ) {
+					return $year_post;
 				}
 				if ( empty( $input['confirm_new'] ) ) {
 					$similar = array();
@@ -809,69 +902,11 @@ function uh_register_abilities() {
 					'beach'    => ! empty( $input['beach'] ),
 				), $tid );
 				update_field( 'aliases', implode( "\n", array_map( 'sanitize_text_field', (array) ( $input['aliases'] ?? array() ) ) ), $tid );
-				return uh_tournament_summary( $tid );
+				$change = uh_log_change( $tid, 'create-tournament', 'create', 'Created tournament ' . get_the_title( $tid ), null );
+				return uh_tournament_summary( $tid ) + array( 'change_id' => $change );
 			},
 			'permission_callback' => fn() => current_user_can( 'publish_posts' ),
 			'meta'                => $add,
-		)
-	);
-
-	wp_register_ability(
-		'uhof/member-history',
-		array(
-			'label'               => 'Member change history',
-			'description'         => 'Recent changes made to a member through these tools, newest first, with change ids for undo-change.',
-			'category'            => 'uhof',
-			'input_schema'        => array(
-				'type'       => 'object',
-				'properties' => array( 'member_id' => array( 'type' => 'integer' ) ),
-				'required'   => array( 'member_id' ),
-			),
-			'execute_callback'    => function ( $input ) {
-				$log = get_post_meta( (int) $input['member_id'], UH_CHANGELOG_META, true ) ?: array();
-				return array( 'changes' => array_map( fn( $c ) => array_diff_key( $c, array( 'before' => 1 ) ), $log ) );
-			},
-			'permission_callback' => 'uh_can_read',
-			'meta'                => $ro,
-		)
-	);
-
-	wp_register_ability(
-		'uhof/undo-change',
-		array(
-			'label'               => 'Undo a change',
-			'description'         => 'Restore the list a change touched to how it was just before that change. Undoing an older change also discards later changes to the same list, so check member-history first.',
-			'category'            => 'uhof',
-			'input_schema'        => array(
-				'type'       => 'object',
-				'properties' => array(
-					'member_id' => array( 'type' => 'integer' ),
-					'change_id' => array( 'type' => 'string' ),
-				),
-				'required'   => array( 'member_id', 'change_id' ),
-			),
-			'execute_callback'    => function ( $input ) {
-				$id  = (int) $input['member_id'];
-				$log = get_post_meta( $id, UH_CHANGELOG_META, true ) ?: array();
-				foreach ( $log as $c ) {
-					if ( $c['id'] !== $input['change_id'] ) {
-						continue;
-					}
-					if ( 'vitals' === $c['list'] ) {
-						update_field( 'vitals', $c['before'], $id );
-						uh_after_member_edit( $id );
-						return array( 'restored' => 'vitals' );
-					}
-					$new = uh_write_rows( $id, $c['list'], $c['before'], 'undo-change', 'Undid: ' . $c['summary'] );
-					if ( is_wp_error( $new ) ) {
-						return $new;
-					}
-					return array( 'restored' => $c['list'], 'change_id' => $new );
-				}
-				return new WP_Error( 'uh_no_change', 'No change with that id on this member.' );
-			},
-			'permission_callback' => 'uh_can_edit_member',
-			'meta'                => $edit,
 		)
 	);
 }
