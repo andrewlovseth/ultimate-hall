@@ -29,7 +29,7 @@ for (const key of keys) {
 		.filter((a) => a.score !== null && a.score < 0.9 && !['manual', 'notApplicable', 'informative'].includes(a.scoreDisplayMode))
 		.map((a) => ({
 			id: a.id, title: a.title, score: a.score, display: a.displayValue,
-			items: (a.details?.items ?? []).slice(0, 8).map((it) => {
+			items: (Array.isArray(a.details?.items) ? a.details.items : []).slice(0, 8).map((it) => {
 				const o = {};
 				for (const [k, v] of Object.entries(it)) {
 					if (v && typeof v === 'object') {
