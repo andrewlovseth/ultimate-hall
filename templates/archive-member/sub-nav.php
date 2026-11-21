@@ -4,7 +4,7 @@
             <?php foreach( $classes as $class ): $year = $class->post_title; ?>
 
                 <li>
-                    <a href="#class-<?php echo $year; ?>" class="smooth"><?php echo $year; ?></a>
+                    <a href="#class-<?php echo $year; ?>"><?php echo $year; ?></a>
                 </li>
                 
             <?php endforeach; ?>

@@ -26,6 +26,12 @@ require_once get_theme_file_path( 'functions/rest.php' );
 
 require_once get_theme_file_path( 'functions/abilities.php' );
 
+require_once get_theme_file_path( 'functions/abilities-log.php' );
+
+require_once get_theme_file_path( 'functions/abilities-members.php' );
+
+require_once get_theme_file_path( 'functions/abilities-teams.php' );
+
 require_once get_theme_file_path( 'functions/mcp.php' );
 
 require_once get_theme_file_path( 'functions/admin-columns.php' );

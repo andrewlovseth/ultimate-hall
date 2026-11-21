@@ -11,8 +11,8 @@
     <div class="gallery">
         <div class="hero-slider">
             <?php if( $photos ): ?>
-                <?php foreach( $photos as $photo ): ?>
-                    <div class="photo">
+                <?php foreach( array_values( $photos ) as $i => $photo ): ?>
+                    <div class="photo<?php if ( 0 === $i ) echo ' is-active'; ?>">
                         <?php echo wp_get_attachment_image($photo['ID'], 'full'); ?>
                     </div>
                 <?php endforeach; ?>

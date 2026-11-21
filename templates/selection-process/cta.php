@@ -37,7 +37,7 @@ if(have_rows('cta')): while(have_rows('cta')): the_row(); ?>
     ?>
 
         <div class="more-info">
-            <a class="smooth" href="<?php echo esc_url($link_url); ?>" target="<?php echo esc_attr($link_target); ?>"><?php echo esc_html($link_title); ?></a>
+            <a href="<?php echo esc_url($link_url); ?>" target="<?php echo esc_attr($link_target); ?>"><?php echo esc_html($link_title); ?></a>
         </div>
 
     <?php endif; ?>
