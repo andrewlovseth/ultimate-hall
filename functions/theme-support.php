@@ -47,7 +47,7 @@ add_theme_support('custom-logo', array(
 ));
 
 
-// SVG uploads are handled by the SVG Support plugin, which sanitizes them and limits who can upload.
+// SVG uploads: functions/svg.php (administrators only, sanitized on upload).
 
 
 // Remove Comment
