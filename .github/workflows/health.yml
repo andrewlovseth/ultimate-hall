@@ -1,0 +1,63 @@
+# Daily health check for ultimatehall.org. Replaces ManageWP's reports and security check.
+# SSHes in with the UHOF_HEALTH_KEY secret, whose authorized_keys entry can only run ops/health.sh.
+# This repo is public, so the log and the issue carry only the result line; read the full
+# report with: ssh uhof 'bash ~/files/wp-content/themes/ultimate-hall/ops/health.sh'
+name: Health
+
+on:
+  schedule:
+    - cron: "0 14 * * *" # 6 AM Pacific standard time
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: health
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TITLE: "Site alert: daily health"
+    steps:
+      - name: Run the health script on the server
+        id: check
+        env:
+          KEY: ${{ secrets.UHOF_HEALTH_KEY }}
+          # The server's public host key, pinned so the runner never trusts a stand-in.
+          KNOWN_HOSTS: 157.230.144.212 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFy1HT1G+0MyhEbCR3MIvDc/WJm5XZ3Xu6zNfOu3FHlq
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/health && chmod 600 ~/.ssh/health
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          set +e
+          ssh -i ~/.ssh/health -o BatchMode=yes -o ConnectTimeout=20 ultimatehall@157.230.144.212 > report.txt 2>&1
+          status=$?
+          set -e
+          rm -f ~/.ssh/health
+          result=$(grep '^RESULT:' report.txt | tail -1)
+          [ -n "$result" ] || result="RESULT: the check did not finish (ssh exit $status)"
+          echo "$result"
+          echo "result=$result" >> "$GITHUB_OUTPUT"
+          [ "$result" = "RESULT: green" ] && echo "green=true" >> "$GITHUB_OUTPUT" || true
+
+      - name: Open or update the alert issue
+        if: steps.check.outputs.green != 'true'
+        env:
+          RESULT: ${{ steps.check.outputs.result }}
+        run: |
+          body=$(printf '%s\n\nFull report: ssh in as the site user and run ops/health.sh in the theme folder.\n\nRun: %s/%s/actions/runs/%s' "$RESULT" "$GITHUB_SERVER_URL" "$GH_REPO" "$GITHUB_RUN_ID")
+          gh label create ops --color B60205 --description "Site health and uptime alerts" 2>/dev/null || true
+          num=$(gh issue list --state open --label ops --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body "$body"; else gh issue create --title "$TITLE" --label ops --body "$body"; fi
+          exit 1
+
+      - name: Close the alert issue when green
+        if: steps.check.outputs.green == 'true'
+        run: |
+          num=$(gh issue list --state open --label ops --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
+          [ -z "$num" ] || gh issue close "$num" --comment "Back to green."

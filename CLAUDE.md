@@ -99,6 +99,13 @@ Never query repeater rows with LIKE meta queries. Use `uh_members_for_team()` / 
 ### Deploys
 Production theme is deployed by WP Pusher from `master` (push-to-deploy off: click Update in WP Pusher), or by rsyncing a `git archive` of master over SSH (`ssh uhof`, site root `~/files`). Back up first: `wp db export` into `/sites/ultimatehall.org/`.
 
+### Ops routines
+These replace ManageWP; they run in GitHub Actions, so nothing depends on a laptop being on.
+- `.github/workflows/uptime.yml` - hourly: home, members, a class page, wp-login and the TLS certificate (14 days), checked from the runner.
+- `.github/workflows/health.yml` - daily 6 AM Pacific: SSHes in with the `UHOF_HEALTH_KEY` secret and runs `ops/health.sh` (PHP fatals, disk, core and plugin checksums, updates, overdue cron). That key's `authorized_keys` entry forces that one command, so it can do nothing else. If SpinupWP rewrites `authorized_keys`, the check fails and says so.
+- Either one opens a single "Site alert: ..." issue labelled `ops` on failure, comments on it while it stays red and closes it when green. The repo is public, so only the result line is published; for the full report, run `bash ops/health.sh` on the server.
+- Updates: WordPress auto-updates are on for every plugin. Backups: SpinupWP daily, plus `wp db export` before deploys and data changes.
+
 ## ACF Field Groups
 JSON definitions in `/acf-json/`. Field groups sync automatically when ACF Pro is active.
 
