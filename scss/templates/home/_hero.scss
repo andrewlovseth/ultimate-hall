@@ -4,7 +4,22 @@ section.hero {
         grid-row: 1;
         z-index: 1;
     }
+
+    // Crossfade: every photo shares one grid cell; js/site.js moves
+    // .is-active and the opacity transition does the fade (was Slick).
+    .hero-slider {
+        display: grid;
+    }
+
     .photo {
+        grid-area: 1 / 1;
+        opacity: 0;
+        transition: opacity 0.8s linear;
+
+        &.is-active {
+            opacity: 1;
+        }
+
         aspect-ratio: 1 / 1;
 
         @include tablet-small {

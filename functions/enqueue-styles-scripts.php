@@ -15,14 +15,13 @@ function bearsmith_enqueue_styles_and_scripts() {
     // Add style.css and third-party css
     wp_enqueue_style( 'style', $uri . '/style.css', array(), $style_last_updated_at );
 
-    // plugins.js & site.js use WordPress's bundled jQuery (3.7+), each versioned by its own file time
-    wp_enqueue_script( 'custom-plugins', $uri . '/js/plugins.js', array( 'jquery' ), filemtime( $dir . '/js/plugins.js' ), true );
-    wp_enqueue_script( 'custom-site', $uri . '/js/site.js', array( 'jquery', 'custom-plugins' ), filemtime( $dir . '/js/site.js' ), true );
+    // site.js: mobile nav + home hero crossfade. Vanilla JS, no jQuery.
+    wp_enqueue_script( 'uh-site', $uri . '/js/site.js', array(), filemtime( $dir . '/js/site.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 
     // Omnibox search (vanilla JS, no jQuery dependency, loaded in footer)
     $search_script_last_updated_at = filemtime( $dir . '/js/search.js' );
 
-    wp_enqueue_script( 'uh-search', $uri . '/js/search.js', array(), $search_script_last_updated_at, true );
+    wp_enqueue_script( 'uh-search', $uri . '/js/search.js', array(), $search_script_last_updated_at, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 
     // Hand the REST endpoint + home URL to the script as window.uhSearch
     wp_localize_script( 'uh-search', 'uhSearch', array(

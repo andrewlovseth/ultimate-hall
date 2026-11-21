@@ -172,14 +172,21 @@ body.admin-bar .header-tray {
             display: none;
         }
 
-        a {
+        button {
             width: 2rem;
             height: 22px;
             display: flex;
             align-items: center;
             margin-left: auto;
+            padding: 0;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
 
             .patty {
+                position: relative;
                 width: 2rem;
                 height: 2px;
                 background: $white;
