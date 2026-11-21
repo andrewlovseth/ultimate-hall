@@ -7,7 +7,7 @@
         
         <section class="class grid" id="class-<?php echo $year; ?>">
             <div class="section-header align-center">
-                <h3><?php echo inaugural_get_class_title($year); ?></h3>
+                <h2><?php echo inaugural_get_class_title($year); ?></h2>
             </div>
 
             <div class="member-grid">

@@ -20,7 +20,7 @@
 <div class="header">
     <?php if($headshot): ?>
         <div class="photo">
-            <img src="<?php echo esc_url( $headshot['url'] ); ?>" alt="<?php echo esc_attr( $headshot['alt'] ); ?>" />
+            <?php echo wp_get_attachment_image( $headshot['ID'], 'large', false, array( 'sizes' => '230px', 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
         </div>
     <?php endif; ?>
 

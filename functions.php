@@ -4,6 +4,8 @@ require_once get_theme_file_path( 'functions/theme-support.php' );
 
 require_once get_theme_file_path( 'functions/enqueue-styles-scripts.php' );
 
+require_once get_theme_file_path( 'functions/head.php' );
+
 require_once get_theme_file_path( 'functions/acf.php' );
 
 require_once get_theme_file_path( 'functions/register-blocks.php' );

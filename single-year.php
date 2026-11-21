@@ -24,7 +24,7 @@
             <?php
                 if ($query->have_posts()) : while ($query->have_posts()) : $query->the_post(); ?>
 
-                    <?php get_template_part('template-parts/global/member'); ?>
+                    <?php get_template_part('template-parts/global/member', null, array('heading' => 'h2')); ?>
 
                 <?php endwhile; endif; wp_reset_postdata(); ?>
         
