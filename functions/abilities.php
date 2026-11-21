@@ -137,6 +137,14 @@ function uh_raw_rows( $member_id, $list ) {
 	return $out;
 }
 
+/** After a member edit: rebuild derived data and purge the page cache so visitors see it. */
+function uh_after_member_edit( $member_id ) {
+	clean_post_cache( $member_id );
+	uh_sync_member( $member_id );
+	// Meta-only writes don't trigger SpinupWP's purge-on-update; team and tournament pages change too.
+	do_action( 'spinupwp_purge_page_cache' );
+}
+
 /** Write a member list, logging the previous rows so the change can be undone. */
 function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
 	$before = uh_raw_rows( $member_id, $list );
@@ -153,8 +161,7 @@ function uh_write_rows( $member_id, $list, array $rows, $ability, $summary ) {
 	array_unshift( $log, $change );
 	update_post_meta( $member_id, UH_CHANGELOG_META, array_slice( $log, 0, UH_CHANGELOG_KEEP ) );
 	update_field( $list, array_values( $rows ), $member_id );
-	clean_post_cache( $member_id );
-	uh_sync_member( $member_id );
+	uh_after_member_edit( $member_id );
 	return $change['id'];
 }
 
@@ -655,7 +662,7 @@ function uh_register_abilities() {
 				array_unshift( $log, array( 'id' => wp_generate_uuid4(), 'time' => gmdate( 'c' ), 'user' => wp_get_current_user()->user_login, 'ability' => 'update-member-vitals', 'list' => 'vitals', 'summary' => 'Updated vitals', 'before' => $before ) );
 				update_post_meta( $id, UH_CHANGELOG_META, array_slice( $log, 0, UH_CHANGELOG_KEEP ) );
 				update_field( 'vitals', $after, $id );
-				uh_sync_member( $id );
+				uh_after_member_edit( $id );
 				return array( 'change_id' => $log[0]['id'], 'vitals' => uh_member_detail( $id )['vitals'] );
 			},
 			'permission_callback' => 'uh_can_edit_member',
@@ -808,7 +815,7 @@ function uh_register_abilities() {
 					}
 					if ( 'vitals' === $c['list'] ) {
 						update_field( 'vitals', $c['before'], $id );
-						uh_sync_member( $id );
+						uh_after_member_edit( $id );
 						return array( 'restored' => 'vitals' );
 					}
 					$new = uh_write_rows( $id, $c['list'], $c['before'], 'undo-change', 'Undid: ' . $c['summary'] );

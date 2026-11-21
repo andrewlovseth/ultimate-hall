@@ -16,7 +16,7 @@ bun run dev
 bun run build
 ```
 
-The dev server proxies `https://ultimatehall.dev` at `http://localhost:3030`. Ensure DDEV is running in the parent project.
+The dev server proxies `https://ultimate-hall.ddev.site` at `http://localhost:3030`. Ensure DDEV is running in the parent project.
 
 ## Architecture
 
@@ -35,6 +35,11 @@ Functions are split into focused files in `/functions/`:
 - `member-helpers.php` - `bearsmith_get_members_by_class()` for querying inductees
 - `inaugural-helpers.php` - Inaugural class-specific logic
 - `register-blocks.php` - ACF block registration
+- `model.php` - **the data layer**: member career/results/service readers, year parsing and formatting, team groups, the derived member index (`_uh_team`, `_uh_tournament`) and `uh_sync_member()`
+- `cli.php` - `wp uh migrate|reindex|merge|cleanup-legacy`
+- `rest.php` - hides private member fields from logged-out REST readers
+- `abilities.php` - 15 WordPress Abilities (`uhof/*`) for agent editing, with a per-member change log and undo
+- `mcp.php` - serves those abilities as MCP tools at `/wp-json/uhof/mcp` (needs the MCP Adapter plugin)
 
 ### Template Structure
 **Single templates** load sections from `/templates/{post-type}/`:
@@ -81,18 +86,21 @@ $query = bearsmith_get_members_by_class($year_ID);
 $args = bearsmith_default_query_args('member', ['posts_per_page' => 10]);
 ```
 
-### ACF Repeater Meta Queries
-For querying across repeater field rows:
-```php
-add_filter('posts_where', bearsmith_modify_repeater_meta_query('playing_career'));
-$query = new WP_Query($args);
-remove_filter('posts_where', bearsmith_modify_repeater_meta_query('playing_career'));
-```
+### Member data model
+A member has three repeaters, all edited in wp-admin or through the abilities:
+- `career`: team (post object), start_year, end_year, to_present, approximate, note. One row per continuous stint.
+- `results`: tournament, team, placement (select from `uh_placements()`). The tournament's `details_series` (us, world, pro) decides which table it shows in.
+- `service`: start_year, end_year, to_present, approximate, description.
+
+Never query repeater rows with LIKE meta queries. Use `uh_members_for_team()` / `uh_members_for_tournament()`, which read the index that `uh_sync_member()` rebuilds on admin saves, REST saves and `wp uh reindex`. If you write meta directly, run `wp uh reindex` afterwards.
+
+### Deploys
+Production theme is deployed by WP Pusher from `master` (push-to-deploy off: click Update in WP Pusher), or by rsyncing a `git archive` of master over SSH (`ssh uhof`, site root `~/files`). Back up first: `wp db export` into `/sites/ultimatehall.org/`.
 
 ## ACF Field Groups
 JSON definitions in `/acf-json/`. Field groups sync automatically when ACF Pro is active.
 
-Key field prefixes on member posts:
+Local JSON overrides the field groups stored in the database. Key field prefixes on member posts:
 - `meta_*` - Classification fields (class, division, induction type)
 - `photos_*` - Image fields
 - `introduction_*` - Bio/intro content
