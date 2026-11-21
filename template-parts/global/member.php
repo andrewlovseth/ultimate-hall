@@ -1,11 +1,11 @@
 <?php
     $args = wp_parse_args($args);
 
-    if(!empty($args)) {
-        $member_ID = $args['member_ID'];
-    } else {
-        $member_ID = $post->ID;
-    }
+    $member_ID = $args['member_ID'] ?? get_the_ID();
+
+    // The name's heading level follows the page outline: h3 under a section heading (default),
+    // h2 where the card sits straight under the page's h1 (a class page).
+    $heading = in_array( $args['heading'] ?? '', array( 'h2', 'h3', 'h4' ), true ) ? $args['heading'] : 'h3';
 
     $type = get_field('meta_induction_type', $member_ID);
     $division = get_field('meta_induction_division', $member_ID);
@@ -34,7 +34,7 @@
 
     <div class="info">
         <div class="name">
-            <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+            <<?php echo $heading; ?>><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></<?php echo $heading; ?>>
         </div>
 
         <?php if($type || $division): ?>
