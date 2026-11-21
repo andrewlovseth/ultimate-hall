@@ -38,7 +38,10 @@ Functions are split into focused files in `/functions/`:
 - `model.php` - **the data layer**: member career/results/service readers, year parsing and formatting, team groups, the derived member index (`_uh_team`, `_uh_tournament`) and `uh_sync_member()`
 - `cli.php` - `wp uh migrate|reindex|merge|cleanup-legacy`
 - `rest.php` - hides private member fields from logged-out REST readers
-- `abilities.php` - 15 WordPress Abilities (`uhof/*`) for agent editing, with a per-member change log and undo
+- `abilities.php` - WordPress Abilities (`uhof/*`) for agent editing: shared helpers, member reads and row edits (career, results, service, awards), vitals, team and tournament creation
+- `abilities-members.php` - create, update and publish members; bios (cleaned to simple HTML), photos, awards, class review (`list-class`), year and class pages
+- `abilities-teams.php` - team and tournament rosters, edits and aliases, `merge` (preview first, then confirm) and `trash`
+- `abilities-log.php` - every ability write is logged on the post (`_uh_changes`, before snapshots for undo) and in a site-wide feed (`uh_change_feed`); `recent-changes`, `member-history`, `undo-change`
 - `mcp.php` - serves those abilities as MCP tools at `/wp-json/uhof/mcp` (needs the MCP Adapter plugin)
 - `admin-columns.php` - wp-admin list columns, sorts, filters and remembered sorts for members, teams, tournaments and media; replaces Admin Columns Pro
 - `svg.php` - SVG uploads, administrators only, every file rewritten by an allowlist sanitizer (`uh_svg_sanitize()`); replaces the SVG Support plugin
@@ -93,6 +96,8 @@ A member has three repeaters, all edited in wp-admin or through the abilities:
 - `career`: team (post object), start_year, end_year, to_present, approximate, note. One row per continuous stint.
 - `results`: tournament, team, placement (select from `uh_placements()`). The tournament's `details_series` (us, world, pro) decides which table it shows in.
 - `service`: start_year, end_year, to_present, approximate, description.
+
+Row edits through the abilities must quote the list's `list_version` from `get-member` (or the previous write), so stale row numbers are refused. `ops/test-abilities.php` exercises every ability as an Editor on a local copy: `ddev wp eval-file wp-content/themes/ultimate-hall/ops/test-abilities.php <editor-login>`.
 
 Never query repeater rows with LIKE meta queries. Use `uh_members_for_team()` / `uh_members_for_tournament()`, which read the index that `uh_sync_member()` rebuilds on admin saves, REST saves and `wp uh reindex`. If you write meta directly, run `wp uh reindex` afterwards.
 
