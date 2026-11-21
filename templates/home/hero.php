@@ -14,12 +14,19 @@
                 <?php foreach( array_values( $photos ) as $i => $photo ): ?>
                     <div class="photo<?php if ( 0 === $i ) echo ' is-active'; ?>">
                         <?php
-                            // First photo is the LCP: load it eagerly at high priority; the rest wait.
-                            echo wp_get_attachment_image( $photo['ID'], 'full', false, array(
-                                'sizes'         => '(min-width: 768px) 100vw, 150vw',
-                                'loading'       => 0 === $i ? 'eager' : 'lazy',
-                                'fetchpriority' => 0 === $i ? 'high' : 'low',
-                            ) );
+                            // The first photo is the LCP: it loads eagerly at high priority.
+                            // The others sit in the same grid cell, so lazy loading can't hold them back;
+                            // they ship with data-src/data-srcset and js/site.js fills them in after
+                            // the page has loaded, well before the first crossfade.
+                            $attr = array( 'sizes' => '(min-width: 768px) 100vw, 150vw', 'loading' => false );
+                            if ( 0 === $i ) {
+                                $attr = array_merge( $attr, array( 'loading' => 'eager', 'fetchpriority' => 'high' ) );
+                            }
+                            $img = wp_get_attachment_image( $photo['ID'], 'full', false, $attr );
+                            if ( 0 !== $i ) {
+                                $img = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $img );
+                            }
+                            echo $img;
                         ?>
                     </div>
                 <?php endforeach; ?>

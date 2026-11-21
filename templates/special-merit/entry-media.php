@@ -23,7 +23,7 @@
             <div class="media">
                 <?php foreach( $images as $image ): ?>
                     <div class="media__photo">
-                        <a data-fslightbox="<?php echo $first_name . '-' . $last_name; ?>" href="<?php echo wp_get_attachment_image_url($image['id'], 'full'); ?>">
+                        <a data-fslightbox="<?php echo esc_attr( $first_name . '-' . $last_name ); ?>" href="<?php echo esc_url( wp_get_attachment_image_url($image['id'], 'full') ); ?>" aria-label="<?php echo esc_attr( sprintf( 'View photo: %s', $image['alt'] ?: $image['title'] ?: trim( $first_name . ' ' . $last_name ) ) ); ?>">
                             <?php echo wp_get_attachment_image($image['ID'], 'large'); ?>
                         </a>
                     </div>
