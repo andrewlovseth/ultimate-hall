@@ -1,0 +1,21 @@
+name: Mockup gold
+on:
+  push:
+    branches: ["mockup/gold"]
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: |
+          npm i --no-save --no-package-lock playwright@1.49.1 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+          node ops/mockup-gold.mjs
+          mv mockups-gold /tmp/mg
+          git config user.name "github-actions[bot]"; git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git fetch origin lighthouse-results --depth=1 && git checkout -B lighthouse-results FETCH_HEAD
+          rm -rf mockups-gold && cp -r /tmp/mg mockups-gold && git add mockups-gold && git commit -qm "Gold text mockups" && git push -q origin lighthouse-results
