@@ -97,7 +97,7 @@ A member has three repeaters, all edited in wp-admin or through the abilities:
 - `results`: tournament, team, placement (select from `uh_placements()`). The tournament's `details_series` (us, world, pro) decides which table it shows in.
 - `service`: start_year, end_year, to_present, approximate, description.
 
-Row edits through the abilities must quote the list's `list_version` from `get-member` (or the previous write), so stale row numbers are refused. `ops/test-abilities.php` exercises every ability as an Editor on a local copy: `ddev wp eval-file wp-content/themes/ultimate-hall/ops/test-abilities.php <editor-login>`.
+Row edits through the abilities must quote the list's `list_version` from `get-member` (or the previous write), so stale row numbers are refused. `ops/test-abilities.php` exercises every ability as an Editor on a local copy: `ddev wp eval-file wp/wp-content/themes/ultimate-hall/ops/test-abilities.php <editor-login>`.
 
 Never query repeater rows with LIKE meta queries. Use `uh_members_for_team()` / `uh_members_for_tournament()`, which read the index that `uh_sync_member()` rebuilds on admin saves, REST saves and `wp uh reindex`. If you write meta directly, run `wp uh reindex` afterwards.
 
