@@ -108,12 +108,21 @@ $check( 'connection listed for the editor', 1 <= count( uh_oauth_user_grants( $e
 $post( '/uhof/oauth/revoke', array( 'token' => $tok2['refresh_token'] ) );
 $check( 'revoke ends the connection', 0 === $as( $tok2['access_token'], '/wp-json/uhof/mcp' ) );
 
+// A password changed on the profile page ends the connection.
+$ed2  = wp_insert_user( array( 'user_login' => 'zz-oauth-ed', 'user_pass' => wp_generate_password(), 'role' => 'editor' ) );
+$code = uh_oauth_create_code( $p, $ed2 );
+$tok3 = $post( '/uhof/oauth/token', array( 'grant_type' => 'authorization_code', 'code' => $code, 'client_id' => $cid, 'redirect_uri' => $params['redirect_uri'], 'code_verifier' => $verifier ) )->get_data();
+$check( 'second editor connects', $ed2 === $as( $tok3['access_token'] ?? '', '/wp-json/uhof/mcp' ) );
+wp_update_user( array( 'ID' => $ed2, 'user_pass' => wp_generate_password() ) );
+$check( 'profile password change ends the connection', 0 === $as( $tok3['access_token'] ?? '', '/wp-json/uhof/mcp' ) );
+
 // A subscriber can't connect.
 $sub = wp_insert_user( array( 'user_login' => 'zz-oauth-sub', 'user_pass' => wp_generate_password(), 'role' => 'subscriber' ) );
 $code = uh_oauth_create_code( $p, $sub );
 $check( 'non-editor code refused at exchange', 400 === $post( '/uhof/oauth/token', array( 'grant_type' => 'authorization_code', 'code' => $code, 'client_id' => $cid, 'redirect_uri' => $params['redirect_uri'], 'code_verifier' => $verifier ) )->get_status() );
 require_once ABSPATH . 'wp-admin/includes/user.php';
 wp_delete_user( $sub );
+wp_delete_user( $ed2 );
 
 unset( $_SERVER['HTTP_AUTHORIZATION'] );
 update_option( UH_OAUTH_CLIENTS, $clients_before, false );
