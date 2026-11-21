@@ -67,25 +67,40 @@
 	if (slides.length > 1 && !reduceMotion) {
 		// The template holds back every photo but the first (data-src/data-srcset), so they
 		// don't compete with it for bandwidth. Fill them in once the page has loaded.
-		var hydrate = function () {
-			slider.querySelectorAll('img[data-src]').forEach(function (img) {
-				if (img.dataset.srcset) img.srcset = img.dataset.srcset;
-				img.src = img.dataset.src;
-				img.removeAttribute('data-src');
-				img.removeAttribute('data-srcset');
-			});
+		var hydrate = function (img) {
+			if (!img || !img.dataset.src) return;
+			if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+			img.src = img.dataset.src;
+			img.removeAttribute('data-src');
+			img.removeAttribute('data-srcset');
 		};
-		if (document.readyState === 'complete') hydrate();
-		else window.addEventListener('load', hydrate);
+		var hydrateAll = function () {
+			slider.querySelectorAll('img[data-src]').forEach(hydrate);
+		};
+		if (document.readyState === 'complete') hydrateAll();
+		else window.addEventListener('load', hydrateAll);
+
+		// A photo is ready once it has fully downloaded and decoded.
+		var isReady = function (slide) {
+			var img = slide.querySelector('img');
+			return !img || (img.complete && img.naturalWidth > 0 && !img.dataset.src);
+		};
 
 		var current = 0;
 		var INTERVAL = 5000;
 
 		window.setInterval(function () {
 			if (document.hidden) return;
+			var next = (current + 1) % slides.length;
+			// Never fade to a photo that hasn't arrived yet (a slow first visit): ask for it
+			// now if it's still held back, keep the current one up, and try again next tick.
+			if (!isReady(slides[next])) {
+				hydrate(slides[next].querySelector('img[data-src]'));
+				return;
+			}
 			// Both photos fade at once, same as Slick's fade mode did.
 			slides[current].classList.remove('is-active');
-			current = (current + 1) % slides.length;
+			current = next;
 			slides[current].classList.add('is-active');
 		}, INTERVAL);
 	}
