@@ -28,6 +28,8 @@ require_once get_theme_file_path( 'functions/abilities.php' );
 
 require_once get_theme_file_path( 'functions/mcp.php' );
 
+require_once get_theme_file_path( 'functions/oauth.php' );
+
 require_once get_theme_file_path( 'functions/admin-columns.php' );
 
 require_once get_theme_file_path( 'functions/svg.php' );
