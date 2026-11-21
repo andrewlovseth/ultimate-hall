@@ -65,6 +65,19 @@
 	var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	if (slides.length > 1 && !reduceMotion) {
+		// The template holds back every photo but the first (data-src/data-srcset), so they
+		// don't compete with it for bandwidth. Fill them in once the page has loaded.
+		var hydrate = function () {
+			slider.querySelectorAll('img[data-src]').forEach(function (img) {
+				if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+				img.src = img.dataset.src;
+				img.removeAttribute('data-src');
+				img.removeAttribute('data-srcset');
+			});
+		};
+		if (document.readyState === 'complete') hydrate();
+		else window.addEventListener('load', hydrate);
+
 		var current = 0;
 		var INTERVAL = 5000;
 

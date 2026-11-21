@@ -6,6 +6,7 @@
     // The name's heading level follows the page outline: h3 under a section heading (default),
     // h2 where the card sits straight under the page's h1 (a class page).
     $heading = in_array( $args['heading'] ?? '', array( 'h2', 'h3', 'h4' ), true ) ? $args['heading'] : 'h3';
+    $subheading = 'h' . ( (int) substr( $heading, 1 ) + 1 ); // the type/division line, one level down
 
     $type = get_field('meta_induction_type', $member_ID);
     $division = get_field('meta_induction_division', $member_ID);
@@ -39,7 +40,7 @@
 
         <?php if($type || $division): ?>
             <div class="meta">
-                <h4>
+                <<?php echo $subheading; ?>>
                     <?php if($type): ?>
                         <span class="type"><?php echo esc_html( $type['label'] ); ?></span>                        
                     <?php endif; ?>
@@ -47,7 +48,7 @@
                     <?php if($division): ?>
                         <span class="division"><?php echo esc_html( $division['label'] ); ?></span>
                     <?php endif; ?>                
-                </h4>
+                </<?php echo $subheading; ?>>
             </div>
         <?php endif; ?>
     </div>
