@@ -44,6 +44,8 @@ require_once get_theme_file_path( 'functions/admin-columns.php' );
 
 require_once get_theme_file_path( 'functions/svg.php' );
 
+require_once get_theme_file_path( 'functions/webp.php' );
+
 // Fix blog pagination: /news/page/2/ gets swallowed by post name rewrite rules
 // because the permalink structure starts with /news/. This adds an explicit rule.
 add_action('init', function () {
