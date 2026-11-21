@@ -13,7 +13,7 @@
     <div class="copy p1">
         <?php if($player_card): ?>
             <div class="player-card">
-                <?php echo wp_get_attachment_image($player_card['ID'], 'full'); ?>
+                <?php echo wp_get_attachment_image($player_card['ID'], 'full', false, array( 'loading' => 'lazy' )); ?>
             </div>
         <?php endif; ?>
 

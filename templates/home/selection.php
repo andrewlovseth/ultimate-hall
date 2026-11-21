@@ -11,7 +11,7 @@
 <section class="selection grid">
     <div class="photo">
         <div class="content">
-            <?php echo wp_get_attachment_image($photo['ID'], 'large'); ?>
+            <?php echo wp_get_attachment_image($photo['ID'], 'large', false, array( 'loading' => 'lazy' )); ?>
         </div>
     </div>
 

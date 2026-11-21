@@ -36,7 +36,7 @@ if ( isset( $type['value'] ) && 'player' === $type['value'] && $results ) :
 
 			<div class="member-grid">
 				<?php while ( $query->have_posts() ) : $query->the_post(); ?>
-					<?php get_template_part( 'template-parts/global/member' ); ?>
+					<?php get_template_part( 'template-parts/global/member', null, array( 'loading' => 'lazy' ) ); ?>
 				<?php endwhile; ?>
 			</div>
 		</section>
