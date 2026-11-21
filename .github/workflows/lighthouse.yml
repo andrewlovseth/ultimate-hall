@@ -1,0 +1,84 @@
+# Lighthouse scores for the key templates on ultimatehall.org, mobile and desktop.
+# Run it from the Actions tab (or push to a lighthouse/** branch). Results are committed
+# to the lighthouse-results branch as trimmed JSON plus a summary table, and shown on the run page.
+# It also screenshots each page as served and with this branch's theme CSS, fonts and JS swapped in,
+# and reports the pixels that changed (screenshots of any difference are kept with the results).
+name: Lighthouse
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: "Runs per page (median is kept)"
+        default: "3"
+  push:
+    branches: ["lighthouse/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lighthouse
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      BASE: https://ultimatehall.org
+      RUNS: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pick sample pages
+        run: |
+          pick() { curl -s "$BASE/wp-sitemap-posts-$1-1.xml" | grep -o '<loc>[^<]*</loc>' | sed 's/<[^>]*>//g' | sed -n "${2}p"; }
+          curl -s "$BASE/wp-sitemap.xml" | grep -o '<loc>[^<]*</loc>' || true
+          {
+            echo "home $BASE/"
+            echo "members $BASE/members/"
+            echo "class $BASE/class/2025/"
+            echo "member $(pick member 5)"
+            echo "team $(pick team 5)"
+            echo "tournament $(pick tournaments 5)"
+          } > pages.txt
+          cat pages.txt
+      - name: Visual check (production vs this branch's theme files)
+        run: |
+          npm i --no-save --no-package-lock playwright@1.49.1 pngjs@7.0.0 pixelmatch@6.0.0 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+          node ops/visual-diff.mjs pages.txt results || echo "visual check failed"
+      - name: Run Lighthouse
+        run: |
+          mkdir -p out
+          while read -r name url; do
+            [ -n "$url" ] || { echo "no url for $name"; continue; }
+            for form in mobile desktop; do
+              preset=""; [ "$form" = desktop ] && preset="--preset=desktop"
+              for i in $(seq 1 "$RUNS"); do
+                npx -y lighthouse@12 "$url" $preset --quiet --output=json \
+                  --output-path="out/$name-$form-$i.json" \
+                  --chrome-flags="--headless=new --no-sandbox" || echo "run failed: $name $form $i"
+              done
+            done
+          done < pages.txt
+      - name: Summarize
+        run: |
+          node ops/lighthouse-summarize.mjs out results
+          [ -f results/visual.md ] && { echo; echo "Visual check:"; cat results/visual.md; } >> results/summary.md || true
+      - name: Publish results
+        run: |
+          stamp=$(date -u +%Y%m%d-%H%M)
+          cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git fetch origin lighthouse-results --depth=1 && git checkout -B lighthouse-results FETCH_HEAD || git checkout --orphan lighthouse-results
+          git rm -rq --cached . 2>/dev/null || true
+          mkdir -p "runs/$stamp"
+          cp results/* "runs/$stamp/"
+          cp results/summary.md latest.md
+          git add "runs/$stamp" latest.md
+          git commit -qm "Lighthouse $stamp ($GITHUB_SHA)"
+          git push -q origin lighthouse-results
