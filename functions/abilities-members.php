@@ -39,6 +39,10 @@ function uh_clean_bio( $bio ) {
 	if ( false === strpos( $bio, '<' ) ) {
 		return wpautop( esc_html( $bio ) );
 	}
+	// Inline tags only (no paragraphs, lists or headings): still split blank lines into paragraphs.
+	if ( ! preg_match( '/<(p|ul|ol|blockquote|h3|h4)[\s>]/i', $bio ) ) {
+		$bio = wpautop( $bio );
+	}
 	return trim(
 		wp_kses(
 			$bio,
