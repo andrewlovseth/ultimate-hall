@@ -113,6 +113,9 @@
             span.tournament {
                 display: block;
                 font-size: 0.675rem;
+                // Room between the team and tournament links, so each gets a 24px
+                // tap target (WCAG 2.2 target size).
+                padding-top: 0.625rem;
 
                 a {
                     color: $slate;

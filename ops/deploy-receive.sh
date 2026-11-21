@@ -99,4 +99,11 @@ if [ -f "$THEME/ops/deploy-receive.sh" ]; then
   mv "$SITE/ops/.deploy-receive.new" "$SITE/ops/deploy-receive.sh"
 fi
 
+# 8. WebP copies of any images that don't have them yet, in the background so the deploy returns
+#    now. Closes the lock and log fds so the next deploy isn't blocked; purges the page cache
+#    when done so cached pages pick up the copies. Output goes to $SITE/logs/webp.log.
+setsid nohup bash -c "$WP uh webp && $WP spinupwp cache purge-site" \
+  >>"$SITE/logs/webp.log" 2>&1 </dev/null 3>&- 9>&- &
+log "started wp uh webp in the background"
+
 result "deployed $REF"
