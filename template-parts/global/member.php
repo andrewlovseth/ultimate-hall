@@ -8,6 +8,13 @@
     $heading = in_array( $args['heading'] ?? '', array( 'h2', 'h3', 'h4' ), true ) ? $args['heading'] : 'h3';
     $subheading = 'h' . ( (int) substr( $heading, 1 ) + 1 ); // the type/division line, one level down
 
+    // Pass 'loading' => 'lazy' where the grid is always below the fold (teammates, the home page's
+    // latest class). Elsewhere WordPress decides, so cards near the top can still be the LCP.
+    $img_attr = array( 'sizes' => '(min-width: 768px) 170px, 25vw' );
+    if ( 'lazy' === ( $args['loading'] ?? '' ) ) {
+        $img_attr['loading'] = 'lazy';
+    }
+
     $type = get_field('meta_induction_type', $member_ID);
     $division = get_field('meta_induction_division', $member_ID);
     $template = get_page_template_slug($member_ID);
@@ -25,7 +32,7 @@
         <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
             <div class="content">
                 <?php if($image): ?>
-                    <?php echo wp_get_attachment_image( $image['ID'], 'thumbnail', false, array( 'sizes' => '(min-width: 768px) 170px, 25vw' ) ); ?>
+                    <?php echo wp_get_attachment_image( $image['ID'], 'thumbnail', false, $img_attr ); ?>
                 <?php else: ?>
                     <div class="empty"></div>
                 <?php endif; ?>
