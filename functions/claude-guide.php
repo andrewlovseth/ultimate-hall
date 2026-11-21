@@ -116,7 +116,7 @@ function uh_guide_page() {
 				<ol>
 					<li>In claude.ai, open <strong>Customize</strong>, then <strong>Connectors</strong>, and click <strong>Add custom connector</strong>.</li>
 					<li>Name it <em>Ultimate Hall of Fame</em> and paste this address:
-						<span class="uh-copy"><input type="text" readonly value="<?php echo esc_attr( $url ); ?>" onclick="this.select()"><button type="button" class="button" data-copy="<?php echo esc_attr( $url ); ?>">Copy</button></span>
+						<span class="uh-copy"><code><?php echo esc_html( $url ); ?></code><button type="button" class="button" data-copy="<?php echo esc_attr( $url ); ?>">Copy</button></span>
 					</li>
 					<li>Click <strong>Connect</strong>. This site opens; log in if it asks, then click <strong>Allow</strong>.</li>
 					<li>In a new chat, check the connector is switched on in the <strong>+</strong> menu, and ask: <em>"Find the Hall of Fame member Jim Parinella."</em></li>
@@ -126,7 +126,7 @@ function uh_guide_page() {
 			<div class="card">
 				<h3>Claude Code</h3>
 				<p>Run this in a terminal:</p>
-				<span class="uh-copy"><input type="text" readonly value="<?php echo esc_attr( $code ); ?>" onclick="this.select()"><button type="button" class="button" data-copy="<?php echo esc_attr( $code ); ?>">Copy</button></span>
+				<span class="uh-copy"><code><?php echo esc_html( $code ); ?></code><button type="button" class="button" data-copy="<?php echo esc_attr( $code ); ?>">Copy</button></span>
 				<p>Then type <code>/mcp</code> in Claude Code, pick <em>ultimate-hall</em> and choose <strong>Authenticate</strong>. A browser window opens here for you to Allow.</p>
 				<p class="description">Only Editors and Administrators can connect. To cut off access, disconnect on <a href="<?php echo esc_url( admin_url( 'profile.php#uh-claude-connections' ) ); ?>">your profile</a> or remove the connector in Claude; changing your password also disconnects every Claude app.</p>
 			</div>
@@ -189,11 +189,18 @@ function uh_guide_page() {
 		.uh-guide .card h3 { margin-top: .5em; }
 		.uh-guide .card li { margin-bottom: .6em; }
 		.uh-guide .uh-copy { display: flex; gap: 6px; margin: 6px 0; }
-		.uh-guide .uh-copy input { flex: 1; font-family: Consolas, Monaco, monospace; font-size: 12px; }
+		.uh-guide .uh-copy { align-items: flex-start; }
+		.uh-guide .uh-copy code { flex: 1; padding: 5px 8px; font-size: 12px; overflow-wrap: anywhere; user-select: all; }
 		.uh-guide .uh-prompts li { font-style: italic; }
 		.uh-guide .uh-list, .uh-guide .uh-prompts { list-style: disc; padding-left: 1.5em; max-width: 80ch; }
 		.uh-guide .uh-tools td:first-child { width: 190px; white-space: nowrap; }
 		.uh-guide .uh-tools .uh-group th { background: #f0f0f1; font-weight: 600; }
+		@media (max-width: 782px) {
+			.uh-guide .uh-tools thead { display: none; }
+			.uh-guide .uh-tools tr, .uh-guide .uh-tools td, .uh-guide .uh-tools th { display: block; width: auto !important; }
+			.uh-guide .uh-tools td:first-child { padding-bottom: 0; }
+			.uh-guide .uh-copy { flex-direction: column; }
+		}
 	</style>
 	<script>
 		document.querySelectorAll('.uh-guide [data-copy]').forEach(function (b) {
