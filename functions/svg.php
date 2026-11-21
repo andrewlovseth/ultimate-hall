@@ -4,7 +4,7 @@
  *
  * Only administrators may upload SVGs, and every SVG is rewritten through an allowlist
  * sanitizer before WordPress stores it. Anything the sanitizer cannot parse is refused.
- * Uploads through wp-admin, the REST API and sideloads all pass the same prefilter.
+ * Uploads through wp-admin, the REST API and sideloads all pass the same prefilter; XML-RPC SVG uploads are refused.
  */
 
 /** Who may upload SVGs. */
@@ -66,18 +66,44 @@ function uh_svg_prefilter( $file ) {
 add_filter( 'wp_handle_upload_prefilter', 'uh_svg_prefilter' );
 add_filter( 'wp_handle_sideload_prefilter', 'uh_svg_prefilter' );
 
+/** XML-RPC uploads go through wp_upload_bits(), which has no prefilter and can't rewrite the file, so SVGs are refused there. */
+add_filter(
+	'wp_upload_bits',
+	function ( $upload ) {
+		if ( is_array( $upload ) && preg_match( '/\.svgz?$/i', $upload['name'] ?? '' ) ) {
+			return 'Upload SVG files through the media library.';
+		}
+		return $upload;
+	}
+);
+
 /**
- * Rewrites an SVG keeping only allowlisted elements and attributes.
+ * Rewrites an SVG keeping only allowlisted SVG-namespace elements and attributes.
  *
- * Drops scripts, event handlers, foreignObject, external references (href, url(), @import),
- * comments, processing instructions and any DOCTYPE. Refuses documents that declare entities.
+ * Drops scripts, event handlers, foreignObject, images, links, external references (href, url(), @import),
+ * comments, processing instructions and the DOCTYPE. Style text that could hide an external reference
+ * (CSS escapes, @import, url() to anything but #id) is dropped whole rather than rewritten.
+ * Refuses files that are not UTF-8, that don't parse, and that declare anything but simple internal entities.
  *
  * @param string $svg Raw SVG markup.
  * @return string|false Clean markup, or false when it is not a usable SVG.
  */
 function uh_svg_sanitize( $svg ) {
-	if ( ! is_string( $svg ) || '' === trim( $svg ) || preg_match( '/<!ENTITY/i', $svg ) ) {
+	if ( ! is_string( $svg ) || '' === trim( $svg ) || false !== strpos( $svg, "\0" ) || ! mb_check_encoding( $svg, 'UTF-8' ) ) {
 		return false;
+	}
+	if ( preg_match( '/<\?xml[^>]*encoding\s*=\s*["\'](?!utf-?8)/i', $svg ) ) {
+		return false;
+	}
+
+	// Illustrator declares short internal entities (<!ENTITY ns_svg "http://...">). Allow only those:
+	// no external, parameter or nested entities, so expansion stays small and nothing is fetched.
+	$declared = preg_match_all( '/<!ENTITY/i', $svg );
+	if ( $declared ) {
+		$safe = preg_match_all( '/<!ENTITY\s+[A-Za-z_][\w.-]*\s+"[^"<&%]{0,200}"\s*>/', $svg );
+		if ( $safe !== $declared || $declared > 20 ) {
+			return false;
+		}
 	}
 
 	$elements = array(
@@ -111,33 +137,40 @@ function uh_svg_sanitize( $svg ) {
 	);
 	$elements   = array_flip( $elements );
 	$attributes = array_flip( $attributes );
+	$svg_ns     = 'http://www.w3.org/2000/svg';
 
 	$doc      = new DOMDocument();
 	$previous = libxml_use_internal_errors( true );
-	$loaded   = $doc->loadXML( $svg, LIBXML_NONET | LIBXML_NOBLANKS );
+	$loaded   = $doc->loadXML( $svg, LIBXML_NONET | ( $declared ? LIBXML_NOENT : 0 ) );
 	libxml_clear_errors();
 	libxml_use_internal_errors( $previous );
-	if ( ! $loaded || ! $doc->documentElement || 'svg' !== strtolower( $doc->documentElement->localName ) ) {
+	$root = $loaded ? $doc->documentElement : null;
+	if ( ! $root || 'svg' !== $root->localName || $svg_ns !== $root->namespaceURI ) {
 		return false;
 	}
 
-	$clean_css = function ( $css ) {
-		$css = preg_replace( '/@import[^;]*;?/i', '', $css );
-		$css = preg_replace( '/url\(\s*([\'"]?)(?!#)[^)]*\1\s*\)/i', 'none', $css );
-		return preg_replace( '/expression\s*\(|javascript:|behavior\s*:|-moz-binding/i', '', $css );
+	// True when CSS could reach outside the file.
+	$unsafe_css = function ( $css ) {
+		return (bool) preg_match( '/\\\\|@import|url\s*+\(\s*+[\'"]?+\s*+(?!#)|expression\s*\(|javascript:|behavior\s*:|-moz-binding/i', $css );
 	};
 
-	$walk = function ( DOMNode $node ) use ( &$walk, $elements, $attributes, $clean_css ) {
+	$walk = function ( DOMNode $node ) use ( &$walk, $elements, $attributes, $svg_ns, $unsafe_css, $doc ) {
 		for ( $i = $node->childNodes->length - 1; $i >= 0; $i-- ) {
 			$child = $node->childNodes->item( $i );
-			if ( XML_TEXT_NODE === $child->nodeType || XML_CDATA_SECTION_NODE === $child->nodeType ) {
-				if ( 'style' === strtolower( $node->localName ) ) {
-					$child->nodeValue = $clean_css( $child->nodeValue );
+			if ( XML_CDATA_SECTION_NODE === $child->nodeType ) {
+				// Re-emit as escaped text so nothing survives as markup if the SVG is ever inlined in HTML.
+				$text = $doc->createTextNode( $child->nodeValue );
+				$node->replaceChild( $text, $child );
+				$child = $text;
+			}
+			if ( XML_TEXT_NODE === $child->nodeType ) {
+				if ( 'style' === $node->localName && $unsafe_css( $child->nodeValue ) ) {
+					$node->removeChild( $child );
 				}
 				continue;
 			}
-			if ( XML_ELEMENT_NODE !== $child->nodeType || ! isset( $elements[ strtolower( $child->localName ) ] ) ) {
-				$node->removeChild( $child ); // Comments, processing instructions, scripts, foreignObject, images.
+			if ( XML_ELEMENT_NODE !== $child->nodeType || $svg_ns !== $child->namespaceURI || ! isset( $elements[ strtolower( $child->localName ) ] ) ) {
+				$node->removeChild( $child ); // Comments, processing instructions, entity references, scripts, foreignObject, images, other namespaces.
 				continue;
 			}
 			for ( $a = $child->attributes->length - 1; $a >= 0; $a-- ) {
@@ -147,10 +180,7 @@ function uh_svg_sanitize( $svg ) {
 				$keep  = isset( $attributes[ $name ] ) && 0 !== strpos( $name, 'on' );
 				if ( $keep && ( 'href' === $name || 'xlink:href' === $name ) ) {
 					$keep = 0 === strpos( $value, '#' );
-				}
-				if ( $keep && 'style' === $name ) {
-					$attr->nodeValue = $clean_css( $value );
-				} elseif ( $keep && preg_match( '/url\(\s*[\'"]?(?!#)/i', $value ) ) {
+				} elseif ( $keep && $unsafe_css( $value ) ) {
 					$keep = false;
 				}
 				if ( ! $keep ) {
@@ -161,9 +191,8 @@ function uh_svg_sanitize( $svg ) {
 		}
 	};
 
-	// The root's attributes go through the same allowlist.
+	// Wrap the root so it goes through the same checks as every other element.
 	$wrapper = $doc->createElement( 'uh-root' );
-	$root    = $doc->documentElement;
 	$doc->replaceChild( $wrapper, $root );
 	$wrapper->appendChild( $root );
 	$walk( $wrapper );
@@ -184,8 +213,9 @@ function uh_svg_dimensions( $path ) {
 	if ( ! $svg ) {
 		return array( 0, 0 );
 	}
-	$width  = (float) $svg['width'];
-	$height = (float) $svg['height'];
+	// Percent sizes say nothing about the drawing; use the viewBox instead.
+	$width  = false === strpos( (string) $svg['width'], '%' ) ? (float) $svg['width'] : 0;
+	$height = false === strpos( (string) $svg['height'], '%' ) ? (float) $svg['height'] : 0;
 	if ( ( ! $width || ! $height ) && preg_match( '/^\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)\s*$/', (string) $svg['viewBox'], $box ) ) {
 		$width  = (float) $box[1];
 		$height = (float) $box[2];
