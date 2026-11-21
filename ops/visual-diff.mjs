@@ -1,5 +1,6 @@
-// Screenshot production pages twice: as served, and with the theme's static files
-// (style.css, fonts, js, images) swapped for this checkout's. Reports how many pixels differ.
+// Screenshot production pages twice, with the theme's static files (style.css, fonts, js, images)
+// served from two checkouts: BASE_DIR (default: production as served) and this checkout.
+// Reports how many pixels differ.
 // Catches CSS and font regressions; PHP template changes are not exercised.
 // Usage: node ops/visual-diff.mjs <pages.txt> <out-dir>   (pages.txt: "name url" per line)
 import { chromium } from 'playwright';
@@ -16,13 +17,13 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 const viewports = { mobile: { width: 390, height: 844 }, desktop: { width: 1440, height: 900 } };
 
 const browser = await chromium.launch();
-async function shot(url, vp, local) {
+async function shot(url, vp, root) {
 	// A normal desktop Chrome user agent: Google Fonts serves different files to "HeadlessChrome".
 	const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, reducedMotion: 'reduce', userAgent: UA });
 	const page = await ctx.newPage();
-	if (local) {
+	if (root !== null) {
 		await page.route((u) => u.pathname.startsWith(THEME), (route) => {
-			const path = new URL(route.request().url()).pathname.slice(THEME.length);
+			const path = root + new URL(route.request().url()).pathname.slice(THEME.length);
 			if (!existsSync(path)) return route.fulfill({ status: 404 });
 			route.fulfill({ body: readFileSync(path), contentType: types[path.split('.').pop()] || 'application/octet-stream' });
 		});
@@ -45,8 +46,8 @@ async function shot(url, vp, local) {
 const rows = [];
 for (const [name, url] of pages) {
 	for (const [form, vp] of Object.entries(viewports)) {
-		const a = await shot(url, vp, false);
-		const b = await shot(url, vp, true);
+		const a = await shot(url, vp, process.env.BASE_DIR ? process.env.BASE_DIR + '/' : null);
+		const b = await shot(url, vp, '');
 		const w = Math.max(a.width, b.width), h = Math.max(a.height, b.height);
 		const pad = (img) => { const p = new PNG({ width: w, height: h }); PNG.bitblt(img, p, 0, 0, img.width, img.height, 0, 0); return p; };
 		const pa = pad(a), pb = pad(b), diff = new PNG({ width: w, height: h });

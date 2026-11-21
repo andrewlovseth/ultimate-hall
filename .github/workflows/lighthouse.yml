@@ -1,7 +1,7 @@
 # Lighthouse scores for the key templates on ultimatehall.org, mobile and desktop.
 # Run it from the Actions tab (or push to a lighthouse/** branch). Results are committed
 # to the lighthouse-results branch as trimmed JSON plus a summary table, and shown on the run page.
-# It also screenshots each page as served and with this branch's theme CSS, fonts and JS swapped in,
+# It also screenshots each page with master's theme CSS, fonts and JS and then with this branch's,
 # and reports the pixels that changed (screenshots of any difference are kept with the results).
 name: Lighthouse
 
@@ -29,6 +29,10 @@ jobs:
       RUNS: ${{ github.event.inputs.runs || '3' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          path: .base
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -49,7 +53,7 @@ jobs:
         run: |
           npm i --no-save --no-package-lock playwright@1.49.1 pngjs@7.0.0 pixelmatch@6.0.0 >/dev/null
           npx playwright install --with-deps chromium >/dev/null
-          node ops/visual-diff.mjs pages.txt results || echo "visual check failed"
+          BASE_DIR=.base node ops/visual-diff.mjs pages.txt results || echo "visual check failed"
       - name: Run Lighthouse
         run: |
           mkdir -p out
