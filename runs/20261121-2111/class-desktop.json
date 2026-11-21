@@ -1,0 +1,583 @@
+{
+ "url": "https://ultimatehall.org/class/2025/",
+ "scores": {
+  "performance": 97,
+  "accessibility": 93,
+  "best-practices": 96,
+  "seo": 92
+ },
+ "allRuns": [
+  [
+   96,
+   93,
+   96,
+   92
+  ],
+  [
+   97,
+   93,
+   96,
+   92
+  ],
+  [
+   98,
+   93,
+   96,
+   92
+  ]
+ ],
+ "metrics": {
+  "first-contentful-paint": "0.9 s",
+  "largest-contentful-paint": "1.0 s",
+  "total-blocking-time": "0 ms",
+  "cumulative-layout-shift": "0",
+  "speed-index": "0.9 s",
+  "server-response-time": "Root document took 20 ms"
+ },
+ "lcp": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A…\" alt=\"\">",
+ "failing": [
+  {
+   "id": "errors-in-console",
+   "title": "Browser errors were logged to the console",
+   "score": 0,
+   "items": [
+    {
+     "source": "network",
+     "description": "Failed to load resource: the server responded with a status of 404 ()",
+     "sourceLocation": "{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/favicon.ico\",\"urlProvider\":\"network\",\"line\":0,\"column\":0}"
+    }
+   ]
+  },
+  {
+   "id": "uses-rel-preconnect",
+   "title": "Preconnect to required origins",
+   "score": 0,
+   "display": "Est savings of 50 ms",
+   "items": [
+    {
+     "url": "https://fonts.googleapis.com",
+     "wastedMs": 50.131000000039585
+    }
+   ]
+  },
+  {
+   "id": "unsized-images",
+   "title": "Image elements do not have explicit `width` and `height`",
+   "score": 0.5,
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg",
+     "node": {
+      "selector": "header.site-header > div.logo > a > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg\" alt=\"\">",
+      "label": "header.site-header > div.logo > a > img"
+     }
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg",
+     "node": {
+      "selector": "footer.site-footer > div.logo > a > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2021/05/hof-logo.svg\" alt=\"\">",
+      "label": "footer.site-footer > div.logo > a > img"
+     }
+    }
+   ]
+  },
+  {
+   "id": "heading-order",
+   "title": "Heading elements are not in a sequentially-descending order",
+   "score": 0,
+   "items": [
+    {
+     "node": {
+      "selector": "div.member > div.info > div.name > h3",
+      "snippet": "<h3>",
+      "label": "Alex “Dutchy” Ghesquiere"
+     },
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"relatedNode\":{\"type\":\"node\",\"lhId\":\"1-1-H1\",\"path\":\"1,HTML,1,BODY,0,DIV,2,MAIN,0,SECTION,0,H1\",\"selector\":\"div#page > main.site-content > section.page-header > h1\",\"bound"
+    }
+   ]
+  },
+  {
+   "id": "link-name",
+   "title": "Links do not have a discernible name",
+   "score": 0,
+   "items": [
+    {
+     "node": {
+      "selector": "div#page > header.site-header > div.logo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/\">",
+      "label": "div#page > header.site-header > div.logo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/alex-dutchy-ghesquiere/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/carolyn-finney/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/cree-howard/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/georgia-bosscher-shriwise/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/john-hassell/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/kaela-helton/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    },
+    {
+     "node": {
+      "selector": "div.member-grid > div.member > div.photo > a",
+      "snippet": "<a href=\"https://ultimatehall.org/members/kurt-gibson/\">",
+      "label": "div.member-grid > div.member > div.photo > a"
+     }
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-resources",
+   "title": "Eliminate render-blocking resources",
+   "score": 0,
+   "display": "Est savings of 610 ms",
+   "items": [
+    {
+     "url": "https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap",
+     "totalBytes": 1406,
+     "wastedMs": 265
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+     "totalBytes": 29972,
+     "wastedMs": 64
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedMs": 64
+    }
+   ]
+  },
+  {
+   "id": "unminified-css",
+   "title": "Minify CSS",
+   "score": 0.5,
+   "display": "Est savings of 2 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedBytes": 2096,
+     "wastedPercent": 16.25151581416615
+    }
+   ]
+  },
+  {
+   "id": "unminified-javascript",
+   "title": "Minify JavaScript",
+   "score": 0.5,
+   "display": "Est savings of 3 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/search.js?ver=1795287854",
+     "totalBytes": 7680,
+     "wastedBytes": 3570,
+     "wastedPercent": 46.478066659031036
+    }
+   ]
+  },
+  {
+   "id": "unused-css-rules",
+   "title": "Reduce unused CSS",
+   "score": 0,
+   "display": "Est savings of 11 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "wastedBytes": 11089,
+     "wastedPercent": 88.21541458759916,
+     "totalBytes": 12570
+    }
+   ]
+  },
+  {
+   "id": "modern-image-formats",
+   "title": "Serve images in next-gen formats",
+   "score": 0,
+   "display": "Est savings of 145 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-400x400.png\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-400x400.png",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 56393,
+     "wastedBytes": 45737.5,
+     "wastedWebpBytes": 45113
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-9-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-9-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 46180,
+     "wastedBytes": 15203.349999999999,
+     "wastedWebpBytes": 2554
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-1-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-1-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 29035,
+     "wastedBytes": 12057.55,
+     "wastedWebpBytes": 7577
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-8-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-8-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 30931,
+     "wastedBytes": 11797.3,
+     "wastedWebpBytes": 5653
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A8-12C59B7A531A_1_201_a-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 23217,
+     "wastedBytes": 10441.25,
+     "wastedWebpBytes": 7867
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-4-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-4-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 22694,
+     "wastedBytes": 9681.35,
+     "wastedWebpBytes": 6568
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-5-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-5-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 21732,
+     "wastedBytes": 9271.75,
+     "wastedWebpBytes": 6462
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-7-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-7-400x400.jpeg",
+     "fromProtocol": true,
+     "isCrossOrigin": false,
+     "totalBytes": 19539,
+     "wastedBytes": 8750.15,
+     "wastedWebpBytes": 6645
+    }
+   ]
+  },
+  {
+   "id": "uses-responsive-images",
+   "title": "Properly size images",
+   "score": 0,
+   "display": "Est savings of 253 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-400x400.png\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-400x400.png",
+     "totalBytes": 56393,
+     "wastedBytes": 47143,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-9-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-9-400x400.jpeg",
+     "totalBytes": 46180,
+     "wastedBytes": 38605,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-8-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-8-400x400.jpeg",
+     "totalBytes": 30931,
+     "wastedBytes": 25858,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-1-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-1-400x400.jpeg",
+     "totalBytes": 29035,
+     "wastedBytes": 24273,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A…\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A8-12C59B7A531A_1_201_a-400x400.jpeg",
+     "totalBytes": 23217,
+     "wastedBytes": 19409,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-4-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-4-400x400.jpeg",
+     "totalBytes": 22694,
+     "wastedBytes": 18972,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-5-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-5-400x400.jpeg",
+     "totalBytes": 21732,
+     "wastedBytes": 18167,
+     "wastedPercent": 83.5975
+    },
+    {
+     "node": {
+      "selector": "div.photo > a > div.content > img",
+      "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/11/image-2-400x400.jpeg\" alt=\"\">",
+      "label": "div.photo > a > div.content > img"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-2-400x400.jpeg",
+     "totalBytes": 21044,
+     "wastedBytes": 17592,
+     "wastedPercent": 83.5975
+    }
+   ]
+  },
+  {
+   "id": "legacy-javascript",
+   "title": "Avoid serving legacy JavaScript to modern browsers",
+   "score": 0.5,
+   "display": "Est savings of 0 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/plugins.js?ver=1795287854",
+     "wastedBytes": 305,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"signal\":\"@babel/plugin-transform-spread\",\"location\":{\"type\":\"source-location\",\"url\":\"https://ultimatehall.org/wp-content/themes/ultimate-hall/js/plugins.js?ver=1795287854",
+     "totalBytes": 0
+    }
+   ]
+  },
+  {
+   "id": "meta-description",
+   "title": "Document does not have a meta description",
+   "score": 0,
+   "items": []
+  },
+  {
+   "id": "image-delivery-insight",
+   "title": "Improve image delivery",
+   "score": 0,
+   "display": "Est savings of 262 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-400x400.png",
+     "totalBytes": 56393,
+     "wastedBytes": 52019,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":29726},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-9-400x400.jpeg",
+     "totalBytes": 46180,
+     "wastedBytes": 41806,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":19513},{\"reason\":\"This imag"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-8-400x400.jpeg",
+     "totalBytes": 30931,
+     "wastedBytes": 26557,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.\",\"wastedBytes\":4264},{\"reason\":\"This image"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-1-400x400.jpeg",
+     "totalBytes": 29035,
+     "wastedBytes": 24661,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A8-12C59B7A531A_1_201_a-400x400.jpeg",
+     "totalBytes": 23217,
+     "wastedBytes": 19409,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-4-400x400.jpeg",
+     "totalBytes": 22694,
+     "wastedBytes": 18972,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-5-400x400.jpeg",
+     "totalBytes": 21732,
+     "wastedBytes": 18167,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2025/11/image-2-400x400.jpeg",
+     "totalBytes": 21044,
+     "wastedBytes": 17592,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (400x400) for its displayed dimensions (162x162). Use responsive images to reduce the image download size.\",\"wasted"
+    }
+   ]
+  },
+  {
+   "id": "lcp-discovery-insight",
+   "title": "LCP request discovery",
+   "score": 0,
+   "items": [
+    {
+     "type": "checklist",
+     "items": "{\"priorityHinted\":{\"label\":\"fetchpriority=high should be applied\",\"value\":false},\"requestDiscoverable\":{\"label\":\"Request is discoverable in initial document\",\"value\":true},\"eagerlyLoaded\":{\"label\":\"la"
+    },
+    {
+     "type": "node",
+     "lhId": "page-4-IMG",
+     "path": "1,HTML,1,BODY,0,DIV,2,MAIN,1,SECTION,0,DIV,4,DIV,0,DIV,0,A,0,DIV,0,IMG",
+     "selector": "div.photo > a > div.content > img",
+     "boundingRect": "{\"top\":359,\"bottom\":521,\"left\":1092,\"right\":1254,\"width\":162,\"height\":162}",
+     "snippet": "<img src=\"https://ultimatehall.org/wp-content/uploads/2025/12/74A88EAC-CC34-4501-A9A…\" alt=\"\">",
+     "nodeLabel": "div.photo > a > div.content > img"
+    }
+   ]
+  },
+  {
+   "id": "network-dependency-tree-insight",
+   "title": "Network dependency tree",
+   "score": 0,
+   "items": [
+    {
+     "type": "list-section",
+     "value": "{\"type\":\"network-tree\",\"chains\":{\"12E12D95228D1C37C61EA2A48FDB5AB6\":{\"url\":\"https://ultimatehall.org/class/2025/\",\"navStartToEndTime\":106,\"transferSize\":5948,\"isLongest\":true,\"children\":{\"7038.2\":{\"ur"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnected origins",
+     "description": "[preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.",
+     "value": "{\"type\":\"text\",\"value\":\"no origins were preconnected\"}"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnect candidates",
+     "description": "Add [preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints to your most important origins, but try to use no more than 4."
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-insight",
+   "title": "Render blocking requests",
+   "score": 0,
+   "display": "Est savings of 610 ms",
+   "items": [
+    {
+     "url": "https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Sorts+Mill+Goudy:ital@0;1&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap",
+     "totalBytes": 1406,
+     "wastedMs": 265
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+     "totalBytes": 29972,
+     "wastedMs": 64
+    },
+    {
+     "url": "https://ultimatehall.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+     "totalBytes": 5025
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795287854",
+     "totalBytes": 12899,
+     "wastedMs": 64
+    }
+   ]
+  }
+ ]
+}
