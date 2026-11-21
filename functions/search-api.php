@@ -92,7 +92,7 @@ function bearsmith_refresh_member_search_index( $post_id ) {
 
     bearsmith_build_member_search_index( (int) $post_id );
 }
-add_action( 'acf/save_post', 'bearsmith_refresh_member_search_index', 20 );
+// uh_sync_member() (functions/model.php) rebuilds the search index on acf/save_post, so no hook here.
 
 /**
  * Split a search query into word tokens for AND-of-terms (conjunctive) matching.

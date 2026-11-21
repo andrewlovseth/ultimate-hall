@@ -1,9 +1,10 @@
 <?php
-    $meta = get_field('meta');
-    $class = $meta['class'];
-    $induction_type = $meta['induction_type']['label'];
-    $induction_division = $meta['induction_division'];
-    $year = $class->post_name;
+    $meta = get_field('meta') ?: array();
+    $class = $meta['class'] ?? null;
+    $induction_type = $meta['induction_type']['label'] ?? '';
+    $induction_division = $meta['induction_division'] ?? null;
+    // Title, not slug: a duplicate year post can have a slug like "1977-2".
+    $year = $class ? $class->post_title : '';
 ?>
 
 <section class="profile-header">

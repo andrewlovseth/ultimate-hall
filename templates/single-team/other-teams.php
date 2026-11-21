@@ -1,5 +1,7 @@
 <?php
 
+    $division    = null;
+    $division_id = null;
     $division_obj = get_field('division');
     if($division_obj) {
         $division = $division_obj[0]->post_title;
@@ -11,7 +13,7 @@
 
     <section class="other-teams grid">
         <div class="section-header align-center">
-            <h3><?php echo $division; ?> Teams</h3>
+            <h3><?php echo esc_html( $division ); ?> Teams</h3>
         </div>
 
         <div class="teams-list">

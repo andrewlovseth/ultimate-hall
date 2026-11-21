@@ -23,6 +23,10 @@ if( $is_preview ) {
 }
 
 $year_obj = get_field('year');
+if ( ! $year_obj ) {
+    // Block added in the editor but no year picked yet.
+    return;
+}
 $year = $year_obj->post_name;
 $year_ID = $year_obj->ID;
 

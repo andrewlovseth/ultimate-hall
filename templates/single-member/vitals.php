@@ -1,6 +1,6 @@
 <?php
-    $meta = get_field('meta');
-    $induction_type = $meta['induction_type']['label'];
+    $meta = get_field('meta') ?: array();
+    $induction_type = $meta['induction_type']['label'] ?? '';
     if($induction_type !== 'Special Merit'):
 ?>
 

@@ -32,10 +32,7 @@
 
                     <div class="excerpt copy p3">
                         <?php
-                            $excerpt = get_the_excerpt(); 
-                            $excerpt = substr( $excerpt, 0, 140 );
-                            $result = substr( $excerpt, 0, strrpos( $excerpt, ' ' ) );
-                            echo $result . ' ...';
+                            echo esc_html( wp_trim_words( get_the_excerpt(), 25, ' ...' ) );
                         ?>
                     </div>
                 </div>
