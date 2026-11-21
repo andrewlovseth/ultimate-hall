@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 const UH_TEAM_INDEX       = '_uh_team';
 const UH_TOURNAMENT_INDEX = '_uh_tournament';
+const UH_RESULT_PAIR_INDEX = '_uh_result_pair';
 
 /** Placement vocabulary, in display order. Shared by the field group, REST and MCP schemas. */
 function uh_placements() {
@@ -239,6 +240,30 @@ function uh_member_career( $member_id ) {
  * (WP_Post or null), placement, series, year, beach. Sorted by year.
  */
 function uh_member_results( $member_id, $series = null ) {
+	$all = uh_member_results_cache( $member_id );
+	if ( null === $all ) {
+		$all = uh_member_results_cache( $member_id, uh_build_member_results( $member_id ) );
+	}
+	return $series ? array_values( array_filter( $all, fn( $r ) => $r['series'] === $series ) ) : $all;
+}
+
+/**
+ * Per-request cache for uh_member_results(): member pages read the same results in several sections.
+ * Get with one argument, set with two, clear everything with uh_member_results_cache( 'flush' ).
+ */
+function uh_member_results_cache( $member_id, $value = null ) {
+	static $cache = array();
+	if ( 'flush' === $member_id ) {
+		$cache = array();
+		return null;
+	}
+	if ( null !== $value ) {
+		$cache[ (int) $member_id ] = $value;
+	}
+	return $cache[ (int) $member_id ] ?? null;
+}
+
+function uh_build_member_results( $member_id ) {
 	$rows = get_field( 'results', $member_id ) ?: array();
 	$out  = array();
 	foreach ( $rows as $row ) {
@@ -248,9 +273,6 @@ function uh_member_results( $member_id, $series = null ) {
 		}
 		// A result with no tournament yet (legacy data) counts as U.S. so it still shows.
 		$row_series = $tid ? ( get_field( 'details_series', $tid ) ?: uh_guess_series( get_the_title( $tid ) ) ) : 'us';
-		if ( $series && $row_series !== $series ) {
-			continue;
-		}
 		$team_id = uh_post_id( $row['team'] ?? 0 );
 		$out[]   = array(
 			'tournament' => $tid ? get_post( $tid ) : null,
@@ -317,6 +339,7 @@ function uh_members_for_tournament( $tournament_id ) {
 function uh_sync_member_index( $member_id ) {
 	$teams       = array();
 	$tournaments = array();
+	$pairs       = array();
 	foreach ( array( 'career' => array( 'team' ), 'results' => array( 'team', 'tournament' ) ) as $repeater => $cols ) {
 		$count = (int) get_post_meta( $member_id, $repeater, true );
 		for ( $i = 0; $i < $count; $i++ ) {
@@ -333,8 +356,21 @@ function uh_sync_member_index( $member_id ) {
 			}
 		}
 	}
+	// "tournament:team" for each result, so teammates (same tournament, same team) is one meta query.
+	$count = (int) get_post_meta( $member_id, 'results', true );
+	for ( $i = 0; $i < $count; $i++ ) {
+		$tid  = (int) get_post_meta( $member_id, "results_{$i}_tournament", true );
+		$team = (int) get_post_meta( $member_id, "results_{$i}_team", true );
+		if ( $tid && $team ) {
+			$pairs[ "{$tid}:{$team}" ] = true;
+		}
+	}
 	delete_post_meta( $member_id, UH_TEAM_INDEX );
 	delete_post_meta( $member_id, UH_TOURNAMENT_INDEX );
+	delete_post_meta( $member_id, UH_RESULT_PAIR_INDEX );
+	foreach ( array_keys( $pairs ) as $pair ) {
+		add_post_meta( $member_id, UH_RESULT_PAIR_INDEX, $pair );
+	}
 	foreach ( array_keys( $teams ) as $id ) {
 		add_post_meta( $member_id, UH_TEAM_INDEX, $id );
 	}
@@ -348,6 +384,7 @@ function uh_sync_member( $member_id ) {
 	if ( ! is_numeric( $member_id ) || 'member' !== get_post_type( (int) $member_id ) ) {
 		return;
 	}
+	uh_member_results_cache( 'flush' );
 	uh_sync_member_index( (int) $member_id );
 	if ( function_exists( 'bearsmith_build_member_search_index' ) ) {
 		bearsmith_build_member_search_index( (int) $member_id );

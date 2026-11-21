@@ -9,30 +9,19 @@ if ( isset( $type['value'] ) && 'player' === $type['value'] && $results ) :
 	$pairs = array();
 	foreach ( $results as $r ) {
 		if ( $r['tournament'] && $r['team'] ) {
-			$pairs[ $r['tournament']->ID . ':' . $r['team']->ID ] = $r['tournament']->ID;
+			$pairs[] = $r['tournament']->ID . ':' . $r['team']->ID;
 		}
 	}
 
-	$teammates = array();
-	if ( $pairs ) {
-		$candidates = get_posts(
-			array(
-				'post_type'      => 'member',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-				'post__not_in'   => array( get_the_ID() ),
-				'meta_query'     => array( array( 'key' => UH_TOURNAMENT_INDEX, 'value' => array_values( array_unique( $pairs ) ), 'compare' => 'IN' ) ),
-			)
-		);
-		foreach ( $candidates as $member_id ) {
-			foreach ( uh_member_results( $member_id, 'us' ) as $r ) {
-				if ( $r['tournament'] && $r['team'] && isset( $pairs[ $r['tournament']->ID . ':' . $r['team']->ID ] ) ) {
-					$teammates[] = $member_id;
-					break;
-				}
-			}
-		}
-	}
+	$teammates = $pairs ? get_posts(
+		array(
+			'post_type'      => 'member',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'post__not_in'   => array( get_the_ID() ),
+			'meta_query'     => array( array( 'key' => UH_RESULT_PAIR_INDEX, 'value' => array_unique( $pairs ), 'compare' => 'IN' ) ),
+		)
+	) : array();
 
 	$first_name = get_field( 'vitals_first_name' );
 
@@ -42,7 +31,7 @@ if ( isset( $type['value'] ) && 'player' === $type['value'] && $results ) :
 
 		<section class="teammates grid">
 			<div class="section-header align-center">
-				<h3><?php if ( $first_name ) : ?><?php echo $first_name; ?>'s <?php endif; ?>Teammates</h3>
+				<h3><?php if ( $first_name ) : ?><?php echo esc_html( $first_name ); ?>'s <?php endif; ?>Teammates</h3>
 			</div>
 
 			<div class="member-grid">
