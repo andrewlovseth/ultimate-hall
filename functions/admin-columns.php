@@ -8,6 +8,8 @@
  *   Tournaments  Title, Date. Defaults to title, Z to A.
  *   Media        File, Author, Uploaded to, Comments, Date, Width. Width sortable.
  * Categories and Tags are hidden on Members and Teams: no member or team has a term.
+ * Each user's last sort on each screen is remembered, as ACP did, seeded once from ACP's saved sorts.
+ * ACP's inline editing of a team's Division is not carried over: edit the team instead.
  */
 
 /** The member list screen's columns. */
@@ -218,10 +220,6 @@ add_action(
 					'value' => sanitize_key( wp_unslash( $_GET['uh_induction'] ) ),
 				);
 			}
-			if ( 'uh_induction' === $query->get( 'orderby' ) ) {
-				$query->set( 'meta_key', 'meta_induction_type' );
-				$query->set( 'orderby', 'meta_value' );
-			}
 		} elseif ( 'team' === $post_type && ! empty( $_GET['uh_division'] ) ) {
 			// ACF stores a relationship as a serialized array of ID strings.
 			$meta[] = array(
@@ -255,7 +253,10 @@ add_filter(
 		$orderby = $query->get( 'orderby' );
 		$order   = 'DESC' === strtoupper( (string) $query->get( 'order' ) ) ? 'DESC' : 'ASC';
 
-		if ( 'uh_class' === $orderby ) {
+		if ( 'uh_induction' === $orderby ) {
+			$clauses['join']   .= " LEFT JOIN {$wpdb->postmeta} uh_tm ON uh_tm.post_id = {$wpdb->posts}.ID AND uh_tm.meta_key = 'meta_induction_type'";
+			$clauses['orderby'] = "uh_tm.meta_value {$order}, {$wpdb->posts}.post_title ASC";
+		} elseif ( 'uh_class' === $orderby ) {
 			$clauses['join']   .= " LEFT JOIN {$wpdb->postmeta} uh_cm ON uh_cm.post_id = {$wpdb->posts}.ID AND uh_cm.meta_key = 'meta_class'"
 				. " LEFT JOIN {$wpdb->posts} uh_cp ON uh_cp.ID = uh_cm.meta_value";
 			$clauses['orderby'] = "uh_cp.post_title {$order}, {$wpdb->posts}.post_title ASC";
@@ -273,3 +274,64 @@ add_filter(
 	10,
 	2
 );
+
+/**
+ * Remembers each user's last sort per list screen and reapplies it when they come back.
+ * The first time, it carries over the sorts Admin Columns Pro saved for that user.
+ */
+function uh_admin_remember_sort() {
+	$screen = get_current_screen();
+	$user   = get_current_user_id();
+	if ( ! $screen || ! $user || ! in_array( $screen->id, array( 'edit-member', 'edit-team', 'edit-tournaments', 'upload' ), true ) ) {
+		return;
+	}
+	$saved = get_user_meta( $user, 'uh_list_sort', true );
+	if ( ! is_array( $saved ) ) {
+		$saved = uh_admin_sorts_from_acp( $user );
+		update_user_meta( $user, 'uh_list_sort', $saved );
+	}
+
+	// phpcs:disable WordPress.Security.NonceVerification -- read-only list sorting.
+	if ( ! empty( $_GET['orderby'] ) ) {
+		$saved[ $screen->id ] = array(
+			'orderby' => sanitize_key( wp_unslash( $_GET['orderby'] ) ),
+			'order'   => isset( $_GET['order'] ) && 'desc' === strtolower( sanitize_key( wp_unslash( $_GET['order'] ) ) ) ? 'desc' : 'asc',
+		);
+		update_user_meta( $user, 'uh_list_sort', $saved );
+	} elseif ( isset( $saved[ $screen->id ] ) ) {
+		$_GET['orderby'] = $_REQUEST['orderby'] = $saved[ $screen->id ]['orderby'];
+		$_GET['order']   = $_REQUEST['order'] = $saved[ $screen->id ]['order'];
+	}
+	// phpcs:enable
+}
+add_action( 'load-edit.php', 'uh_admin_remember_sort' );
+add_action( 'load-upload.php', 'uh_admin_remember_sort' );
+
+/** A user's ACP sorts, translated to this file's column names. */
+function uh_admin_sorts_from_acp( $user ) {
+	$screens = array(
+		'member'      => 'edit-member',
+		'team'        => 'edit-team',
+		'tournaments' => 'edit-tournaments',
+		'wp-media'    => 'upload',
+	);
+	$columns = array(
+		'603ece448c49bc' => 'uh_class',
+		'603ecea55ef9dc' => 'uh_induction',
+		'6094132b65e354' => 'uh_division',
+		'60e34dbdad4fe0' => 'uh_width',
+		'title'          => 'title',
+		'date'           => 'date',
+	);
+	$sorts = array();
+	foreach ( (array) get_user_option( 'ac_preferences_sorted_by', $user ) as $key => $sort ) {
+		$list = preg_replace( '/[0-9a-f]{13}$/', '', (string) $key );
+		if ( isset( $screens[ $list ], $sort['orderby'], $columns[ $sort['orderby'] ] ) ) {
+			$sorts[ $screens[ $list ] ] = array(
+				'orderby' => $columns[ $sort['orderby'] ],
+				'order'   => 'desc' === ( $sort['order'] ?? '' ) ? 'desc' : 'asc',
+			);
+		}
+	}
+	return $sorts;
+}

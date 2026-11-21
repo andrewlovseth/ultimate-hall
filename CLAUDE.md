@@ -40,6 +40,7 @@ Functions are split into focused files in `/functions/`:
 - `rest.php` - hides private member fields from logged-out REST readers
 - `abilities.php` - 15 WordPress Abilities (`uhof/*`) for agent editing, with a per-member change log and undo
 - `mcp.php` - serves those abilities as MCP tools at `/wp-json/uhof/mcp` (needs the MCP Adapter plugin)
+- `admin-columns.php` - wp-admin list columns, sorts, filters and remembered sorts for members, teams, tournaments and media; replaces Admin Columns Pro
 
 ### Template Structure
 **Single templates** load sections from `/templates/{post-type}/`:
