@@ -49,6 +49,7 @@
     // -------------------------------------------------------------------------
     // Pre-calculated variants (replaces darken() calls)
     // -------------------------------------------------------------------------
+    --color-gold-text: #856800;         // gold for small text on white/light gray: 5.3:1 (gold-400 is 1.7:1)
     --color-gold-400-dark: #d4b228;     // darken($gold-400, 5%)
     --color-charcoal-dark: #333333;     // darken($charcoal, 5%)
 
@@ -99,6 +100,7 @@ $gold-100: var(--color-gold-100);
 $gold-200: var(--color-gold-200);
 $gold-300: var(--color-gold-300);
 $gold-400: var(--color-gold-400);
+$gold-text: var(--color-gold-text);
 $gold-500: var(--color-gold-500);
 $gold-600: var(--color-gold-600);
 $gold-700: var(--color-gold-700);
