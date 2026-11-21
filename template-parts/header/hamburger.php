@@ -1,5 +1,5 @@
 <div class="hamburger">
-    <a href="#" class="js-nav-trigger">
-        <div class="patty"></div>
-    </a>
+    <button type="button" class="js-nav-trigger" aria-expanded="false" aria-controls="site-navigation" aria-label="Menu">
+        <span class="patty"></span>
+    </button>
 </div>

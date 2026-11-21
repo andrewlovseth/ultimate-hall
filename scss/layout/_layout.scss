@@ -1,6 +1,14 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 
+// In-page links (Back to Top, the class jump links, anchors in .copy)
+// glide instead of jumping. Replaces the jQuery Smooth Scroll plugin.
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
 body {
 	background: $white;
 }

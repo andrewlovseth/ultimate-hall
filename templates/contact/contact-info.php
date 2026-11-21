@@ -32,25 +32,25 @@
             <h4>Social</h4>
 
             <div class="link facebook">
-                <a href="<?php echo $facebook; ?>" rel="external">
+                <a href="<?php echo $facebook; ?>" target="_blank" rel="noopener">
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-facebook-blue.svg" alt="Facebook" />
                 </a>
             </div>
 
             <div class="link twitter">
-                <a href="<?php echo $twitter; ?>" rel="external">
+                <a href="<?php echo $twitter; ?>" target="_blank" rel="noopener">
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-twitter-blue.svg" alt="Twitter" />
                 </a>
             </div>
 
             <div class="link instagram">
-                <a href="<?php echo $instagram; ?>" rel="external">
+                <a href="<?php echo $instagram; ?>" target="_blank" rel="noopener">
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-instagram-blue.svg" alt="Instagram" />
                 </a>
             </div>
 
             <div class="link youtube">
-                <a href="<?php echo $youtube; ?>" rel="external">
+                <a href="<?php echo $youtube; ?>" target="_blank" rel="noopener">
                     <img src="<?php bloginfo('template_directory'); ?>/images/icon-youtube-blue.svg" alt="YouTube" />
                 </a>
             </div>

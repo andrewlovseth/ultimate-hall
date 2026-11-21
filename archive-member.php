@@ -15,7 +15,7 @@
 
 
     <div class="back-to-top">
-        <a href="#page" class="smooth">Back to Top</a>
+        <a href="#page">Back to Top</a>
     </div>
 
 

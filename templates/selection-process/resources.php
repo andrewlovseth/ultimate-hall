@@ -23,7 +23,7 @@
                 ?>
         
                 <li class="document">
-                    <a href="<?php echo $url; ?>" rel="external"><?php echo $title; ?></a>
+                    <a href="<?php echo $url; ?>" target="_blank" rel="noopener"><?php echo $title; ?></a>
                 </li>
 
             <?php endwhile; endif; ?>
