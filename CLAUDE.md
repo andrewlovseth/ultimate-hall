@@ -97,7 +97,12 @@ A member has three repeaters, all edited in wp-admin or through the abilities:
 Never query repeater rows with LIKE meta queries. Use `uh_members_for_team()` / `uh_members_for_tournament()`, which read the index that `uh_sync_member()` rebuilds on admin saves, REST saves and `wp uh reindex`. If you write meta directly, run `wp uh reindex` afterwards.
 
 ### Deploys
-Production theme is deployed by WP Pusher from `master` (push-to-deploy off: click Update in WP Pusher), or by rsyncing a `git archive` of master over SSH (`ssh uhof`, site root `~/files`). Back up first: `wp db export` into `/sites/ultimatehall.org/`.
+Publish a GitHub release (or run the Deploy workflow by hand with a branch, tag or commit). `.github/workflows/deploy.yml` streams a `git archive` of that ref over SSH with the `UHOF_DEPLOY_KEY` secret. That key's `authorized_keys` entry forces `/sites/ultimatehall.org/ops/deploy-receive.sh` (a copy of `ops/deploy-receive.sh` kept outside the theme, refreshed by each deploy), which:
+- refuses a release missing the theme files or with any PHP syntax error;
+- backs up the live theme to `/sites/ultimatehall.org/theme-backups/` (last 5 kept) and swaps the new one in;
+- runs `wp uh reindex`, `wp cache flush` and `wp spinupwp cache purge-site`;
+- checks the home and members pages and rolls back to the previous theme if either fails.
+The workflow log shows only the `RESULT:` line; the full log is `/sites/ultimatehall.org/logs/deploy.log`. The deployed ref is in the theme's `.deployed-release`. Back up the database before data changes: `wp db export` into `/sites/ultimatehall.org/`.
 
 ### Ops routines
 These replace ManageWP; they run in GitHub Actions, so nothing depends on a laptop being on.

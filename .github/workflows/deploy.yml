@@ -1,0 +1,59 @@
+# Deploy the theme to ultimatehall.org. Replaces WP Pusher.
+# Runs when a GitHub release is published, or by hand from the Actions tab for any branch or tag.
+# Streams `git archive` of that ref over SSH with the UHOF_DEPLOY_KEY secret, whose
+# authorized_keys entry can only run ops/deploy-receive.sh (installed at
+# /sites/ultimatehall.org/ops/). That script checks the release, backs up the live theme,
+# swaps it in, reindexes, purges caches, smoke-tests and rolls back on failure.
+# This repo is public, so the log shows only the result line.
+name: Deploy
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag or commit to deploy
+        required: true
+        default: master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      REF: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REF }}
+
+      - name: Send the release to the server
+        env:
+          KEY: ${{ secrets.UHOF_DEPLOY_KEY }}
+          # The server's public host key, pinned so the runner never trusts a stand-in.
+          KNOWN_HOSTS: 157.230.144.212 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFy1HT1G+0MyhEbCR3MIvDc/WJm5XZ3Xu6zNfOu3FHlq
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          name="$REF@$(git rev-parse --short HEAD)"
+          set +e
+          git archive --format=tar.gz HEAD \
+            | ssh -i ~/.ssh/deploy -o BatchMode=yes -o ConnectTimeout=20 ultimatehall@157.230.144.212 "$name" > out.txt 2>&1
+          status=$?
+          set -e
+          rm -f ~/.ssh/deploy
+          result=$(grep '^RESULT:' out.txt | tail -1)
+          [ -n "$result" ] || result="RESULT: no answer from the server (ssh exit $status)"
+          echo "$result"
+          echo "### $result" >> "$GITHUB_STEP_SUMMARY"
+          case "$result" in "RESULT: deployed "*) exit 0 ;; *) exit 1 ;; esac
