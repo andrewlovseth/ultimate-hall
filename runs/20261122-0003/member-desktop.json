@@ -1,0 +1,166 @@
+{
+ "url": "https://ultimatehall.org/members/nicole-sprout-beck/",
+ "scores": {
+  "performance": 100,
+  "accessibility": 100,
+  "best-practices": 100,
+  "seo": 100
+ },
+ "allRuns": [
+  [
+   100,
+   100,
+   100,
+   100
+  ],
+  [
+   100,
+   100,
+   100,
+   100
+  ],
+  [
+   100,
+   100,
+   100,
+   100
+  ]
+ ],
+ "metrics": {
+  "first-contentful-paint": "0.4 s",
+  "largest-contentful-paint": "0.7 s",
+  "total-blocking-time": "0 ms",
+  "cumulative-layout-shift": "0",
+  "speed-index": "0.4 s",
+  "server-response-time": "Root document took 20 ms"
+ },
+ "lcp": "<p>",
+ "failing": [
+  {
+   "id": "unminified-javascript",
+   "title": "Minify JavaScript",
+   "score": 0.5,
+   "display": "Est savings of 3 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/js/search.js?ver=1795304422",
+     "totalBytes": 7680,
+     "wastedBytes": 3570,
+     "wastedPercent": 46.478066659031036
+    }
+   ]
+  },
+  {
+   "id": "uses-responsive-images",
+   "title": "Properly size images",
+   "score": 0.5,
+   "display": "Est savings of 199 KiB",
+   "items": [
+    {
+     "node": {
+      "selector": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large",
+      "snippet": "<img width=\"1200\" height=\"982\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/BC9A0101-20EB-456E-8D8…\" class=\"attachment-large size-large\" alt=\"Photo by Karl Cook\" loading=\"lazy\" decoding=\"a",
+      "label": "Photo by Karl Cook"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/BC9A0101-20EB-456E-8D89-E4AB34849073-768x629.jpeg.webp",
+     "totalBytes": 110660,
+     "wastedBytes": 91128,
+     "wastedPercent": 82.34962904080551
+    },
+    {
+     "node": {
+      "selector": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large",
+      "snippet": "<img width=\"800\" height=\"536\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/sprout10-768x515.jpg.w…\" class=\"attachment-large size-large\" alt=\"\" loading=\"lazy\" decoding=\"async\" srcset=\"https",
+      "label": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/sprout10-768x515.jpg.webp",
+     "totalBytes": 95678,
+     "wastedBytes": 75052,
+     "wastedPercent": 78.44255663430421
+    },
+    {
+     "node": {
+      "selector": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large",
+      "snippet": "<img width=\"608\" height=\"408\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/lay-out-large.jpg.webp\" class=\"attachment-large size-large\" alt=\"\" loading=\"lazy\" decoding=\"async\">",
+      "label": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/lay-out-large.jpg.webp",
+     "totalBytes": 29664,
+     "wastedBytes": 19468,
+     "wastedPercent": 65.6282249742002
+    },
+    {
+     "node": {
+      "selector": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large",
+      "snippet": "<img width=\"800\" height=\"495\" src=\"https://ultimatehall.org/wp-content/uploads/2021/03/viewing-00000003-1-768…\" class=\"attachment-large size-large\" alt=\"\" loading=\"lazy\" decoding=\"async\" srcset=\"https",
+      "label": "div.photo > a.photo__link > div.photo__thumbnail > img.attachment-large"
+     },
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/viewing-00000003-1-768x475.jpg.webp",
+     "totalBytes": 23902,
+     "wastedBytes": 18315,
+     "wastedPercent": 76.62719298245614
+    }
+   ]
+  },
+  {
+   "id": "image-delivery-insight",
+   "title": "Improve image delivery",
+   "score": 0.5,
+   "display": "Est savings of 172 KiB",
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/BC9A0101-20EB-456E-8D89-E4AB34849073-768x629.jpeg.webp",
+     "totalBytes": 110660,
+     "wastedBytes": 93310,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Increasing the image compression factor could improve this image's download size.\",\"wastedBytes\":44807},{\"reason\":\"This image file is larger than it needs to be "
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/sprout10-768x515.jpg.webp",
+     "totalBytes": 95678,
+     "wastedBytes": 74487,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"Increasing the image compression factor could improve this image's download size.\",\"wastedBytes\":51428},{\"reason\":\"This image file is larger than it needs to be "
+    },
+    {
+     "url": "https://ultimatehall.org/wp-content/uploads/2021/03/lay-out-large.jpg.webp",
+     "totalBytes": 29664,
+     "wastedBytes": 8488,
+     "subItems": "{\"type\":\"subitems\",\"items\":[{\"reason\":\"This image file is larger than it needs to be (408x408) for its displayed dimensions (435x292). Use responsive images to reduce the image download size.\",\"wasted"
+    }
+   ]
+  },
+  {
+   "id": "network-dependency-tree-insight",
+   "title": "Network dependency tree",
+   "score": 0,
+   "items": [
+    {
+     "type": "list-section",
+     "value": "{\"type\":\"network-tree\",\"chains\":{\"77078A78D7F07222ED235EBC78FD23AD\":{\"url\":\"https://ultimatehall.org/members/nicole-sprout-beck/\",\"navStartToEndTime\":104,\"transferSize\":10461,\"isLongest\":true,\"childre"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnected origins",
+     "description": "[preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.",
+     "value": "{\"type\":\"text\",\"value\":\"no origins were preconnected\"}"
+    },
+    {
+     "type": "list-section",
+     "title": "Preconnect candidates",
+     "description": "Add [preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints to your most important origins, but try to use no more than 4.",
+     "value": "{\"type\":\"text\",\"value\":\"No additional origins are good candidates for preconnecting\"}"
+    }
+   ]
+  },
+  {
+   "id": "render-blocking-insight",
+   "title": "Render blocking requests",
+   "score": 0.5,
+   "items": [
+    {
+     "url": "https://ultimatehall.org/wp-content/themes/ultimate-hall/style.css?ver=1795304422",
+     "totalBytes": 11849
+    }
+   ]
+  }
+ ]
+}
