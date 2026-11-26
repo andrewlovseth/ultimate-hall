@@ -1,10 +1,11 @@
-# Hourly uptime and certificate check for ultimatehall.org. Replaces ManageWP's uptime monitor.
+# Daily uptime and certificate check for ultimatehall.org. Replaces ManageWP's uptime monitor.
+# Daily, not hourly: Andy wants situational awareness, not round-the-clock monitoring (2026-11-26).
 # A failure opens one "Site alert: uptime" issue (GitHub emails the repo owner); the next green run closes it.
 name: Uptime
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "17 15 * * *"
   workflow_dispatch:
 
 permissions:
